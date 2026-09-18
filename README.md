@@ -48,3 +48,8 @@
 2. 디렉토리 이동: `cd [저장소 이름]`
 3. 가상환경 생성 및 실행: (권장) `python -m venv .venv` 후 활성화
 4. 패키지 설치: `pip install -r requirements.txt`
+
+---
+
+## 구글드라이브 링크
+https://drive.google.com/drive/folders/1uxGd0kggrNSZbuXRMXHij4qSTAYBeocL?usp=sharing
