@@ -51,5 +51,11 @@
 
 ---
 
+## Data Description
+
+Raw 데이터에 대한 속성 정보는 root 폴더 속 'STATCAST_2021_03_변수설명서.md'에 작성되어 있습니다.
+
+---
+
 ## 구글드라이브 링크
 https://drive.google.com/drive/folders/1uxGd0kggrNSZbuXRMXHij4qSTAYBeocL?usp=sharing
