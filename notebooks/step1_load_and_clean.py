@@ -14,6 +14,7 @@ import pandas as pd
 # 사용자 설정 (레포 구조: data/raw, data/processed, src)
 # -----------------------------
 def _find_repo_root() -> Path:
+    """.py로 실행하든 노트북 셀에 붙여넣든, 나중에 src/preprocessing/ 처럼
     폴더 깊이가 바뀌어도 레포 루트를 자동으로 찾는다.
     ".git" 폴더나 "data" 폴더가 있는 위치를 레포 루트로 판단한다."""
     try:
