@@ -1,0 +1,9 @@
+{
+  "Shohei Ohtani": {
+    "2023": { "average_velocity": 100.0, "cluster": 10 },
+    "2024": { "average_velocity": 99.9, "cluster": 6 }
+  },
+  "Justin Verlander": {
+    "2024": { "average_velocity": 94.5, "cluster": 4 }
+  }
+}
