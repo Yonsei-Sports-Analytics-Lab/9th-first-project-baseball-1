@@ -16,6 +16,7 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 !data/processed/README.md
+!data/processed/data_description.json
 
 # OS Files
 .DS_Store
