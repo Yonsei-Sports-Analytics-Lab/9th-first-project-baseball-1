@@ -16,6 +16,7 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 !data/processed/README.md
+!data/processed/reference_flight_times.json
 
 # OS Files
 .DS_Store
