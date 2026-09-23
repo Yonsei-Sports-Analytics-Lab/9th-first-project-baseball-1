@@ -232,3 +232,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# clustering result for the team (JSON only)
+!data/processed/hclust_pitcher_clustered_k3.json
+!data/processed/hclust_pitcher_clustered_k6.json

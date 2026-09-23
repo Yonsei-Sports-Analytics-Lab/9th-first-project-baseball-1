@@ -18,8 +18,12 @@ NEEDED_COLUMNS = [
     "pitch_type", "game_year", "game_type", "description",
     "pitcher", "player_name", "p_throws",
     "pfx_x", "pfx_z", "release_pos_y", "vy0", "ay", "arm_angle",
+    "release_speed",
 ]
-NUMERIC_COLUMNS = ["pfx_x", "pfx_z", "release_pos_y", "vy0", "ay", "arm_angle", "game_year"]
+NUMERIC_COLUMNS = [
+    "pfx_x", "pfx_z", "release_pos_y", "vy0", "ay", "arm_angle",
+    "release_speed", "game_year",
+]
 
 # 체공시간 계산 상수 (체공시간_보정_무브먼트_계산_가이드.md)
 PLATE_Y_FT = 17.0 / 12.0      # 홈플레이트 앞면 y좌표
@@ -29,3 +33,6 @@ MAX_FLIGHT_TIME_S = 0.60
 
 # 군집분석 변수
 CLUSTER_FEATURES = ["ivb_ft", "hb_ft", "arm_angle"]
+
+# 군집에는 안 쓰지만 결과에 같이 담는 값 (JSON의 average_velocity)
+VELOCITY_COLUMN = "release_speed"
