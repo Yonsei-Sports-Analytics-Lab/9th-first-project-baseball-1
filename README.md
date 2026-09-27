@@ -55,6 +55,20 @@
 
 Raw 데이터에 대한 속성 정보는 root 폴더 속 'STATCAST_2021_03_변수설명서.md'에 작성되어 있습니다.
 
+## 3D 투구 궤적 시각화
+
+`data/processed`의 `data_[설명].csv` 파일을 투수별 3D 궤적 데이터로 변환할 수
+있습니다.
+
+```bash
+python3 main.py --list-pitchers
+python3 main.py --pitcher "Shohei Ohtani"
+```
+
+변환기는 실제 Statcast 운동 파라미터를 우선 사용하며, 결과는
+`src/visualization/pitch_3d/public/pitch-data.json`에 생성됩니다. React 뷰어의
+연결 방법은 `src/visualization/pitch_3d/README.md`를 참고하세요.
+
 ---
 
 ## 구글드라이브 링크

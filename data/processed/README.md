@@ -21,12 +21,29 @@
   * `pitch_features_scaled_202603.csv` (스케일링 및 파생 변수 추가 완료)
   * `X_train_lstm.npy`, `y_train_lstm.npy` (LSTM 모델 입력용으로 형태 변환 완료)
 
+3D 투구 뷰어가 읽는 파일은 `data_[설명].csv` 형식으로 저장합니다. 예를 들어
+`data_ohtani_2024.csv`, `data_verlander.csv`는 자동 탐색 대상입니다. 여러 파일을
+함께 둘 수 있고, CSV에 여러 투수가 있으면 실행 시 투수 이름을 선택합니다.
+
 ## 🔄 전처리 실행 방법
 
 새로운 파생 변수를 추가하거나 정제 로직을 바꾼 경우, 아래와 같이 전처리 파이프라인 스크립트를 실행하여 이 폴더의 데이터를 갱신합니다.
 ```bash
 # 예시 스크립트 실행
-python src/preprocessing/data_pipeline.py
+python3 src/preprocessing/data_pipeline.py
+```
+
+## 3D 투구 시각화 데이터 생성
+
+```bash
+python3 main.py --list-pitchers
+python3 main.py --pitcher "Shohei Ohtani"
+```
+
+개별 투구 CSV에는 Statcast의 `pitch_type`, `release_speed`, `plate_x`, `plate_z`,
+`release_pos_y`, `vx0`, `vy0`, `vz0`, `ax`, `ay`, `az` 열 사용을 권장합니다.
+운동 파라미터가 없으면 릴리스 위치와 `pfx_x`, `pfx_z`를 사용하는 보조 모델로
+복원합니다. 전체 데이터 계약은 `src/visualization/pitch_3d/README.md`에 있습니다.
 
 ### 📥 데이터 다운로드 링크
 * **2024시즌 전체 투구 데이터 (Statcast):** [구글 드라이브 링크(클릭)](#)

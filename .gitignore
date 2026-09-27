@@ -18,12 +18,16 @@ data/processed/*
 !data/processed/README.md
 !data/processed/data_description.json
 
+# generated 3D viewer payload
+src/visualization/pitch_3d/public/pitch-data.json
+
 # OS Files
 .DS_Store
 Thumbs.db
 
 # Distribution / packaging
 .Python
+node_modules/
 build/
 develop-eggs/
 dist/

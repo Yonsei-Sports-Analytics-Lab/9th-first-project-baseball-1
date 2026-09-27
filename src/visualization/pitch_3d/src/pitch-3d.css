@@ -1,0 +1,120 @@
+.pitch3d {
+  --panel: #111714;
+  --panel-soft: #18201c;
+  --line: rgba(255, 255, 255, 0.12);
+  display: flex;
+  width: 100%;
+  height: 680px;
+  overflow: hidden;
+  color: #f8fafc;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  font-family: Inter, Pretendard, system-ui, sans-serif;
+}
+
+.pitch3d button { font: inherit; }
+.pitch3d__scene { position: relative; flex: 1; min-width: 0; }
+.pitch3d__scene canvas { display: block; }
+
+.pitch3d__header {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(9, 14, 11, 0.82), transparent);
+}
+
+.pitch3d__header h2 { margin: 2px 0 0; font-size: 22px; }
+.pitch3d__header > span { color: #a7f3d0; font-size: 12px; font-weight: 700; }
+.pitch3d__eyebrow { margin: 0; color: #94a3b8; font-size: 10px; font-weight: 800; letter-spacing: 0.18em; }
+
+.pitch3d__toggles {
+  position: absolute;
+  z-index: 3;
+  top: 88px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.pitch3d__toggles button,
+.pitch3d__views button,
+.pitch3d__filter-heading button {
+  color: #cbd5e1;
+  background: rgba(5, 10, 7, 0.75);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pitch3d__toggles button { padding: 8px 12px; font-size: 11px; font-weight: 700; }
+.pitch3d__toggles button.is-active { color: #a7f3d0; border-color: #34d399; }
+
+.pitch3d__views {
+  position: absolute;
+  z-index: 3;
+  bottom: 20px;
+  left: 50%;
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  transform: translateX(-50%);
+  background: rgba(5, 10, 7, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.pitch3d__views button { padding: 7px 12px; border-color: transparent; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.pitch3d__views button.is-active { color: #111714; background: #f8fafc; }
+
+.pitch3d__sidebar {
+  z-index: 4;
+  width: 238px;
+  padding: 20px 16px;
+  overflow-y: auto;
+  background: rgba(8, 12, 10, 0.96);
+  border-left: 1px solid var(--line);
+}
+
+.pitch3d__filter-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; color: #94a3b8; font-size: 11px; font-weight: 800; }
+.pitch3d__filter-heading button { padding: 5px 8px; color: #7dd3fc; font-size: 9px; }
+.pitch3d__pitch-list { display: flex; flex-direction: column; gap: 7px; }
+
+.pitch3d__pitch-list > button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  color: #64748b;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.pitch3d__pitch-list > button.is-active { color: white; background: rgba(255, 255, 255, 0.07); border-color: var(--line); opacity: 1; }
+.pitch3d__pitch-list i { width: 11px; height: 11px; flex: none; border-radius: 50%; box-shadow: 0 0 10px currentColor; }
+.pitch3d__pitch-list span { display: flex; min-width: 0; flex-direction: column; }
+.pitch3d__pitch-list strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.pitch3d__pitch-list small { margin-top: 3px; color: #64748b; font: 10px ui-monospace, monospace; }
+.pitch3d__notice { margin: 18px 4px 0; color: #fbbf24; font-size: 10px; line-height: 1.5; }
+
+@media (max-width: 760px) {
+  .pitch3d { height: 720px; flex-direction: column; }
+  .pitch3d__scene { min-height: 540px; }
+  .pitch3d__sidebar { box-sizing: border-box; width: 100%; border-top: 1px solid var(--line); border-left: 0; }
+  .pitch3d__pitch-list { flex-direction: row; overflow-x: auto; }
+  .pitch3d__pitch-list > button { min-width: 145px; }
+  .pitch3d__views button { padding-inline: 8px; }
+}
