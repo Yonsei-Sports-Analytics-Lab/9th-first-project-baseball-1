@@ -18,6 +18,8 @@ data/processed/*
 !data/processed/README.md
 !data/processed/data_description.json
 !data/processed/reference_flight_times.json
+!data/processed/pitcher_repertoire_clusters_k3.json
+!data/processed/pitcher_repertoire_clusters_k6.json
 
 # OS Files
 .DS_Store

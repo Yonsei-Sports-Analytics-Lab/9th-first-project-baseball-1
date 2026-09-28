@@ -1,0 +1,4674 @@
+{
+  "A.J. Alexy": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "A.J. Minter": {
+    "2021": { "average_velocity": 92.4, "cluster": 1 },
+    "2022": { "average_velocity": 94.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "A.J. Puk": {
+    "2022": { "average_velocity": 96.6, "cluster": 0 },
+    "2023": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "AJ Blubaugh": {
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "AJ Smith-Shawver": {
+    "2023": { "average_velocity": 94.5, "cluster": 2 },
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Aaron Ashby": {
+    "2021": { "average_velocity": 96.6, "cluster": 0 },
+    "2022": { "average_velocity": 95.6, "cluster": 0 },
+    "2024": { "average_velocity": 96.3, "cluster": 0 },
+    "2025": { "average_velocity": 97.7, "cluster": 0 }
+  },
+  "Aaron Brooks": {
+    "2024": { "average_velocity": 92.0, "cluster": 0 }
+  },
+  "Aaron Bummer": {
+    "2021": { "average_velocity": 94.4, "cluster": 0 },
+    "2022": { "average_velocity": 93.6, "cluster": 0 },
+    "2023": { "average_velocity": 93.1, "cluster": 0 },
+    "2024": { "average_velocity": 92.7, "cluster": 0 },
+    "2025": { "average_velocity": 91.3, "cluster": 0 }
+  },
+  "Aaron Civale": {
+    "2021": { "average_velocity": 89.8, "cluster": 1 },
+    "2022": { "average_velocity": 88.5, "cluster": 1 },
+    "2023": { "average_velocity": 89.7, "cluster": 1 },
+    "2024": { "average_velocity": 90.3, "cluster": 1 },
+    "2025": { "average_velocity": 90.6, "cluster": 1 }
+  },
+  "Aaron Loup": {
+    "2021": { "average_velocity": 89.4, "cluster": 0 },
+    "2022": { "average_velocity": 88.5, "cluster": 0 },
+    "2023": { "average_velocity": 89.6, "cluster": 0 }
+  },
+  "Aaron Nola": {
+    "2021": { "average_velocity": 92.5, "cluster": 2 },
+    "2022": { "average_velocity": 92.0, "cluster": 2 },
+    "2023": { "average_velocity": 91.6, "cluster": 2 },
+    "2024": { "average_velocity": 91.4, "cluster": 2 },
+    "2025": { "average_velocity": 90.7, "cluster": 2 }
+  },
+  "Aaron Sanchez": {
+    "2021": { "average_velocity": 89.9, "cluster": 0 },
+    "2022": { "average_velocity": 92.2, "cluster": 0 }
+  },
+  "Aaron Slegers": {
+    "2021": { "average_velocity": 91.7, "cluster": 0 }
+  },
+  "Abner Uribe": {
+    "2023": { "average_velocity": 99.5, "cluster": 0 },
+    "2025": { "average_velocity": 98.5, "cluster": 0 }
+  },
+  "Adam Cimber": {
+    "2021": { "average_velocity": 87.0, "cluster": 0 },
+    "2022": { "average_velocity": 86.4, "cluster": 0 },
+    "2023": { "average_velocity": 85.2, "cluster": 0 },
+    "2024": { "average_velocity": 85.2, "cluster": 0 }
+  },
+  "Adam Kolarek": {
+    "2022": { "average_velocity": 87.7, "cluster": 0 }
+  },
+  "Adam Mazur": {
+    "2024": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Adam Oller": {
+    "2022": { "average_velocity": 91.9, "cluster": 2 },
+    "2023": { "average_velocity": 92.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Adam Ottavino": {
+    "2021": { "average_velocity": 94.7, "cluster": 0 },
+    "2022": { "average_velocity": 93.5, "cluster": 0 },
+    "2023": { "average_velocity": 91.4, "cluster": 0 },
+    "2024": { "average_velocity": 91.5, "cluster": 0 }
+  },
+  "Adam Plutko": {
+    "2021": { "average_velocity": 90.0, "cluster": 2 }
+  },
+  "Adam Wainwright": {
+    "2021": { "average_velocity": 87.5, "cluster": 1 },
+    "2022": { "average_velocity": 86.7, "cluster": 1 },
+    "2023": { "average_velocity": 85.3, "cluster": 1 }
+  },
+  "Adbert Alzolay": {
+    "2021": { "average_velocity": 93.4, "cluster": 0 },
+    "2023": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Adrian Houser": {
+    "2021": { "average_velocity": 93.7, "cluster": 0 },
+    "2022": { "average_velocity": 93.9, "cluster": 0 },
+    "2023": { "average_velocity": 92.5, "cluster": 0 },
+    "2024": { "average_velocity": 92.8, "cluster": 0 },
+    "2025": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Adrian Morejon": {
+    "2022": { "average_velocity": 96.7, "cluster": 2 },
+    "2024": { "average_velocity": 97.2, "cluster": 0 },
+    "2025": { "average_velocity": 97.4, "cluster": 0 }
+  },
+  "Adrian Sampson": {
+    "2021": { "average_velocity": 91.5, "cluster": 0 },
+    "2022": { "average_velocity": 91.5, "cluster": 2 }
+  },
+  "Adrián Martinez": {
+    "2022": { "average_velocity": 93.9, "cluster": 0 },
+    "2023": { "average_velocity": 93.8, "cluster": 0 }
+  },
+  "Albert Abreu": {
+    "2021": { "average_velocity": 97.9, "cluster": 2 },
+    "2022": { "average_velocity": 98.2, "cluster": 2 },
+    "2023": { "average_velocity": 97.3, "cluster": 2 }
+  },
+  "Albert Suárez": {
+    "2024": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Alec Marsh": {
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Alec Mills": {
+    "2021": { "average_velocity": 89.0, "cluster": 0 }
+  },
+  "Alek Jacob": {
+    "2025": { "average_velocity": 85.1, "cluster": 0 }
+  },
+  "Alek Manoah": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Alex Claudio": {
+    "2021": { "average_velocity": 85.4, "cluster": 0 }
+  },
+  "Alex Cobb": {
+    "2021": { "average_velocity": 92.7, "cluster": 0 },
+    "2022": { "average_velocity": 94.8, "cluster": 0 },
+    "2023": { "average_velocity": 94.5, "cluster": 0 }
+  },
+  "Alex Colomé": {
+    "2021": { "average_velocity": 90.8, "cluster": 1 },
+    "2022": { "average_velocity": 91.3, "cluster": 1 }
+  },
+  "Alex Faedo": {
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 92.9, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Alex Lange": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 },
+    "2022": { "average_velocity": 96.1, "cluster": 0 },
+    "2023": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "Alex Reyes": {
+    "2021": { "average_velocity": 96.6, "cluster": 2 }
+  },
+  "Alex Vesia": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.2, "cluster": 2 },
+    "2023": { "average_velocity": 94.4, "cluster": 2 },
+    "2024": { "average_velocity": 93.4, "cluster": 2 },
+    "2025": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Alex Wells": {
+    "2021": { "average_velocity": 88.5, "cluster": 2 }
+  },
+  "Alex Wood": {
+    "2021": { "average_velocity": 91.8, "cluster": 0 },
+    "2022": { "average_velocity": 92.4, "cluster": 0 },
+    "2023": { "average_velocity": 91.5, "cluster": 0 },
+    "2024": { "average_velocity": 90.5, "cluster": 0 }
+  },
+  "Alex Young": {
+    "2021": { "average_velocity": 88.8, "cluster": 0 },
+    "2023": { "average_velocity": 90.6, "cluster": 0 }
+  },
+  "Alexis Díaz": {
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 94.5, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Allan Winans": {
+    "2023": { "average_velocity": 89.8, "cluster": 0 }
+  },
+  "Amir Garrett": {
+    "2021": { "average_velocity": 94.8, "cluster": 2 },
+    "2022": { "average_velocity": 94.2, "cluster": 2 },
+    "2023": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Amos Willingham": {
+    "2023": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Andre Jackson": {
+    "2023": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Andre Pallante": {
+    "2022": { "average_velocity": 95.2, "cluster": 1 },
+    "2023": { "average_velocity": 96.1, "cluster": 1 },
+    "2024": { "average_velocity": 94.6, "cluster": 1 },
+    "2025": { "average_velocity": 94.4, "cluster": 1 }
+  },
+  "Andrew Abbott": {
+    "2023": { "average_velocity": 92.7, "cluster": 2 },
+    "2024": { "average_velocity": 92.8, "cluster": 2 },
+    "2025": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Andrew Albers": {
+    "2021": { "average_velocity": 88.3, "cluster": 2 }
+  },
+  "Andrew Bellatti": {
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Andrew Chafin": {
+    "2021": { "average_velocity": 92.0, "cluster": 0 },
+    "2022": { "average_velocity": 91.5, "cluster": 0 },
+    "2023": { "average_velocity": 92.2, "cluster": 0 },
+    "2024": { "average_velocity": 91.7, "cluster": 0 },
+    "2025": { "average_velocity": 89.9, "cluster": 0 }
+  },
+  "Andrew Heaney": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 },
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 92.5, "cluster": 2 },
+    "2024": { "average_velocity": 91.5, "cluster": 2 },
+    "2025": { "average_velocity": 89.9, "cluster": 0 }
+  },
+  "Andrew Kittredge": {
+    "2021": { "average_velocity": 95.2, "cluster": 0 },
+    "2024": { "average_velocity": 94.5, "cluster": 0 },
+    "2025": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Andrew Miller": {
+    "2021": { "average_velocity": 88.5, "cluster": 0 }
+  },
+  "Andrew Nardi": {
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 94.6, "cluster": 2 },
+    "2024": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Andrew Suárez": {
+    "2023": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Andrew Wantz": {
+    "2021": { "average_velocity": 91.3, "cluster": 2 },
+    "2022": { "average_velocity": 92.7, "cluster": 2 },
+    "2023": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Andrés Machado": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.3, "cluster": 2 },
+    "2023": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Andrés Muñoz": {
+    "2022": { "average_velocity": 100.1, "cluster": 2 },
+    "2023": { "average_velocity": 98.9, "cluster": 0 },
+    "2024": { "average_velocity": 98.1, "cluster": 2 },
+    "2025": { "average_velocity": 98.3, "cluster": 2 }
+  },
+  "Angel Chivilli": {
+    "2024": { "average_velocity": 96.1, "cluster": 0 },
+    "2025": { "average_velocity": 96.9, "cluster": 0 }
+  },
+  "Angel Perdomo": {
+    "2021": { "average_velocity": 94.3, "cluster": 2 },
+    "2023": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Angel Zerpa": {
+    "2023": { "average_velocity": 94.5, "cluster": 0 },
+    "2024": { "average_velocity": 96.4, "cluster": 0 },
+    "2025": { "average_velocity": 96.3, "cluster": 0 }
+  },
+  "Anthony Banda": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 96.1, "cluster": 2 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Anthony Bass": {
+    "2021": { "average_velocity": 95.3, "cluster": 0 },
+    "2022": { "average_velocity": 95.3, "cluster": 0 }
+  },
+  "Anthony Bender": {
+    "2021": { "average_velocity": 96.9, "cluster": 0 },
+    "2024": { "average_velocity": 95.4, "cluster": 0 }
+  },
+  "Anthony DeSclafani": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "Anthony Gose": {
+    "2022": { "average_velocity": 97.2, "cluster": 2 }
+  },
+  "Anthony Misiewicz": {
+    "2021": { "average_velocity": 91.5, "cluster": 2 },
+    "2022": { "average_velocity": 90.9, "cluster": 1 }
+  },
+  "Anthony Molina": {
+    "2024": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Antonio Senzatela": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.1, "cluster": 1 },
+    "2025": { "average_velocity": 95.1, "cluster": 2 }
+  },
+  "Aníbal Sánchez": {
+    "2022": { "average_velocity": 88.3, "cluster": 2 }
+  },
+  "Archie Bradley": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Aroldis Chapman": {
+    "2021": { "average_velocity": 98.5, "cluster": 2 },
+    "2022": { "average_velocity": 97.3, "cluster": 2 },
+    "2023": { "average_velocity": 99.6, "cluster": 2 },
+    "2024": { "average_velocity": 98.7, "cluster": 2 },
+    "2025": { "average_velocity": 98.9, "cluster": 2 }
+  },
+  "Art Warren": {
+    "2022": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Ashton Goudeau": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 },
+    "2022": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Austin Adams": {
+    "2024": { "average_velocity": 93.4, "cluster": 0 }
+  },
+  "Austin Cox": {
+    "2023": { "average_velocity": 90.1, "cluster": 2 }
+  },
+  "Austin Davis": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Austin Gomber": {
+    "2021": { "average_velocity": 91.6, "cluster": 2 },
+    "2022": { "average_velocity": 91.0, "cluster": 2 },
+    "2023": { "average_velocity": 90.6, "cluster": 2 },
+    "2024": { "average_velocity": 90.4, "cluster": 2 }
+  },
+  "Austin Pruitt": {
+    "2023": { "average_velocity": 91.6, "cluster": 2 }
+  },
+  "Austin Voth": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 92.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.4, "cluster": 2 },
+    "2024": { "average_velocity": 90.9, "cluster": 1 }
+  },
+  "Bailey Falter": {
+    "2021": { "average_velocity": 91.8, "cluster": 2 },
+    "2022": { "average_velocity": 91.2, "cluster": 2 },
+    "2023": { "average_velocity": 90.7, "cluster": 2 },
+    "2024": { "average_velocity": 91.9, "cluster": 2 },
+    "2025": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Bailey Ober": {
+    "2021": { "average_velocity": 92.3, "cluster": 2 },
+    "2022": { "average_velocity": 91.5, "cluster": 2 },
+    "2023": { "average_velocity": 91.4, "cluster": 2 },
+    "2024": { "average_velocity": 91.7, "cluster": 2 },
+    "2025": { "average_velocity": 90.2, "cluster": 2 }
+  },
+  "Beau Brieske": {
+    "2022": { "average_velocity": 94.2, "cluster": 2 },
+    "2023": { "average_velocity": 96.4, "cluster": 2 },
+    "2024": { "average_velocity": 95.8, "cluster": 2 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Ben Bowden": {
+    "2021": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Ben Brown": {
+    "2024": { "average_velocity": 96.4, "cluster": 2 },
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Ben Casparius": {
+    "2025": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Ben Heller": {
+    "2023": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Ben Joyce": {
+    "2024": { "average_velocity": 99.9, "cluster": 2 }
+  },
+  "Ben Lively": {
+    "2023": { "average_velocity": 90.7, "cluster": 2 },
+    "2024": { "average_velocity": 90.2, "cluster": 2 },
+    "2025": { "average_velocity": 89.4, "cluster": 2 }
+  },
+  "Bennett Sousa": {
+    "2025": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Blake Parker": {
+    "2021": { "average_velocity": 90.4, "cluster": 2 }
+  },
+  "Blake Snell": {
+    "2021": { "average_velocity": 95.1, "cluster": 2 },
+    "2022": { "average_velocity": 95.9, "cluster": 2 },
+    "2023": { "average_velocity": 95.5, "cluster": 2 },
+    "2024": { "average_velocity": 95.9, "cluster": 2 },
+    "2025": { "average_velocity": 95.4, "cluster": 2 }
+  },
+  "Blake Taylor": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Blake Treinen": {
+    "2021": { "average_velocity": 95.6, "cluster": 0 },
+    "2024": { "average_velocity": 93.8, "cluster": 0 },
+    "2025": { "average_velocity": 95.0, "cluster": 0 }
+  },
+  "Bobby Miller": {
+    "2023": { "average_velocity": 98.9, "cluster": 2 },
+    "2024": { "average_velocity": 97.5, "cluster": 2 }
+  },
+  "Bowden Francis": {
+    "2023": { "average_velocity": 94.4, "cluster": 2 },
+    "2024": { "average_velocity": 92.7, "cluster": 2 },
+    "2025": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Brad Boxberger": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 },
+    "2022": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Brad Brach": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Brad Hand": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Brad Keller": {
+    "2021": { "average_velocity": 93.9, "cluster": 0 },
+    "2022": { "average_velocity": 94.0, "cluster": 1 },
+    "2023": { "average_velocity": 93.1, "cluster": 1 },
+    "2024": { "average_velocity": 93.7, "cluster": 1 },
+    "2025": { "average_velocity": 97.0, "cluster": 2 }
+  },
+  "Brad Lord": {
+    "2025": { "average_velocity": 94.7, "cluster": 0 }
+  },
+  "Brad Wieck": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Bradley Blalock": {
+    "2024": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Brady Basso": {
+    "2024": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Brady Singer": {
+    "2021": { "average_velocity": 93.7, "cluster": 0 },
+    "2022": { "average_velocity": 93.7, "cluster": 0 },
+    "2023": { "average_velocity": 92.1, "cluster": 0 },
+    "2024": { "average_velocity": 92.1, "cluster": 0 },
+    "2025": { "average_velocity": 91.4, "cluster": 0 }
+  },
+  "Brandon Bielak": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 },
+    "2023": { "average_velocity": 92.1, "cluster": 0 },
+    "2024": { "average_velocity": 92.0, "cluster": 0 }
+  },
+  "Brandon Eisert": {
+    "2025": { "average_velocity": 89.5, "cluster": 2 }
+  },
+  "Brandon Hughes": {
+    "2022": { "average_velocity": 93.2, "cluster": 2 },
+    "2024": { "average_velocity": 92.5, "cluster": 2 }
+  },
+  "Brandon Kintzler": {
+    "2021": { "average_velocity": 92.1, "cluster": 0 }
+  },
+  "Brandon Pfaadt": {
+    "2023": { "average_velocity": 93.5, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 },
+    "2025": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Brandon Walter": {
+    "2023": { "average_velocity": 89.1, "cluster": 1 },
+    "2025": { "average_velocity": 89.9, "cluster": 1 }
+  },
+  "Brandon Williamson": {
+    "2023": { "average_velocity": 91.2, "cluster": 2 }
+  },
+  "Brandon Woodruff": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 },
+    "2022": { "average_velocity": 96.1, "cluster": 2 },
+    "2023": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Brandon Workman": {
+    "2021": { "average_velocity": 90.0, "cluster": 2 }
+  },
+  "Brandon Young": {
+    "2025": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Brant Hurter": {
+    "2024": { "average_velocity": 92.4, "cluster": 0 },
+    "2025": { "average_velocity": 92.2, "cluster": 0 }
+  },
+  "Braxton Ashcraft": {
+    "2025": { "average_velocity": 96.9, "cluster": 2 }
+  },
+  "Braxton Garrett": {
+    "2021": { "average_velocity": 89.9, "cluster": 2 },
+    "2022": { "average_velocity": 91.2, "cluster": 2 },
+    "2023": { "average_velocity": 90.6, "cluster": 0 },
+    "2024": { "average_velocity": 90.2, "cluster": 0 }
+  },
+  "Brayan Bello": {
+    "2022": { "average_velocity": 96.5, "cluster": 0 },
+    "2023": { "average_velocity": 95.1, "cluster": 0 },
+    "2024": { "average_velocity": 95.7, "cluster": 0 },
+    "2025": { "average_velocity": 93.7, "cluster": 0 }
+  },
+  "Brenan Hanifee": {
+    "2024": { "average_velocity": 95.0, "cluster": 0 },
+    "2025": { "average_velocity": 95.4, "cluster": 0 }
+  },
+  "Brendan White": {
+    "2023": { "average_velocity": 94.1, "cluster": 1 }
+  },
+  "Brendon Little": {
+    "2024": { "average_velocity": 94.4, "cluster": 0 },
+    "2025": { "average_velocity": 93.4, "cluster": 0 }
+  },
+  "Brennan Bernardino": {
+    "2023": { "average_velocity": 90.9, "cluster": 0 },
+    "2024": { "average_velocity": 90.5, "cluster": 0 },
+    "2025": { "average_velocity": 89.7, "cluster": 0 }
+  },
+  "Brent Headrick": {
+    "2023": { "average_velocity": 91.7, "cluster": 2 }
+  },
+  "Brent Honeywell": {
+    "2023": { "average_velocity": 94.7, "cluster": 2 },
+    "2024": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Brent Suter": {
+    "2021": { "average_velocity": 87.4, "cluster": 1 },
+    "2022": { "average_velocity": 86.4, "cluster": 1 },
+    "2023": { "average_velocity": 87.1, "cluster": 1 },
+    "2024": { "average_velocity": 86.4, "cluster": 1 },
+    "2025": { "average_velocity": 87.6, "cluster": 1 }
+  },
+  "Brett Anderson": {
+    "2021": { "average_velocity": 88.6, "cluster": 0 }
+  },
+  "Brett Kennedy": {
+    "2023": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Brett Martin": {
+    "2021": { "average_velocity": 93.3, "cluster": 0 },
+    "2022": { "average_velocity": 93.5, "cluster": 0 }
+  },
+  "Brett de Geus": {
+    "2021": { "average_velocity": 92.1, "cluster": 0 }
+  },
+  "Brock Burke": {
+    "2022": { "average_velocity": 95.1, "cluster": 2 },
+    "2023": { "average_velocity": 94.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.6, "cluster": 2 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Brock Stewart": {
+    "2023": { "average_velocity": 96.1, "cluster": 2 },
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Brooks Raley": {
+    "2021": { "average_velocity": 88.9, "cluster": 1 },
+    "2022": { "average_velocity": 89.4, "cluster": 0 },
+    "2023": { "average_velocity": 88.4, "cluster": 0 }
+  },
+  "Bruce Zimmermann": {
+    "2021": { "average_velocity": 91.4, "cluster": 2 },
+    "2022": { "average_velocity": 89.4, "cluster": 2 }
+  },
+  "Brusdar Graterol": {
+    "2021": { "average_velocity": 99.5, "cluster": 0 },
+    "2022": { "average_velocity": 98.2, "cluster": 0 },
+    "2023": { "average_velocity": 97.8, "cluster": 0 }
+  },
+  "Bryan Abreu": {
+    "2021": { "average_velocity": 95.7, "cluster": 2 },
+    "2022": { "average_velocity": 97.4, "cluster": 2 },
+    "2023": { "average_velocity": 97.6, "cluster": 2 },
+    "2024": { "average_velocity": 96.7, "cluster": 2 },
+    "2025": { "average_velocity": 97.2, "cluster": 2 }
+  },
+  "Bryan Baker": {
+    "2022": { "average_velocity": 96.0, "cluster": 2 },
+    "2023": { "average_velocity": 95.7, "cluster": 2 },
+    "2025": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Bryan Garcia": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Bryan Hoeing": {
+    "2023": { "average_velocity": 94.1, "cluster": 0 },
+    "2024": { "average_velocity": 94.0, "cluster": 0 }
+  },
+  "Bryan Hudson": {
+    "2024": { "average_velocity": 89.6, "cluster": 1 },
+    "2025": { "average_velocity": 90.0, "cluster": 2 }
+  },
+  "Bryan King": {
+    "2024": { "average_velocity": 92.0, "cluster": 2 },
+    "2025": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Bryan Sammons": {
+    "2024": { "average_velocity": 89.6, "cluster": 2 }
+  },
+  "Bryan Shaw": {
+    "2021": { "average_velocity": 92.9, "cluster": 1 },
+    "2022": { "average_velocity": 92.5, "cluster": 1 },
+    "2023": { "average_velocity": 93.8, "cluster": 1 }
+  },
+  "Bryan Woo": {
+    "2023": { "average_velocity": 95.1, "cluster": 2 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 },
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Bryce Elder": {
+    "2022": { "average_velocity": 90.6, "cluster": 0 },
+    "2023": { "average_velocity": 89.8, "cluster": 0 },
+    "2024": { "average_velocity": 90.5, "cluster": 0 },
+    "2025": { "average_velocity": 91.8, "cluster": 0 }
+  },
+  "Bryce Jarvis": {
+    "2024": { "average_velocity": 94.3, "cluster": 2 }
+  },
+  "Bryce Miller": {
+    "2023": { "average_velocity": 95.1, "cluster": 2 },
+    "2024": { "average_velocity": 94.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Bryse Wilson": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 },
+    "2022": { "average_velocity": 91.9, "cluster": 0 },
+    "2023": { "average_velocity": 91.6, "cluster": 1 },
+    "2024": { "average_velocity": 91.3, "cluster": 1 },
+    "2025": { "average_velocity": 90.6, "cluster": 1 }
+  },
+  "Buck Farmer": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 },
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.9, "cluster": 2 },
+    "2024": { "average_velocity": 92.6, "cluster": 0 }
+  },
+  "Burch Smith": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2024": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Cade Cavalli": {
+    "2025": { "average_velocity": 96.1, "cluster": 2 }
+  },
+  "Cade Horton": {
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Cade Povich": {
+    "2024": { "average_velocity": 91.7, "cluster": 2 },
+    "2025": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "Cade Smith": {
+    "2024": { "average_velocity": 96.0, "cluster": 2 },
+    "2025": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Caden Dana": {
+    "2025": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Cal Quantrill": {
+    "2021": { "average_velocity": 92.4, "cluster": 2 },
+    "2022": { "average_velocity": 91.3, "cluster": 1 },
+    "2023": { "average_velocity": 91.7, "cluster": 2 },
+    "2024": { "average_velocity": 92.4, "cluster": 2 },
+    "2025": { "average_velocity": 91.7, "cluster": 2 }
+  },
+  "Caleb Baragar": {
+    "2021": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Caleb Boushley": {
+    "2025": { "average_velocity": 91.3, "cluster": 0 }
+  },
+  "Caleb Ferguson": {
+    "2022": { "average_velocity": 95.0, "cluster": 2 },
+    "2023": { "average_velocity": 93.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.2, "cluster": 2 },
+    "2025": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Caleb Kilian": {
+    "2022": { "average_velocity": 92.6, "cluster": 0 }
+  },
+  "Caleb Smith": {
+    "2021": { "average_velocity": 91.4, "cluster": 2 },
+    "2022": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Caleb Thielbar": {
+    "2021": { "average_velocity": 91.3, "cluster": 2 },
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.2, "cluster": 2 },
+    "2024": { "average_velocity": 93.2, "cluster": 2 },
+    "2025": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Calvin Faucher": {
+    "2023": { "average_velocity": 93.0, "cluster": 1 },
+    "2024": { "average_velocity": 93.5, "cluster": 1 },
+    "2025": { "average_velocity": 93.6, "cluster": 1 }
+  },
+  "Cam Bedrosian": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Cam Booser": {
+    "2024": { "average_velocity": 92.0, "cluster": 2 },
+    "2025": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Cam Schlittler": {
+    "2025": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Camilo Doval": {
+    "2021": { "average_velocity": 98.7, "cluster": 2 },
+    "2022": { "average_velocity": 99.0, "cluster": 0 },
+    "2023": { "average_velocity": 98.9, "cluster": 0 },
+    "2024": { "average_velocity": 98.7, "cluster": 2 },
+    "2025": { "average_velocity": 97.7, "cluster": 1 }
+  },
+  "Carl Edwards Jr.": {
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.6, "cluster": 1 }
+  },
+  "Carlos Carrasco": {
+    "2021": { "average_velocity": 93.2, "cluster": 2 },
+    "2022": { "average_velocity": 93.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 2 },
+    "2024": { "average_velocity": 91.4, "cluster": 1 },
+    "2025": { "average_velocity": 91.1, "cluster": 0 }
+  },
+  "Carlos Estévez": {
+    "2021": { "average_velocity": 97.1, "cluster": 2 },
+    "2022": { "average_velocity": 97.3, "cluster": 2 },
+    "2023": { "average_velocity": 97.1, "cluster": 2 },
+    "2024": { "average_velocity": 96.9, "cluster": 2 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Carlos Hernández": {
+    "2021": { "average_velocity": 97.2, "cluster": 2 },
+    "2022": { "average_velocity": 96.6, "cluster": 2 },
+    "2023": { "average_velocity": 99.1, "cluster": 2 },
+    "2024": { "average_velocity": 97.9, "cluster": 2 },
+    "2025": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Carlos Martinez": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "Carlos Rodón": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 },
+    "2022": { "average_velocity": 95.6, "cluster": 2 },
+    "2023": { "average_velocity": 95.3, "cluster": 2 },
+    "2024": { "average_velocity": 95.3, "cluster": 2 },
+    "2025": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Carlos Vargas": {
+    "2025": { "average_velocity": 97.2, "cluster": 0 }
+  },
+  "Carmen Mlodzinski": {
+    "2023": { "average_velocity": 94.9, "cluster": 2 },
+    "2024": { "average_velocity": 94.9, "cluster": 2 },
+    "2025": { "average_velocity": 95.7, "cluster": 0 }
+  },
+  "Carson Fulmer": {
+    "2021": { "average_velocity": 90.7, "cluster": 2 },
+    "2024": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Carson Seymour": {
+    "2025": { "average_velocity": 95.9, "cluster": 0 }
+  },
+  "Carson Spiers": {
+    "2024": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Casey Lawrence": {
+    "2023": { "average_velocity": 89.4, "cluster": 0 }
+  },
+  "Casey Legumina": {
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Casey Mize": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.4, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Casey Sadler": {
+    "2021": { "average_velocity": 90.2, "cluster": 1 }
+  },
+  "Chad Green": {
+    "2021": { "average_velocity": 95.7, "cluster": 2 },
+    "2024": { "average_velocity": 95.4, "cluster": 2 },
+    "2025": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Chad Kuhl": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 },
+    "2022": { "average_velocity": 92.9, "cluster": 0 },
+    "2023": { "average_velocity": 93.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.6, "cluster": 0 }
+  },
+  "Chad Patrick": {
+    "2025": { "average_velocity": 90.8, "cluster": 1 }
+  },
+  "Chad Smith": {
+    "2022": { "average_velocity": 95.6, "cluster": 0 }
+  },
+  "Charlie Barnes": {
+    "2021": { "average_velocity": 89.7, "cluster": 0 }
+  },
+  "Charlie Morton": {
+    "2021": { "average_velocity": 94.3, "cluster": 0 },
+    "2022": { "average_velocity": 93.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 0 },
+    "2024": { "average_velocity": 93.0, "cluster": 0 },
+    "2025": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "Chase Anderson": {
+    "2021": { "average_velocity": 90.2, "cluster": 2 },
+    "2022": { "average_velocity": 91.5, "cluster": 2 },
+    "2023": { "average_velocity": 91.5, "cluster": 1 },
+    "2024": { "average_velocity": 90.4, "cluster": 1 }
+  },
+  "Chase Burns": {
+    "2025": { "average_velocity": 98.7, "cluster": 2 }
+  },
+  "Chase De Jong": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 },
+    "2022": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Chase Dollander": {
+    "2025": { "average_velocity": 97.7, "cluster": 2 }
+  },
+  "Chase Lee": {
+    "2025": { "average_velocity": 89.2, "cluster": 0 }
+  },
+  "Chase Shugart": {
+    "2025": { "average_velocity": 92.7, "cluster": 1 }
+  },
+  "Chase Silseth": {
+    "2023": { "average_velocity": 94.2, "cluster": 2 }
+  },
+  "Chasen Shreve": {
+    "2021": { "average_velocity": 91.6, "cluster": 2 },
+    "2022": { "average_velocity": 90.6, "cluster": 2 },
+    "2023": { "average_velocity": 90.5, "cluster": 2 }
+  },
+  "Chi Chi González": {
+    "2021": { "average_velocity": 91.2, "cluster": 1 }
+  },
+  "Chris Archer": {
+    "2022": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Chris Bassitt": {
+    "2021": { "average_velocity": 91.9, "cluster": 0 },
+    "2022": { "average_velocity": 91.8, "cluster": 0 },
+    "2023": { "average_velocity": 91.0, "cluster": 0 },
+    "2024": { "average_velocity": 91.6, "cluster": 0 },
+    "2025": { "average_velocity": 90.8, "cluster": 0 }
+  },
+  "Chris Devenski": {
+    "2024": { "average_velocity": 90.6, "cluster": 2 }
+  },
+  "Chris Ellis": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Chris Flexen": {
+    "2021": { "average_velocity": 91.2, "cluster": 2 },
+    "2022": { "average_velocity": 89.6, "cluster": 2 },
+    "2023": { "average_velocity": 90.3, "cluster": 1 },
+    "2024": { "average_velocity": 89.7, "cluster": 2 },
+    "2025": { "average_velocity": 90.9, "cluster": 2 }
+  },
+  "Chris Martin": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.8, "cluster": 2 },
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 93.2, "cluster": 1 },
+    "2025": { "average_velocity": 93.1, "cluster": 1 }
+  },
+  "Chris Mazza": {
+    "2021": { "average_velocity": 88.7, "cluster": 1 }
+  },
+  "Chris Murphy": {
+    "2023": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Chris Paddack": {
+    "2021": { "average_velocity": 94.9, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Chris Rodriguez": {
+    "2021": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "Chris Roycroft": {
+    "2024": { "average_velocity": 95.6, "cluster": 0 },
+    "2025": { "average_velocity": 93.9, "cluster": 0 }
+  },
+  "Chris Sale": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 0 },
+    "2024": { "average_velocity": 94.7, "cluster": 0 },
+    "2025": { "average_velocity": 94.8, "cluster": 0 }
+  },
+  "Chris Stratton": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 },
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Christian Scott": {
+    "2024": { "average_velocity": 94.2, "cluster": 2 }
+  },
+  "Cionel Pérez": {
+    "2021": { "average_velocity": 95.9, "cluster": 2 },
+    "2022": { "average_velocity": 96.7, "cluster": 2 },
+    "2023": { "average_velocity": 96.5, "cluster": 0 },
+    "2024": { "average_velocity": 96.3, "cluster": 0 },
+    "2025": { "average_velocity": 95.5, "cluster": 0 }
+  },
+  "Clarke Schmidt": {
+    "2022": { "average_velocity": 94.8, "cluster": 0 },
+    "2023": { "average_velocity": 92.3, "cluster": 1 },
+    "2024": { "average_velocity": 93.1, "cluster": 1 },
+    "2025": { "average_velocity": 92.7, "cluster": 1 }
+  },
+  "Clay Holmes": {
+    "2021": { "average_velocity": 96.1, "cluster": 0 },
+    "2022": { "average_velocity": 97.0, "cluster": 0 },
+    "2023": { "average_velocity": 96.0, "cluster": 0 },
+    "2024": { "average_velocity": 96.6, "cluster": 0 },
+    "2025": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "Clayton Kershaw": {
+    "2021": { "average_velocity": 90.6, "cluster": 2 },
+    "2022": { "average_velocity": 90.7, "cluster": 2 },
+    "2023": { "average_velocity": 90.7, "cluster": 2 },
+    "2025": { "average_velocity": 89.2, "cluster": 2 }
+  },
+  "Codi Heuer": {
+    "2021": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Cody Bolton": {
+    "2023": { "average_velocity": 95.2, "cluster": 2 }
+  },
+  "Cody Bradford": {
+    "2023": { "average_velocity": 89.8, "cluster": 2 },
+    "2024": { "average_velocity": 89.8, "cluster": 2 }
+  },
+  "Cody Morris": {
+    "2022": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Cody Ponce": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "Cody Poteet": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Cole Henry": {
+    "2025": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Cole Irvin": {
+    "2021": { "average_velocity": 90.7, "cluster": 2 },
+    "2022": { "average_velocity": 90.5, "cluster": 2 },
+    "2023": { "average_velocity": 90.5, "cluster": 2 },
+    "2024": { "average_velocity": 90.6, "cluster": 0 }
+  },
+  "Cole Ragans": {
+    "2022": { "average_velocity": 91.1, "cluster": 2 },
+    "2023": { "average_velocity": 95.4, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 },
+    "2025": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Cole Sands": {
+    "2022": { "average_velocity": 90.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.9, "cluster": 2 },
+    "2024": { "average_velocity": 93.4, "cluster": 1 },
+    "2025": { "average_velocity": 92.6, "cluster": 1 }
+  },
+  "Cole Sulser": {
+    "2021": { "average_velocity": 93.2, "cluster": 2 },
+    "2022": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Cole Winn": {
+    "2025": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Colin Holderman": {
+    "2022": { "average_velocity": 95.1, "cluster": 0 },
+    "2023": { "average_velocity": 96.3, "cluster": 0 },
+    "2024": { "average_velocity": 94.7, "cluster": 0 },
+    "2025": { "average_velocity": 95.1, "cluster": 0 }
+  },
+  "Colin Poche": {
+    "2022": { "average_velocity": 93.3, "cluster": 2 },
+    "2023": { "average_velocity": 92.5, "cluster": 2 },
+    "2024": { "average_velocity": 91.2, "cluster": 2 }
+  },
+  "Colin Rea": {
+    "2023": { "average_velocity": 90.7, "cluster": 0 },
+    "2024": { "average_velocity": 91.2, "cluster": 0 },
+    "2025": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Colin Selby": {
+    "2023": { "average_velocity": 96.6, "cluster": 0 }
+  },
+  "Collin McHugh": {
+    "2021": { "average_velocity": 88.3, "cluster": 1 },
+    "2022": { "average_velocity": 89.0, "cluster": 1 },
+    "2023": { "average_velocity": 89.2, "cluster": 1 }
+  },
+  "Collin Snider": {
+    "2022": { "average_velocity": 96.0, "cluster": 0 },
+    "2023": { "average_velocity": 94.6, "cluster": 0 },
+    "2024": { "average_velocity": 93.0, "cluster": 1 },
+    "2025": { "average_velocity": 90.3, "cluster": 1 }
+  },
+  "Colton Gordon": {
+    "2025": { "average_velocity": 91.0, "cluster": 2 }
+  },
+  "Conner Greene": {
+    "2021": { "average_velocity": 95.9, "cluster": 2 }
+  },
+  "Connor Brogdon": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 2 },
+    "2023": { "average_velocity": 91.7, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Connor Gillispie": {
+    "2025": { "average_velocity": 89.1, "cluster": 2 }
+  },
+  "Connor Overton": {
+    "2022": { "average_velocity": 90.9, "cluster": 2 }
+  },
+  "Connor Phillips": {
+    "2023": { "average_velocity": 96.4, "cluster": 2 }
+  },
+  "Connor Seabold": {
+    "2023": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Cooper Criswell": {
+    "2023": { "average_velocity": 86.9, "cluster": 0 },
+    "2024": { "average_velocity": 88.1, "cluster": 0 }
+  },
+  "Corbin Burnes": {
+    "2021": { "average_velocity": 95.5, "cluster": 1 },
+    "2022": { "average_velocity": 95.2, "cluster": 1 },
+    "2023": { "average_velocity": 94.5, "cluster": 1 },
+    "2024": { "average_velocity": 95.5, "cluster": 1 },
+    "2025": { "average_velocity": 94.4, "cluster": 1 }
+  },
+  "Corbin Martin": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Corey Kluber": {
+    "2021": { "average_velocity": 89.1, "cluster": 1 },
+    "2022": { "average_velocity": 87.4, "cluster": 1 },
+    "2023": { "average_velocity": 87.2, "cluster": 1 }
+  },
+  "Corey Knebel": {
+    "2021": { "average_velocity": 96.3, "cluster": 2 },
+    "2022": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Cory Abbott": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 },
+    "2022": { "average_velocity": 91.2, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Craig Kimbrel": {
+    "2021": { "average_velocity": 96.5, "cluster": 2 },
+    "2022": { "average_velocity": 95.8, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Craig Stammen": {
+    "2021": { "average_velocity": 91.3, "cluster": 0 },
+    "2022": { "average_velocity": 90.4, "cluster": 0 }
+  },
+  "Cristian Javier": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2022": { "average_velocity": 93.8, "cluster": 2 },
+    "2023": { "average_velocity": 92.8, "cluster": 2 },
+    "2024": { "average_velocity": 91.7, "cluster": 2 }
+  },
+  "Cristopher Sánchez": {
+    "2022": { "average_velocity": 93.1, "cluster": 0 },
+    "2023": { "average_velocity": 92.1, "cluster": 0 },
+    "2024": { "average_velocity": 94.5, "cluster": 0 },
+    "2025": { "average_velocity": 95.4, "cluster": 0 }
+  },
+  "DJ Herz": {
+    "2024": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "DL Hall": {
+    "2023": { "average_velocity": 95.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Dakota Hudson": {
+    "2022": { "average_velocity": 91.9, "cluster": 0 },
+    "2023": { "average_velocity": 91.3, "cluster": 0 },
+    "2024": { "average_velocity": 90.2, "cluster": 0 }
+  },
+  "Dallas Keuchel": {
+    "2021": { "average_velocity": 86.8, "cluster": 0 },
+    "2022": { "average_velocity": 86.6, "cluster": 0 },
+    "2023": { "average_velocity": 86.3, "cluster": 0 },
+    "2024": { "average_velocity": 87.4, "cluster": 0 }
+  },
+  "Dan Winkler": {
+    "2021": { "average_velocity": 91.9, "cluster": 1 }
+  },
+  "Dane Dunning": {
+    "2021": { "average_velocity": 89.8, "cluster": 0 },
+    "2022": { "average_velocity": 88.9, "cluster": 0 },
+    "2023": { "average_velocity": 90.3, "cluster": 0 },
+    "2024": { "average_velocity": 89.1, "cluster": 0 },
+    "2025": { "average_velocity": 89.3, "cluster": 0 }
+  },
+  "Daniel Bard": {
+    "2021": { "average_velocity": 97.4, "cluster": 0 },
+    "2022": { "average_velocity": 97.9, "cluster": 0 },
+    "2023": { "average_velocity": 94.8, "cluster": 0 }
+  },
+  "Daniel Castano": {
+    "2022": { "average_velocity": 87.8, "cluster": 1 }
+  },
+  "Daniel Duarte": {
+    "2023": { "average_velocity": 94.0, "cluster": 0 }
+  },
+  "Daniel Hudson": {
+    "2021": { "average_velocity": 97.0, "cluster": 2 },
+    "2022": { "average_velocity": 96.9, "cluster": 2 },
+    "2024": { "average_velocity": 95.2, "cluster": 2 }
+  },
+  "Daniel Lynch IV": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2022": { "average_velocity": 94.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.6, "cluster": 2 },
+    "2024": { "average_velocity": 92.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Daniel Norris": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 },
+    "2022": { "average_velocity": 91.2, "cluster": 2 }
+  },
+  "Daniel Palencia": {
+    "2023": { "average_velocity": 98.4, "cluster": 2 },
+    "2025": { "average_velocity": 99.5, "cluster": 2 }
+  },
+  "Daniel Ponce de Leon": {
+    "2021": { "average_velocity": 92.5, "cluster": 2 }
+  },
+  "Danny Coulombe": {
+    "2023": { "average_velocity": 88.0, "cluster": 1 },
+    "2024": { "average_velocity": 88.1, "cluster": 1 },
+    "2025": { "average_velocity": 87.9, "cluster": 1 }
+  },
+  "Danny Duffy": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Danny Young": {
+    "2024": { "average_velocity": 91.4, "cluster": 0 }
+  },
+  "Dany Jiménez": {
+    "2022": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Darius Vines": {
+    "2023": { "average_velocity": 87.5, "cluster": 1 }
+  },
+  "Darren McCaughan": {
+    "2024": { "average_velocity": 89.2, "cluster": 0 }
+  },
+  "Darwinzon Hernández": {
+    "2021": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Daulton Jefferies": {
+    "2022": { "average_velocity": 91.6, "cluster": 0 }
+  },
+  "Dauri Moreta": {
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.1, "cluster": 2 }
+  },
+  "David Bednar": {
+    "2021": { "average_velocity": 96.7, "cluster": 2 },
+    "2022": { "average_velocity": 96.4, "cluster": 2 },
+    "2023": { "average_velocity": 96.6, "cluster": 2 },
+    "2024": { "average_velocity": 97.2, "cluster": 2 },
+    "2025": { "average_velocity": 97.1, "cluster": 2 }
+  },
+  "David Festa": {
+    "2024": { "average_velocity": 94.7, "cluster": 2 },
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "David Hale": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "David Hess": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "David Peterson": {
+    "2021": { "average_velocity": 92.5, "cluster": 0 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.1, "cluster": 2 },
+    "2024": { "average_velocity": 92.4, "cluster": 0 },
+    "2025": { "average_velocity": 91.7, "cluster": 0 }
+  },
+  "David Phelps": {
+    "2022": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "David Price": {
+    "2021": { "average_velocity": 91.8, "cluster": 0 },
+    "2022": { "average_velocity": 91.0, "cluster": 0 }
+  },
+  "David Robertson": {
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Davis Daniel": {
+    "2024": { "average_velocity": 91.5, "cluster": 2 }
+  },
+  "Davis Martin": {
+    "2022": { "average_velocity": 94.0, "cluster": 2 },
+    "2024": { "average_velocity": 93.6, "cluster": 2 },
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Daysbel Hernández": {
+    "2025": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Dean Kremer": {
+    "2021": { "average_velocity": 91.1, "cluster": 2 },
+    "2022": { "average_velocity": 91.1, "cluster": 2 },
+    "2023": { "average_velocity": 92.2, "cluster": 2 },
+    "2024": { "average_velocity": 91.0, "cluster": 2 },
+    "2025": { "average_velocity": 91.3, "cluster": 2 }
+  },
+  "Declan Cronin": {
+    "2024": { "average_velocity": 93.5, "cluster": 0 }
+  },
+  "Dedniel Núñez": {
+    "2024": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Demarcus Evans": {
+    "2021": { "average_velocity": 89.4, "cluster": 2 }
+  },
+  "Dennis Santana": {
+    "2021": { "average_velocity": 95.3, "cluster": 0 },
+    "2022": { "average_velocity": 96.8, "cluster": 0 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 },
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Denyi Reyes": {
+    "2023": { "average_velocity": 89.9, "cluster": 2 }
+  },
+  "Deolis Guerra": {
+    "2021": { "average_velocity": 90.7, "cluster": 2 }
+  },
+  "Derek Holland": {
+    "2021": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "Derek Law": {
+    "2022": { "average_velocity": 92.0, "cluster": 1 },
+    "2023": { "average_velocity": 93.6, "cluster": 1 },
+    "2024": { "average_velocity": 92.8, "cluster": 1 }
+  },
+  "Devin Smeltzer": {
+    "2022": { "average_velocity": 88.5, "cluster": 2 }
+  },
+  "Devin Williams": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 },
+    "2022": { "average_velocity": 93.9, "cluster": 2 },
+    "2023": { "average_velocity": 94.0, "cluster": 2 },
+    "2024": { "average_velocity": 94.7, "cluster": 2 },
+    "2025": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Diego Castillo": {
+    "2021": { "average_velocity": 94.6, "cluster": 0 },
+    "2022": { "average_velocity": 95.2, "cluster": 0 }
+  },
+  "Dietrich Enns": {
+    "2021": { "average_velocity": 90.9, "cluster": 2 },
+    "2025": { "average_velocity": 91.6, "cluster": 2 }
+  },
+  "Dillon Maples": {
+    "2021": { "average_velocity": 95.2, "cluster": 0 }
+  },
+  "Dillon Peters": {
+    "2021": { "average_velocity": 90.8, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Dillon Tate": {
+    "2021": { "average_velocity": 92.8, "cluster": 0 },
+    "2022": { "average_velocity": 94.0, "cluster": 0 },
+    "2024": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Dinelson Lamet": {
+    "2021": { "average_velocity": 95.5, "cluster": 2 },
+    "2022": { "average_velocity": 95.3, "cluster": 2 },
+    "2023": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Domingo Acevedo": {
+    "2022": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Domingo Germán": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Domingo Tapia": {
+    "2021": { "average_velocity": 97.2, "cluster": 0 },
+    "2023": { "average_velocity": 97.1, "cluster": 2 }
+  },
+  "Dominic Leone": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Drew Carlton": {
+    "2023": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Drew Hutchison": {
+    "2022": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Drew Pomeranz": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2025": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Drew Rasmussen": {
+    "2021": { "average_velocity": 96.3, "cluster": 2 },
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 92.1, "cluster": 1 },
+    "2024": { "average_velocity": 94.6, "cluster": 2 },
+    "2025": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Drew Rom": {
+    "2023": { "average_velocity": 89.5, "cluster": 2 }
+  },
+  "Drew Smith": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Drew Smyly": {
+    "2021": { "average_velocity": 91.1, "cluster": 2 },
+    "2022": { "average_velocity": 91.1, "cluster": 2 },
+    "2023": { "average_velocity": 91.2, "cluster": 2 },
+    "2024": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Drew Steckenrider": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Drew Thorpe": {
+    "2024": { "average_velocity": 89.5, "cluster": 2 }
+  },
+  "Drew VerHagen": {
+    "2023": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Drey Jameson": {
+    "2022": { "average_velocity": 95.2, "cluster": 2 },
+    "2023": { "average_velocity": 95.9, "cluster": 0 }
+  },
+  "Duane Underwood Jr.": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.1, "cluster": 1 }
+  },
+  "Dustin May": {
+    "2021": { "average_velocity": 96.8, "cluster": 0 },
+    "2022": { "average_velocity": 96.2, "cluster": 0 },
+    "2023": { "average_velocity": 96.2, "cluster": 0 },
+    "2025": { "average_velocity": 94.5, "cluster": 0 }
+  },
+  "Dylan Bundy": {
+    "2021": { "average_velocity": 90.7, "cluster": 2 },
+    "2022": { "average_velocity": 89.1, "cluster": 2 }
+  },
+  "Dylan Cease": {
+    "2021": { "average_velocity": 96.6, "cluster": 2 },
+    "2022": { "average_velocity": 96.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.6, "cluster": 2 },
+    "2024": { "average_velocity": 96.8, "cluster": 2 },
+    "2025": { "average_velocity": 97.0, "cluster": 2 }
+  },
+  "Dylan Coleman": {
+    "2022": { "average_velocity": 97.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 1 }
+  },
+  "Dylan Covey": {
+    "2023": { "average_velocity": 94.1, "cluster": 0 }
+  },
+  "Dylan Dodd": {
+    "2023": { "average_velocity": 91.5, "cluster": 2 },
+    "2025": { "average_velocity": 89.7, "cluster": 1 }
+  },
+  "Dylan Floro": {
+    "2021": { "average_velocity": 93.5, "cluster": 0 },
+    "2022": { "average_velocity": 92.5, "cluster": 0 },
+    "2023": { "average_velocity": 92.5, "cluster": 0 },
+    "2024": { "average_velocity": 89.9, "cluster": 0 }
+  },
+  "Dylan Lee": {
+    "2022": { "average_velocity": 91.9, "cluster": 2 },
+    "2024": { "average_velocity": 92.5, "cluster": 2 },
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Easton Lucas": {
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Edgar Santana": {
+    "2021": { "average_velocity": 94.2, "cluster": 0 }
+  },
+  "Eduard Bazardo": {
+    "2024": { "average_velocity": 94.3, "cluster": 2 },
+    "2025": { "average_velocity": 95.2, "cluster": 0 }
+  },
+  "Eduardo Rodriguez": {
+    "2021": { "average_velocity": 91.5, "cluster": 2 },
+    "2022": { "average_velocity": 90.8, "cluster": 2 },
+    "2023": { "average_velocity": 91.3, "cluster": 2 },
+    "2024": { "average_velocity": 91.1, "cluster": 2 },
+    "2025": { "average_velocity": 91.3, "cluster": 2 }
+  },
+  "Eduardo Salazar": {
+    "2024": { "average_velocity": 94.5, "cluster": 0 },
+    "2025": { "average_velocity": 94.6, "cluster": 0 }
+  },
+  "Edward Cabrera": {
+    "2022": { "average_velocity": 95.9, "cluster": 2 },
+    "2023": { "average_velocity": 96.2, "cluster": 2 },
+    "2024": { "average_velocity": 96.3, "cluster": 2 },
+    "2025": { "average_velocity": 96.7, "cluster": 0 }
+  },
+  "Edwin Díaz": {
+    "2021": { "average_velocity": 98.8, "cluster": 2 },
+    "2022": { "average_velocity": 99.1, "cluster": 2 },
+    "2024": { "average_velocity": 97.5, "cluster": 2 },
+    "2025": { "average_velocity": 97.0, "cluster": 2 }
+  },
+  "Edwin Uceta": {
+    "2024": { "average_velocity": 92.5, "cluster": 2 },
+    "2025": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Eli Morgan": {
+    "2021": { "average_velocity": 90.4, "cluster": 2 },
+    "2022": { "average_velocity": 92.1, "cluster": 2 },
+    "2023": { "average_velocity": 92.5, "cluster": 2 },
+    "2024": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Elieser Hernández": {
+    "2021": { "average_velocity": 90.9, "cluster": 2 },
+    "2022": { "average_velocity": 91.6, "cluster": 2 }
+  },
+  "Elvin Rodríguez": {
+    "2022": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Elvis Alvarado": {
+    "2025": { "average_velocity": 98.4, "cluster": 2 }
+  },
+  "Elvis Peguero": {
+    "2023": { "average_velocity": 96.0, "cluster": 0 },
+    "2024": { "average_velocity": 96.8, "cluster": 0 }
+  },
+  "Emerson Hancock": {
+    "2024": { "average_velocity": 92.7, "cluster": 0 },
+    "2025": { "average_velocity": 94.8, "cluster": 0 }
+  },
+  "Emilio Pagán": {
+    "2021": { "average_velocity": 91.7, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 93.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.0, "cluster": 2 },
+    "2025": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Emmanuel Clase": {
+    "2021": { "average_velocity": 100.2, "cluster": 1 },
+    "2022": { "average_velocity": 99.5, "cluster": 1 },
+    "2023": { "average_velocity": 99.1, "cluster": 1 },
+    "2024": { "average_velocity": 99.5, "cluster": 1 },
+    "2025": { "average_velocity": 98.8, "cluster": 1 }
+  },
+  "Emmet Sheehan": {
+    "2023": { "average_velocity": 95.4, "cluster": 2 },
+    "2025": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Enyel De Los Santos": {
+    "2021": { "average_velocity": 94.9, "cluster": 2 },
+    "2022": { "average_velocity": 95.2, "cluster": 2 },
+    "2023": { "average_velocity": 95.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Erasmo Ramírez": {
+    "2021": { "average_velocity": 90.7, "cluster": 1 },
+    "2022": { "average_velocity": 91.0, "cluster": 1 },
+    "2023": { "average_velocity": 89.9, "cluster": 1 },
+    "2024": { "average_velocity": 90.1, "cluster": 0 }
+  },
+  "Eric Lauer": {
+    "2021": { "average_velocity": 91.9, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 2 },
+    "2023": { "average_velocity": 89.0, "cluster": 2 },
+    "2025": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Eric Yardley": {
+    "2021": { "average_velocity": 87.0, "cluster": 0 }
+  },
+  "Erich Uelmen": {
+    "2022": { "average_velocity": 93.4, "cluster": 0 }
+  },
+  "Erick Fedde": {
+    "2021": { "average_velocity": 92.3, "cluster": 0 },
+    "2022": { "average_velocity": 91.1, "cluster": 1 },
+    "2024": { "average_velocity": 91.4, "cluster": 1 },
+    "2025": { "average_velocity": 91.9, "cluster": 0 }
+  },
+  "Erik Miller": {
+    "2024": { "average_velocity": 96.9, "cluster": 2 }
+  },
+  "Erik Sabrowski": {
+    "2025": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Erik Swanson": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 },
+    "2023": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Ervin Santana": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Eury Pérez": {
+    "2023": { "average_velocity": 97.5, "cluster": 2 },
+    "2025": { "average_velocity": 97.6, "cluster": 2 }
+  },
+  "Evan Phillips": {
+    "2022": { "average_velocity": 94.7, "cluster": 1 },
+    "2023": { "average_velocity": 94.8, "cluster": 1 },
+    "2024": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Fernando Cruz": {
+    "2023": { "average_velocity": 91.7, "cluster": 2 },
+    "2024": { "average_velocity": 92.0, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Framber Valdez": {
+    "2021": { "average_velocity": 92.7, "cluster": 0 },
+    "2022": { "average_velocity": 94.1, "cluster": 0 },
+    "2023": { "average_velocity": 94.8, "cluster": 0 },
+    "2024": { "average_velocity": 94.1, "cluster": 0 },
+    "2025": { "average_velocity": 94.2, "cluster": 0 }
+  },
+  "Frankie Montas": {
+    "2021": { "average_velocity": 95.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.0, "cluster": 2 },
+    "2024": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Fraser Ellard": {
+    "2024": { "average_velocity": 94.5, "cluster": 2 },
+    "2025": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Freddy Peralta": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 94.4, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Félix Bautista": {
+    "2022": { "average_velocity": 99.1, "cluster": 2 },
+    "2023": { "average_velocity": 99.5, "cluster": 2 },
+    "2025": { "average_velocity": 96.9, "cluster": 2 }
+  },
+  "Gabe Speier": {
+    "2023": { "average_velocity": 94.6, "cluster": 0 },
+    "2024": { "average_velocity": 92.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Garrett Cleavinger": {
+    "2024": { "average_velocity": 94.0, "cluster": 2 },
+    "2025": { "average_velocity": 96.1, "cluster": 0 }
+  },
+  "Garrett Crochet": {
+    "2021": { "average_velocity": 96.7, "cluster": 2 },
+    "2024": { "average_velocity": 95.3, "cluster": 2 },
+    "2025": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Garrett Hill": {
+    "2022": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Garrett Richards": {
+    "2021": { "average_velocity": 94.4, "cluster": 1 }
+  },
+  "Garrett Whitlock": {
+    "2021": { "average_velocity": 95.8, "cluster": 0 },
+    "2022": { "average_velocity": 95.3, "cluster": 0 },
+    "2023": { "average_velocity": 94.0, "cluster": 0 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Gavin Hollowell": {
+    "2023": { "average_velocity": 93.3, "cluster": 0 }
+  },
+  "Gavin Stone": {
+    "2023": { "average_velocity": 93.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Gavin Williams": {
+    "2023": { "average_velocity": 95.7, "cluster": 2 },
+    "2024": { "average_velocity": 95.7, "cluster": 2 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "George Kirby": {
+    "2022": { "average_velocity": 94.2, "cluster": 2 },
+    "2023": { "average_velocity": 96.0, "cluster": 2 },
+    "2024": { "average_velocity": 96.0, "cluster": 2 },
+    "2025": { "average_velocity": 96.4, "cluster": 0 }
+  },
+  "George Soriano": {
+    "2023": { "average_velocity": 94.6, "cluster": 2 },
+    "2024": { "average_velocity": 94.1, "cluster": 2 },
+    "2025": { "average_velocity": 95.6, "cluster": 0 }
+  },
+  "Germán Márquez": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.3, "cluster": 2 },
+    "2025": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Gerrit Cole": {
+    "2021": { "average_velocity": 97.7, "cluster": 2 },
+    "2022": { "average_velocity": 97.0, "cluster": 2 },
+    "2023": { "average_velocity": 96.2, "cluster": 2 },
+    "2024": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Gerson Garabito": {
+    "2024": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Giovanny Gallegos": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 },
+    "2022": { "average_velocity": 94.2, "cluster": 2 },
+    "2023": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Glenn Otto Jr.": {
+    "2021": { "average_velocity": 92.3, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 0 }
+  },
+  "Gordon Graceffo": {
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Graham Ashcraft": {
+    "2022": { "average_velocity": 97.2, "cluster": 1 },
+    "2023": { "average_velocity": 95.9, "cluster": 1 },
+    "2024": { "average_velocity": 95.4, "cluster": 1 },
+    "2025": { "average_velocity": 97.0, "cluster": 1 }
+  },
+  "Grant Anderson": {
+    "2023": { "average_velocity": 92.9, "cluster": 0 },
+    "2024": { "average_velocity": 91.7, "cluster": 0 },
+    "2025": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "Grant Hartwig": {
+    "2023": { "average_velocity": 94.3, "cluster": 0 }
+  },
+  "Grant Holmes": {
+    "2024": { "average_velocity": 94.2, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Grant Taylor": {
+    "2025": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Grayson Rodriguez": {
+    "2023": { "average_velocity": 96.8, "cluster": 2 },
+    "2024": { "average_velocity": 96.1, "cluster": 2 }
+  },
+  "Greg Holland": {
+    "2021": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Greg Weissert": {
+    "2023": { "average_velocity": 93.9, "cluster": 0 },
+    "2024": { "average_velocity": 93.8, "cluster": 0 },
+    "2025": { "average_velocity": 94.0, "cluster": 0 }
+  },
+  "Gregory Santos": {
+    "2023": { "average_velocity": 98.8, "cluster": 0 }
+  },
+  "Gregory Soto": {
+    "2021": { "average_velocity": 98.2, "cluster": 0 },
+    "2022": { "average_velocity": 98.3, "cluster": 0 },
+    "2023": { "average_velocity": 98.3, "cluster": 0 },
+    "2024": { "average_velocity": 97.4, "cluster": 0 },
+    "2025": { "average_velocity": 96.9, "cluster": 0 }
+  },
+  "Griffin Canning": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 },
+    "2023": { "average_velocity": 94.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.4, "cluster": 2 },
+    "2025": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Griffin Jax": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 },
+    "2022": { "average_velocity": 95.4, "cluster": 2 },
+    "2023": { "average_velocity": 96.2, "cluster": 2 },
+    "2024": { "average_velocity": 97.0, "cluster": 2 },
+    "2025": { "average_velocity": 96.4, "cluster": 2 }
+  },
+  "Gunnar Hoglund": {
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Gus Varland": {
+    "2023": { "average_velocity": 95.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Génesis Cabrera": {
+    "2021": { "average_velocity": 97.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 2 },
+    "2024": { "average_velocity": 92.6, "cluster": 1 },
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Hans Crouse": {
+    "2024": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Hansel Robles": {
+    "2021": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Hayden Birdsong": {
+    "2024": { "average_velocity": 95.8, "cluster": 2 },
+    "2025": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Hayden Wesneski": {
+    "2022": { "average_velocity": 91.8, "cluster": 0 },
+    "2023": { "average_velocity": 92.8, "cluster": 0 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Heath Hembree": {
+    "2021": { "average_velocity": 95.3, "cluster": 2 },
+    "2022": { "average_velocity": 94.2, "cluster": 2 }
+  },
+  "Hirokazu Sawamura": {
+    "2021": { "average_velocity": 96.1, "cluster": 2 },
+    "2022": { "average_velocity": 95.9, "cluster": 2 }
+  },
+  "Hoby Milner": {
+    "2021": { "average_velocity": 89.1, "cluster": 0 },
+    "2022": { "average_velocity": 88.9, "cluster": 0 },
+    "2023": { "average_velocity": 88.5, "cluster": 0 },
+    "2024": { "average_velocity": 88.6, "cluster": 0 },
+    "2025": { "average_velocity": 87.7, "cluster": 0 }
+  },
+  "Hogan Harris": {
+    "2023": { "average_velocity": 92.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.9, "cluster": 2 },
+    "2025": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Huascar Brazobán": {
+    "2022": { "average_velocity": 91.7, "cluster": 1 },
+    "2023": { "average_velocity": 92.2, "cluster": 1 },
+    "2024": { "average_velocity": 93.9, "cluster": 0 },
+    "2025": { "average_velocity": 95.4, "cluster": 0 }
+  },
+  "Huascar Ynoa": {
+    "2021": { "average_velocity": 96.5, "cluster": 2 }
+  },
+  "Humberto Castellanos": {
+    "2021": { "average_velocity": 90.0, "cluster": 0 },
+    "2022": { "average_velocity": 88.7, "cluster": 0 }
+  },
+  "Humberto Mejía": {
+    "2021": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Hunter Brown": {
+    "2022": { "average_velocity": 95.8, "cluster": 2 },
+    "2023": { "average_velocity": 94.4, "cluster": 2 },
+    "2024": { "average_velocity": 95.1, "cluster": 2 },
+    "2025": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Hunter Dobbins": {
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Hunter Gaddis": {
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Hunter Greene": {
+    "2022": { "average_velocity": 98.8, "cluster": 2 },
+    "2023": { "average_velocity": 98.3, "cluster": 2 },
+    "2024": { "average_velocity": 97.6, "cluster": 2 },
+    "2025": { "average_velocity": 99.5, "cluster": 2 }
+  },
+  "Hunter Harvey": {
+    "2022": { "average_velocity": 98.3, "cluster": 2 },
+    "2023": { "average_velocity": 98.3, "cluster": 2 },
+    "2024": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Hunter Stratton": {
+    "2024": { "average_velocity": 93.8, "cluster": 1 }
+  },
+  "Hunter Strickland": {
+    "2021": { "average_velocity": 94.8, "cluster": 2 },
+    "2022": { "average_velocity": 94.9, "cluster": 2 },
+    "2024": { "average_velocity": 89.6, "cluster": 1 }
+  },
+  "Hyeon-Jong Yang": {
+    "2021": { "average_velocity": 89.9, "cluster": 2 }
+  },
+  "Hyun Jin Ryu": {
+    "2021": { "average_velocity": 88.3, "cluster": 1 },
+    "2022": { "average_velocity": 88.5, "cluster": 2 },
+    "2023": { "average_velocity": 87.4, "cluster": 0 }
+  },
+  "Héctor Neris": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Héctor Santiago": {
+    "2021": { "average_velocity": 90.9, "cluster": 2 }
+  },
+  "Ian Anderson": {
+    "2021": { "average_velocity": 94.5, "cluster": 2 },
+    "2022": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Ian Gibaut": {
+    "2022": { "average_velocity": 94.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Ian Hamilton": {
+    "2023": { "average_velocity": 95.9, "cluster": 0 },
+    "2024": { "average_velocity": 96.1, "cluster": 0 },
+    "2025": { "average_velocity": 94.7, "cluster": 0 }
+  },
+  "Ian Kennedy": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 },
+    "2022": { "average_velocity": 93.2, "cluster": 2 },
+    "2023": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Ian Seymour": {
+    "2025": { "average_velocity": 90.1, "cluster": 2 }
+  },
+  "Isaac Mattson": {
+    "2025": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Isaiah Campbell": {
+    "2023": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "J.A. Happ": {
+    "2021": { "average_velocity": 90.5, "cluster": 2 }
+  },
+  "J.B. Wendelken": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 },
+    "2022": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "J.C. Mejía": {
+    "2021": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "J.P. Feyereisen": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "J.P. France": {
+    "2023": { "average_velocity": 91.1, "cluster": 1 },
+    "2024": { "average_velocity": 89.8, "cluster": 2 }
+  },
+  "J.T. Ginn": {
+    "2024": { "average_velocity": 92.9, "cluster": 0 },
+    "2025": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "JD Hammer": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "JP Sears": {
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 91.5, "cluster": 2 },
+    "2025": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "JT Brubaker": {
+    "2021": { "average_velocity": 93.1, "cluster": 0 },
+    "2022": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "JT Chargois": {
+    "2021": { "average_velocity": 96.3, "cluster": 0 },
+    "2023": { "average_velocity": 96.2, "cluster": 0 },
+    "2024": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Jack Dreyer": {
+    "2025": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Jack Flaherty": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 },
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 1 },
+    "2024": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Jack Kochanowicz": {
+    "2024": { "average_velocity": 95.8, "cluster": 0 },
+    "2025": { "average_velocity": 95.5, "cluster": 0 }
+  },
+  "Jack Leiter": {
+    "2024": { "average_velocity": 96.2, "cluster": 2 },
+    "2025": { "average_velocity": 97.0, "cluster": 2 }
+  },
+  "Jackson Jobe": {
+    "2025": { "average_velocity": 96.1, "cluster": 2 }
+  },
+  "Jackson Kowar": {
+    "2021": { "average_velocity": 95.6, "cluster": 2 },
+    "2023": { "average_velocity": 96.9, "cluster": 2 }
+  },
+  "Jackson Rutledge": {
+    "2023": { "average_velocity": 95.6, "cluster": 2 },
+    "2025": { "average_velocity": 94.0, "cluster": 0 }
+  },
+  "Jackson Stephens": {
+    "2022": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Jackson Tetreault": {
+    "2022": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Jacob Barnes": {
+    "2021": { "average_velocity": 92.2, "cluster": 2 },
+    "2022": { "average_velocity": 92.3, "cluster": 2 },
+    "2023": { "average_velocity": 92.0, "cluster": 1 },
+    "2024": { "average_velocity": 92.5, "cluster": 1 }
+  },
+  "Jacob Latz": {
+    "2024": { "average_velocity": 94.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Jacob Lopez": {
+    "2025": { "average_velocity": 89.8, "cluster": 0 }
+  },
+  "Jacob Misiorowski": {
+    "2025": { "average_velocity": 99.5, "cluster": 2 }
+  },
+  "Jacob Webb": {
+    "2021": { "average_velocity": 94.0, "cluster": 2 },
+    "2023": { "average_velocity": 94.8, "cluster": 2 },
+    "2024": { "average_velocity": 93.5, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Jacob deGrom": {
+    "2021": { "average_velocity": 99.2, "cluster": 2 },
+    "2022": { "average_velocity": 98.9, "cluster": 2 },
+    "2023": { "average_velocity": 98.7, "cluster": 2 },
+    "2025": { "average_velocity": 97.4, "cluster": 2 }
+  },
+  "Jaime Barria": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 },
+    "2022": { "average_velocity": 91.9, "cluster": 2 },
+    "2023": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Jake Arrieta": {
+    "2021": { "average_velocity": 91.4, "cluster": 0 }
+  },
+  "Jake Bird": {
+    "2022": { "average_velocity": 93.8, "cluster": 0 },
+    "2023": { "average_velocity": 93.5, "cluster": 0 },
+    "2024": { "average_velocity": 94.9, "cluster": 0 },
+    "2025": { "average_velocity": 94.2, "cluster": 0 }
+  },
+  "Jake Brentz": {
+    "2021": { "average_velocity": 96.9, "cluster": 2 }
+  },
+  "Jake Cousins": {
+    "2021": { "average_velocity": 95.5, "cluster": 0 },
+    "2024": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Jake Diekman": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 },
+    "2022": { "average_velocity": 95.4, "cluster": 0 },
+    "2023": { "average_velocity": 95.1, "cluster": 0 },
+    "2024": { "average_velocity": 94.5, "cluster": 0 }
+  },
+  "Jake Faria": {
+    "2021": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Jake Irvin": {
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Jake Lemoine": {
+    "2022": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "Jake McGee": {
+    "2021": { "average_velocity": 94.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Jake Odorizzi": {
+    "2021": { "average_velocity": 91.2, "cluster": 2 },
+    "2022": { "average_velocity": 90.7, "cluster": 2 }
+  },
+  "Jake Woodford": {
+    "2021": { "average_velocity": 91.7, "cluster": 0 },
+    "2022": { "average_velocity": 92.1, "cluster": 0 },
+    "2023": { "average_velocity": 91.8, "cluster": 0 },
+    "2024": { "average_velocity": 90.6, "cluster": 0 }
+  },
+  "Jakob Junis": {
+    "2021": { "average_velocity": 90.0, "cluster": 1 },
+    "2022": { "average_velocity": 91.7, "cluster": 0 },
+    "2023": { "average_velocity": 93.6, "cluster": 0 },
+    "2024": { "average_velocity": 92.0, "cluster": 0 },
+    "2025": { "average_velocity": 91.0, "cluster": 0 }
+  },
+  "Jalen Beeks": {
+    "2022": { "average_velocity": 94.7, "cluster": 2 },
+    "2023": { "average_velocity": 92.6, "cluster": 2 },
+    "2024": { "average_velocity": 92.2, "cluster": 2 },
+    "2025": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "James Kaprielian": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "James Karinchak": {
+    "2021": { "average_velocity": 95.9, "cluster": 2 },
+    "2022": { "average_velocity": 95.3, "cluster": 2 },
+    "2023": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "James McArthur": {
+    "2024": { "average_velocity": 95.0, "cluster": 0 }
+  },
+  "James Paxton": {
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Jameson Taillon": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 93.3, "cluster": 2 },
+    "2023": { "average_velocity": 92.0, "cluster": 2 },
+    "2024": { "average_velocity": 90.1, "cluster": 2 },
+    "2025": { "average_velocity": 90.8, "cluster": 2 }
+  },
+  "Jandel Gustave": {
+    "2021": { "average_velocity": 96.7, "cluster": 0 }
+  },
+  "Janson Junk": {
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Jared Jones": {
+    "2024": { "average_velocity": 97.3, "cluster": 2 }
+  },
+  "Jared Koenig": {
+    "2022": { "average_velocity": 89.3, "cluster": 0 },
+    "2024": { "average_velocity": 93.6, "cluster": 0 },
+    "2025": { "average_velocity": 94.5, "cluster": 0 }
+  },
+  "Jared Shuster": {
+    "2023": { "average_velocity": 91.4, "cluster": 2 },
+    "2024": { "average_velocity": 92.5, "cluster": 2 }
+  },
+  "Jarlín García": {
+    "2021": { "average_velocity": 93.1, "cluster": 0 },
+    "2022": { "average_velocity": 93.7, "cluster": 0 }
+  },
+  "Jason Adam": {
+    "2022": { "average_velocity": 94.7, "cluster": 2 },
+    "2023": { "average_velocity": 94.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.2, "cluster": 2 }
+  },
+  "Jason Alexander": {
+    "2022": { "average_velocity": 92.4, "cluster": 0 },
+    "2025": { "average_velocity": 90.9, "cluster": 0 }
+  },
+  "Jason Foley": {
+    "2022": { "average_velocity": 96.2, "cluster": 0 },
+    "2023": { "average_velocity": 97.2, "cluster": 0 },
+    "2024": { "average_velocity": 97.0, "cluster": 0 }
+  },
+  "Javier Assad": {
+    "2022": { "average_velocity": 91.1, "cluster": 0 },
+    "2023": { "average_velocity": 91.5, "cluster": 0 },
+    "2024": { "average_velocity": 90.4, "cluster": 0 },
+    "2025": { "average_velocity": 91.2, "cluster": 0 }
+  },
+  "Javy Guerra": {
+    "2022": { "average_velocity": 97.3, "cluster": 0 },
+    "2023": { "average_velocity": 97.6, "cluster": 2 }
+  },
+  "Jeff Brigham": {
+    "2023": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Jeff Hoffman": {
+    "2021": { "average_velocity": 94.3, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 97.2, "cluster": 2 },
+    "2024": { "average_velocity": 96.6, "cluster": 2 },
+    "2025": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Jeffrey Springs": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 91.4, "cluster": 2 },
+    "2024": { "average_velocity": 89.6, "cluster": 2 },
+    "2025": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Jefry Rodriguez": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Jeremiah Estrada": {
+    "2024": { "average_velocity": 97.3, "cluster": 2 },
+    "2025": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Jesse Chavez": {
+    "2021": { "average_velocity": 89.9, "cluster": 1 },
+    "2022": { "average_velocity": 89.8, "cluster": 1 },
+    "2023": { "average_velocity": 89.4, "cluster": 1 },
+    "2024": { "average_velocity": 89.5, "cluster": 1 }
+  },
+  "Jesse Scholtens": {
+    "2023": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Jesus Tinoco": {
+    "2024": { "average_velocity": 96.2, "cluster": 0 }
+  },
+  "Jesús Luzardo": {
+    "2021": { "average_velocity": 95.5, "cluster": 2 },
+    "2022": { "average_velocity": 96.1, "cluster": 2 },
+    "2023": { "average_velocity": 96.7, "cluster": 2 },
+    "2024": { "average_velocity": 95.1, "cluster": 2 },
+    "2025": { "average_velocity": 96.4, "cluster": 2 }
+  },
+  "Jeurys Familia": {
+    "2021": { "average_velocity": 96.6, "cluster": 0 },
+    "2022": { "average_velocity": 95.2, "cluster": 0 }
+  },
+  "Jharel Cotton": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Jhoan Duran": {
+    "2022": { "average_velocity": 100.9, "cluster": 2 },
+    "2023": { "average_velocity": 101.8, "cluster": 2 },
+    "2024": { "average_velocity": 100.5, "cluster": 2 },
+    "2025": { "average_velocity": 100.4, "cluster": 2 }
+  },
+  "Jhony Brito": {
+    "2023": { "average_velocity": 95.9, "cluster": 0 },
+    "2024": { "average_velocity": 96.3, "cluster": 0 }
+  },
+  "Jhoulys Chacín": {
+    "2021": { "average_velocity": 91.3, "cluster": 0 },
+    "2022": { "average_velocity": 90.5, "cluster": 0 }
+  },
+  "Jimmy Cordero": {
+    "2023": { "average_velocity": 97.3, "cluster": 0 }
+  },
+  "Jimmy Herget": {
+    "2022": { "average_velocity": 90.5, "cluster": 0 },
+    "2025": { "average_velocity": 92.2, "cluster": 0 }
+  },
+  "Jimmy Lambert": {
+    "2022": { "average_velocity": 94.3, "cluster": 2 },
+    "2023": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "JoJo Romero": {
+    "2023": { "average_velocity": 94.8, "cluster": 0 },
+    "2024": { "average_velocity": 94.2, "cluster": 0 },
+    "2025": { "average_velocity": 93.8, "cluster": 0 }
+  },
+  "Joakim Soria": {
+    "2021": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Joan Adon": {
+    "2022": { "average_velocity": 94.9, "cluster": 2 },
+    "2023": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Joe Barlow": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Joe Boyle": {
+    "2024": { "average_velocity": 97.7, "cluster": 2 },
+    "2025": { "average_velocity": 98.3, "cluster": 2 }
+  },
+  "Joe Jacques": {
+    "2023": { "average_velocity": 91.3, "cluster": 0 }
+  },
+  "Joe Jiménez": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.3, "cluster": 2 },
+    "2024": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Joe Kelly": {
+    "2021": { "average_velocity": 97.6, "cluster": 0 },
+    "2023": { "average_velocity": 98.9, "cluster": 0 },
+    "2024": { "average_velocity": 98.2, "cluster": 0 }
+  },
+  "Joe La Sorsa": {
+    "2023": { "average_velocity": 86.6, "cluster": 0 }
+  },
+  "Joe Mantiply": {
+    "2021": { "average_velocity": 91.1, "cluster": 0 },
+    "2022": { "average_velocity": 90.5, "cluster": 0 },
+    "2023": { "average_velocity": 89.7, "cluster": 0 },
+    "2024": { "average_velocity": 89.0, "cluster": 0 }
+  },
+  "Joe Musgrove": {
+    "2021": { "average_velocity": 92.2, "cluster": 1 },
+    "2022": { "average_velocity": 91.8, "cluster": 1 },
+    "2023": { "average_velocity": 91.8, "cluster": 1 },
+    "2024": { "average_velocity": 91.6, "cluster": 1 }
+  },
+  "Joe Ross": {
+    "2021": { "average_velocity": 93.5, "cluster": 0 },
+    "2024": { "average_velocity": 94.8, "cluster": 0 },
+    "2025": { "average_velocity": 94.2, "cluster": 0 }
+  },
+  "Joe Ryan": {
+    "2021": { "average_velocity": 91.2, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 },
+    "2025": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Joe Smith": {
+    "2021": { "average_velocity": 86.3, "cluster": 0 },
+    "2022": { "average_velocity": 84.7, "cluster": 0 }
+  },
+  "Joel Kuhnel": {
+    "2022": { "average_velocity": 96.0, "cluster": 0 }
+  },
+  "Joel Payamps": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 95.3, "cluster": 0 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Joely Rodríguez": {
+    "2021": { "average_velocity": 94.0, "cluster": 0 },
+    "2022": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Joey Cantillo": {
+    "2024": { "average_velocity": 92.2, "cluster": 2 },
+    "2025": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Joey Estes": {
+    "2024": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Joey Krehbiel": {
+    "2022": { "average_velocity": 90.7, "cluster": 2 }
+  },
+  "Joey Lucchesi": {
+    "2021": { "average_velocity": 91.0, "cluster": 0 },
+    "2023": { "average_velocity": 90.1, "cluster": 0 },
+    "2025": { "average_velocity": 92.9, "cluster": 0 }
+  },
+  "Joey Wentz": {
+    "2022": { "average_velocity": 89.8, "cluster": 2 },
+    "2023": { "average_velocity": 90.6, "cluster": 2 },
+    "2024": { "average_velocity": 90.1, "cluster": 2 },
+    "2025": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Johan Oviedo": {
+    "2021": { "average_velocity": 95.0, "cluster": 2 },
+    "2022": { "average_velocity": 96.0, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "John Brebbia": {
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 94.5, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "John Curtiss": {
+    "2021": { "average_velocity": 94.9, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "John Gant": {
+    "2021": { "average_velocity": 89.9, "cluster": 0 }
+  },
+  "John King": {
+    "2021": { "average_velocity": 91.7, "cluster": 0 },
+    "2022": { "average_velocity": 91.7, "cluster": 0 },
+    "2023": { "average_velocity": 93.7, "cluster": 0 },
+    "2024": { "average_velocity": 93.5, "cluster": 0 },
+    "2025": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "John Means": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "John Schreiber": {
+    "2022": { "average_velocity": 93.9, "cluster": 0 },
+    "2023": { "average_velocity": 93.0, "cluster": 0 },
+    "2024": { "average_velocity": 91.6, "cluster": 0 },
+    "2025": { "average_velocity": 92.4, "cluster": 0 }
+  },
+  "Johnny Cueto": {
+    "2021": { "average_velocity": 91.6, "cluster": 2 },
+    "2022": { "average_velocity": 90.0, "cluster": 0 },
+    "2023": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "Jon Gray": {
+    "2021": { "average_velocity": 94.9, "cluster": 0 },
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.7, "cluster": 2 },
+    "2024": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Jon Lester": {
+    "2021": { "average_velocity": 87.6, "cluster": 1 }
+  },
+  "Jonathan Bowlan": {
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Jonathan Cannon": {
+    "2024": { "average_velocity": 92.5, "cluster": 0 },
+    "2025": { "average_velocity": 92.0, "cluster": 0 }
+  },
+  "Jonathan Heasley": {
+    "2022": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Jonathan Hernández": {
+    "2023": { "average_velocity": 97.5, "cluster": 0 },
+    "2024": { "average_velocity": 96.8, "cluster": 0 }
+  },
+  "Jonathan Loáisiga": {
+    "2021": { "average_velocity": 98.3, "cluster": 0 },
+    "2022": { "average_velocity": 98.2, "cluster": 0 }
+  },
+  "Jordan Hicks": {
+    "2022": { "average_velocity": 99.1, "cluster": 0 },
+    "2023": { "average_velocity": 100.1, "cluster": 0 },
+    "2024": { "average_velocity": 94.6, "cluster": 0 },
+    "2025": { "average_velocity": 97.4, "cluster": 0 }
+  },
+  "Jordan Holloway": {
+    "2021": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Jordan Leasure": {
+    "2024": { "average_velocity": 96.1, "cluster": 2 },
+    "2025": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Jordan Lyles": {
+    "2021": { "average_velocity": 92.4, "cluster": 2 },
+    "2022": { "average_velocity": 91.0, "cluster": 2 },
+    "2023": { "average_velocity": 90.4, "cluster": 2 }
+  },
+  "Jordan Montgomery": {
+    "2021": { "average_velocity": 91.1, "cluster": 0 },
+    "2022": { "average_velocity": 92.6, "cluster": 0 },
+    "2023": { "average_velocity": 93.1, "cluster": 0 },
+    "2024": { "average_velocity": 91.9, "cluster": 0 }
+  },
+  "Jordan Romano": {
+    "2021": { "average_velocity": 97.6, "cluster": 2 },
+    "2022": { "average_velocity": 96.8, "cluster": 2 },
+    "2023": { "average_velocity": 96.7, "cluster": 2 }
+  },
+  "Jordan Sheffield": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 }
+  },
+  "Jordan Weems": {
+    "2022": { "average_velocity": 96.5, "cluster": 2 },
+    "2023": { "average_velocity": 96.2, "cluster": 2 },
+    "2024": { "average_velocity": 96.0, "cluster": 2 }
+  },
+  "Jordan Wicks": {
+    "2023": { "average_velocity": 91.3, "cluster": 2 },
+    "2024": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Jorge Alcala": {
+    "2021": { "average_velocity": 97.3, "cluster": 2 },
+    "2024": { "average_velocity": 97.9, "cluster": 2 },
+    "2025": { "average_velocity": 97.1, "cluster": 2 }
+  },
+  "Jorge López": {
+    "2021": { "average_velocity": 95.3, "cluster": 0 },
+    "2022": { "average_velocity": 97.6, "cluster": 0 },
+    "2023": { "average_velocity": 96.8, "cluster": 0 },
+    "2024": { "average_velocity": 95.5, "cluster": 0 },
+    "2025": { "average_velocity": 94.7, "cluster": 0 }
+  },
+  "Jose Alvarez": {
+    "2021": { "average_velocity": 90.9, "cluster": 0 }
+  },
+  "Jose Cuas": {
+    "2022": { "average_velocity": 93.0, "cluster": 0 },
+    "2023": { "average_velocity": 92.6, "cluster": 0 },
+    "2024": { "average_velocity": 92.0, "cluster": 0 }
+  },
+  "Jose E. Hernandez": {
+    "2023": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Jose Quintana": {
+    "2021": { "average_velocity": 91.6, "cluster": 2 },
+    "2022": { "average_velocity": 91.3, "cluster": 2 },
+    "2023": { "average_velocity": 90.3, "cluster": 2 },
+    "2024": { "average_velocity": 90.7, "cluster": 2 },
+    "2025": { "average_velocity": 90.5, "cluster": 0 }
+  },
+  "Josh Fleming": {
+    "2021": { "average_velocity": 89.5, "cluster": 0 },
+    "2022": { "average_velocity": 89.1, "cluster": 0 },
+    "2023": { "average_velocity": 90.4, "cluster": 0 },
+    "2024": { "average_velocity": 89.1, "cluster": 0 }
+  },
+  "Josh Hader": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 },
+    "2022": { "average_velocity": 97.6, "cluster": 2 },
+    "2023": { "average_velocity": 96.1, "cluster": 2 },
+    "2024": { "average_velocity": 96.1, "cluster": 2 },
+    "2025": { "average_velocity": 95.4, "cluster": 2 }
+  },
+  "Josh Rogers": {
+    "2021": { "average_velocity": 90.5, "cluster": 2 },
+    "2022": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Josh Sborz": {
+    "2021": { "average_velocity": 96.7, "cluster": 2 },
+    "2022": { "average_velocity": 96.9, "cluster": 2 },
+    "2023": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Josh Staumont": {
+    "2021": { "average_velocity": 96.6, "cluster": 2 },
+    "2022": { "average_velocity": 96.4, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Josh Taylor": {
+    "2021": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Josh Tomlin": {
+    "2021": { "average_velocity": 86.9, "cluster": 1 }
+  },
+  "Josh Winckowski": {
+    "2022": { "average_velocity": 93.1, "cluster": 0 },
+    "2023": { "average_velocity": 93.1, "cluster": 0 },
+    "2024": { "average_velocity": 92.9, "cluster": 1 }
+  },
+  "Josh Winder": {
+    "2022": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Josiah Gray": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.3, "cluster": 2 },
+    "2023": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "José A. Ferrer": {
+    "2023": { "average_velocity": 95.2, "cluster": 0 },
+    "2024": { "average_velocity": 98.0, "cluster": 0 },
+    "2025": { "average_velocity": 97.6, "cluster": 0 }
+  },
+  "José Alvarado": {
+    "2021": { "average_velocity": 98.4, "cluster": 0 },
+    "2022": { "average_velocity": 97.2, "cluster": 0 },
+    "2023": { "average_velocity": 96.5, "cluster": 0 },
+    "2024": { "average_velocity": 95.7, "cluster": 0 },
+    "2025": { "average_velocity": 97.3, "cluster": 0 }
+  },
+  "José Berríos": {
+    "2021": { "average_velocity": 93.9, "cluster": 0 },
+    "2022": { "average_velocity": 93.9, "cluster": 2 },
+    "2023": { "average_velocity": 94.0, "cluster": 0 },
+    "2024": { "average_velocity": 93.5, "cluster": 0 },
+    "2025": { "average_velocity": 92.2, "cluster": 0 }
+  },
+  "José Buttó": {
+    "2023": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 94.0, "cluster": 2 },
+    "2025": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "José Cisnero": {
+    "2021": { "average_velocity": 95.2, "cluster": 2 },
+    "2022": { "average_velocity": 94.3, "cluster": 2 },
+    "2023": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "José De León": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "José Fermin": {
+    "2025": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "José Leclerc": {
+    "2022": { "average_velocity": 95.4, "cluster": 2 },
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "José Quijada": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "José Ruiz": {
+    "2021": { "average_velocity": 97.0, "cluster": 2 },
+    "2022": { "average_velocity": 96.8, "cluster": 2 },
+    "2023": { "average_velocity": 96.3, "cluster": 2 },
+    "2024": { "average_velocity": 96.1, "cluster": 2 }
+  },
+  "José Soriano": {
+    "2023": { "average_velocity": 98.4, "cluster": 0 },
+    "2024": { "average_velocity": 98.0, "cluster": 0 },
+    "2025": { "average_velocity": 97.2, "cluster": 0 }
+  },
+  "José Suarez": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "José Ureña": {
+    "2021": { "average_velocity": 93.9, "cluster": 0 },
+    "2022": { "average_velocity": 95.6, "cluster": 0 },
+    "2023": { "average_velocity": 95.2, "cluster": 0 },
+    "2024": { "average_velocity": 96.0, "cluster": 0 },
+    "2025": { "average_velocity": 96.2, "cluster": 0 }
+  },
+  "José Urquidy": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 },
+    "2022": { "average_velocity": 93.0, "cluster": 2 },
+    "2023": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Jovani Morán": {
+    "2022": { "average_velocity": 93.3, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Juan Mejia": {
+    "2025": { "average_velocity": 96.4, "cluster": 1 }
+  },
+  "Juan Minaya": {
+    "2021": { "average_velocity": 95.2, "cluster": 2 }
+  },
+  "Juan Morillo": {
+    "2025": { "average_velocity": 99.0, "cluster": 2 }
+  },
+  "Julian Aguiar": {
+    "2024": { "average_velocity": 94.3, "cluster": 0 }
+  },
+  "Julian Merryweather": {
+    "2022": { "average_velocity": 97.3, "cluster": 2 },
+    "2023": { "average_velocity": 98.1, "cluster": 2 }
+  },
+  "Julio Teheran": {
+    "2023": { "average_velocity": 88.5, "cluster": 0 }
+  },
+  "Julio Urías": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 },
+    "2022": { "average_velocity": 93.0, "cluster": 2 },
+    "2023": { "average_velocity": 91.7, "cluster": 2 }
+  },
+  "Junior Guerra": {
+    "2021": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Justin Anderson": {
+    "2024": { "average_velocity": 95.2, "cluster": 2 }
+  },
+  "Justin Bruihl": {
+    "2022": { "average_velocity": 86.9, "cluster": 1 },
+    "2023": { "average_velocity": 87.7, "cluster": 1 }
+  },
+  "Justin Dunn": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Justin Garza": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Justin Lawrence": {
+    "2021": { "average_velocity": 97.3, "cluster": 0 },
+    "2022": { "average_velocity": 95.1, "cluster": 0 },
+    "2023": { "average_velocity": 95.4, "cluster": 0 },
+    "2024": { "average_velocity": 94.6, "cluster": 0 }
+  },
+  "Justin Martinez": {
+    "2024": { "average_velocity": 100.3, "cluster": 0 }
+  },
+  "Justin Miller": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Justin Slaten": {
+    "2024": { "average_velocity": 93.6, "cluster": 1 },
+    "2025": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Justin Steele": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 1 },
+    "2023": { "average_velocity": 91.8, "cluster": 1 },
+    "2024": { "average_velocity": 91.6, "cluster": 1 }
+  },
+  "Justin Sterner": {
+    "2025": { "average_velocity": 91.2, "cluster": 2 }
+  },
+  "Justin Topa": {
+    "2023": { "average_velocity": 94.3, "cluster": 0 },
+    "2025": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Justin Verlander": {
+    "2022": { "average_velocity": 95.0, "cluster": 2 },
+    "2023": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.5, "cluster": 2 },
+    "2025": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Justin Wilson": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 },
+    "2024": { "average_velocity": 94.5, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Justin Wrobleski": {
+    "2024": { "average_velocity": 95.0, "cluster": 2 },
+    "2025": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Justus Sheffield": {
+    "2021": { "average_velocity": 92.3, "cluster": 0 }
+  },
+  "Kaleb Ort": {
+    "2022": { "average_velocity": 96.4, "cluster": 2 },
+    "2023": { "average_velocity": 95.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Karl Kauffmann": {
+    "2023": { "average_velocity": 89.8, "cluster": 0 }
+  },
+  "Keaton Winn": {
+    "2023": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Keegan Akin": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 },
+    "2022": { "average_velocity": 93.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 },
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Keegan Thompson": {
+    "2021": { "average_velocity": 92.3, "cluster": 2 },
+    "2022": { "average_velocity": 92.4, "cluster": 2 },
+    "2023": { "average_velocity": 92.1, "cluster": 2 },
+    "2024": { "average_velocity": 91.9, "cluster": 1 }
+  },
+  "Keider Montero": {
+    "2024": { "average_velocity": 94.6, "cluster": 2 },
+    "2025": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Ken Waldichuk": {
+    "2022": { "average_velocity": 94.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Kendall Graveman": {
+    "2021": { "average_velocity": 96.4, "cluster": 0 },
+    "2022": { "average_velocity": 96.5, "cluster": 0 },
+    "2023": { "average_velocity": 95.9, "cluster": 0 }
+  },
+  "Kenley Jansen": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 94.4, "cluster": 2 },
+    "2024": { "average_velocity": 92.3, "cluster": 2 },
+    "2025": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Kenny Rosenberg": {
+    "2023": { "average_velocity": 89.3, "cluster": 2 },
+    "2024": { "average_velocity": 88.8, "cluster": 2 }
+  },
+  "Kenta Maeda": {
+    "2021": { "average_velocity": 90.5, "cluster": 2 },
+    "2023": { "average_velocity": 90.9, "cluster": 2 },
+    "2024": { "average_velocity": 90.4, "cluster": 2 }
+  },
+  "Kevin Gausman": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.9, "cluster": 2 },
+    "2023": { "average_velocity": 94.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Kevin Ginkel": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 96.4, "cluster": 2 },
+    "2023": { "average_velocity": 95.6, "cluster": 2 },
+    "2024": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Kevin Kelly": {
+    "2023": { "average_velocity": 90.0, "cluster": 0 },
+    "2024": { "average_velocity": 90.5, "cluster": 0 },
+    "2025": { "average_velocity": 91.0, "cluster": 0 }
+  },
+  "Keynan Middleton": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 },
+    "2023": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Kirby Snead": {
+    "2022": { "average_velocity": 93.4, "cluster": 0 }
+  },
+  "Kirby Yates": {
+    "2023": { "average_velocity": 93.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.2, "cluster": 2 },
+    "2025": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Kirk McCarty": {
+    "2022": { "average_velocity": 90.5, "cluster": 1 }
+  },
+  "Kodai Senga": {
+    "2023": { "average_velocity": 93.7, "cluster": 2 },
+    "2025": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Kodi Whitley": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Kody Funderburk": {
+    "2024": { "average_velocity": 92.5, "cluster": 1 },
+    "2025": { "average_velocity": 92.6, "cluster": 0 }
+  },
+  "Kohei Arihara": {
+    "2021": { "average_velocity": 90.0, "cluster": 2 },
+    "2022": { "average_velocity": 89.4, "cluster": 0 }
+  },
+  "Kolby Allard": {
+    "2021": { "average_velocity": 89.7, "cluster": 2 },
+    "2024": { "average_velocity": 88.5, "cluster": 2 },
+    "2025": { "average_velocity": 88.8, "cluster": 2 }
+  },
+  "Konnor Pilkington": {
+    "2022": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Kris Bubic": {
+    "2021": { "average_velocity": 90.9, "cluster": 2 },
+    "2022": { "average_velocity": 92.0, "cluster": 2 },
+    "2024": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "Kumar Rocker": {
+    "2025": { "average_velocity": 93.8, "cluster": 0 }
+  },
+  "Kutter Crawford": {
+    "2022": { "average_velocity": 91.9, "cluster": 2 },
+    "2023": { "average_velocity": 91.5, "cluster": 2 },
+    "2024": { "average_velocity": 90.1, "cluster": 2 }
+  },
+  "Kwang Hyun Kim": {
+    "2021": { "average_velocity": 89.1, "cluster": 2 }
+  },
+  "Kyle Bradish": {
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 94.6, "cluster": 1 },
+    "2024": { "average_velocity": 95.1, "cluster": 0 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Kyle Finnegan": {
+    "2021": { "average_velocity": 95.6, "cluster": 2 },
+    "2022": { "average_velocity": 96.9, "cluster": 2 },
+    "2023": { "average_velocity": 97.3, "cluster": 2 },
+    "2024": { "average_velocity": 97.2, "cluster": 2 },
+    "2025": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Kyle Freeland": {
+    "2021": { "average_velocity": 89.4, "cluster": 1 },
+    "2022": { "average_velocity": 88.4, "cluster": 1 },
+    "2023": { "average_velocity": 87.2, "cluster": 0 },
+    "2024": { "average_velocity": 89.9, "cluster": 0 },
+    "2025": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Kyle Funkhouser": {
+    "2021": { "average_velocity": 95.6, "cluster": 0 }
+  },
+  "Kyle Gibson": {
+    "2021": { "average_velocity": 91.7, "cluster": 0 },
+    "2022": { "average_velocity": 91.0, "cluster": 0 },
+    "2023": { "average_velocity": 91.4, "cluster": 0 },
+    "2024": { "average_velocity": 90.1, "cluster": 0 }
+  },
+  "Kyle Harrison": {
+    "2023": { "average_velocity": 93.4, "cluster": 2 },
+    "2024": { "average_velocity": 92.5, "cluster": 0 },
+    "2025": { "average_velocity": 93.9, "cluster": 0 }
+  },
+  "Kyle Hart": {
+    "2025": { "average_velocity": 91.4, "cluster": 0 }
+  },
+  "Kyle Hendricks": {
+    "2021": { "average_velocity": 87.3, "cluster": 0 },
+    "2022": { "average_velocity": 86.7, "cluster": 0 },
+    "2023": { "average_velocity": 87.6, "cluster": 0 },
+    "2024": { "average_velocity": 87.6, "cluster": 0 },
+    "2025": { "average_velocity": 86.3, "cluster": 0 }
+  },
+  "Kyle Keller": {
+    "2021": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Kyle Leahy": {
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 95.4, "cluster": 2 }
+  },
+  "Kyle Muller": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.5, "cluster": 2 },
+    "2024": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Kyle Nelson": {
+    "2023": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Kyle Nicolas": {
+    "2024": { "average_velocity": 97.4, "cluster": 2 }
+  },
+  "Kyle Tyler": {
+    "2024": { "average_velocity": 90.4, "cluster": 1 }
+  },
+  "Kyle Wright": {
+    "2022": { "average_velocity": 94.6, "cluster": 0 },
+    "2023": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Kyle Zimmer": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Lake Bachar": {
+    "2025": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Lance Lynn": {
+    "2021": { "average_velocity": 91.9, "cluster": 2 },
+    "2022": { "average_velocity": 91.6, "cluster": 1 },
+    "2023": { "average_velocity": 91.2, "cluster": 1 },
+    "2024": { "average_velocity": 91.0, "cluster": 1 }
+  },
+  "Lance McCullers Jr.": {
+    "2021": { "average_velocity": 93.8, "cluster": 0 },
+    "2022": { "average_velocity": 92.0, "cluster": 0 },
+    "2025": { "average_velocity": 91.4, "cluster": 0 }
+  },
+  "Landen Roupp": {
+    "2024": { "average_velocity": 94.4, "cluster": 0 },
+    "2025": { "average_velocity": 92.5, "cluster": 0 }
+  },
+  "Landon Knack": {
+    "2024": { "average_velocity": 93.6, "cluster": 2 },
+    "2025": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Liam Hendriks": {
+    "2021": { "average_velocity": 97.7, "cluster": 2 },
+    "2022": { "average_velocity": 97.6, "cluster": 2 }
+  },
+  "Logan Allen (663531)": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 },
+    "2024": { "average_velocity": 89.3, "cluster": 1 }
+  },
+  "Logan Allen (671106)": {
+    "2023": { "average_velocity": 90.6, "cluster": 2 },
+    "2024": { "average_velocity": 89.8, "cluster": 2 },
+    "2025": { "average_velocity": 89.4, "cluster": 2 }
+  },
+  "Logan Evans": {
+    "2025": { "average_velocity": 90.2, "cluster": 1 }
+  },
+  "Logan Gilbert": {
+    "2021": { "average_velocity": 95.2, "cluster": 2 },
+    "2022": { "average_velocity": 96.1, "cluster": 2 },
+    "2023": { "average_velocity": 95.7, "cluster": 2 },
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 95.4, "cluster": 2 }
+  },
+  "Logan Webb": {
+    "2021": { "average_velocity": 92.8, "cluster": 0 },
+    "2022": { "average_velocity": 91.8, "cluster": 0 },
+    "2023": { "average_velocity": 92.3, "cluster": 0 },
+    "2024": { "average_velocity": 92.5, "cluster": 0 },
+    "2025": { "average_velocity": 92.4, "cluster": 0 }
+  },
+  "Lou Trivino": {
+    "2021": { "average_velocity": 95.2, "cluster": 0 },
+    "2022": { "average_velocity": 95.0, "cluster": 0 },
+    "2025": { "average_velocity": 93.6, "cluster": 1 }
+  },
+  "Louis Head": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Louis Varland": {
+    "2023": { "average_velocity": 95.4, "cluster": 2 },
+    "2024": { "average_velocity": 96.1, "cluster": 2 },
+    "2025": { "average_velocity": 98.2, "cluster": 2 }
+  },
+  "Lucas Erceg": {
+    "2023": { "average_velocity": 97.5, "cluster": 0 },
+    "2024": { "average_velocity": 98.6, "cluster": 2 },
+    "2025": { "average_velocity": 97.6, "cluster": 2 }
+  },
+  "Lucas Gilbreath": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Lucas Giolito": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2022": { "average_velocity": 92.7, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Lucas Luetge": {
+    "2021": { "average_velocity": 88.2, "cluster": 1 },
+    "2022": { "average_velocity": 87.5, "cluster": 1 }
+  },
+  "Lucas Sims": {
+    "2021": { "average_velocity": 95.1, "cluster": 2 },
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Luis Castillo": {
+    "2021": { "average_velocity": 97.2, "cluster": 0 },
+    "2022": { "average_velocity": 97.1, "cluster": 2 },
+    "2023": { "average_velocity": 96.1, "cluster": 2 },
+    "2024": { "average_velocity": 95.6, "cluster": 0 },
+    "2025": { "average_velocity": 95.0, "cluster": 0 }
+  },
+  "Luis Cessa": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2022": { "average_velocity": 93.4, "cluster": 0 }
+  },
+  "Luis Frías": {
+    "2022": { "average_velocity": 96.9, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 1 }
+  },
+  "Luis Garcia": {
+    "2021": { "average_velocity": 91.3, "cluster": 2 },
+    "2022": { "average_velocity": 90.6, "cluster": 2 },
+    "2023": { "average_velocity": 88.4, "cluster": 1 }
+  },
+  "Luis García": {
+    "2021": { "average_velocity": 98.3, "cluster": 0 },
+    "2022": { "average_velocity": 98.7, "cluster": 0 },
+    "2023": { "average_velocity": 97.2, "cluster": 0 },
+    "2024": { "average_velocity": 96.1, "cluster": 0 },
+    "2025": { "average_velocity": 96.7, "cluster": 0 }
+  },
+  "Luis Gil": {
+    "2021": { "average_velocity": 96.1, "cluster": 2 },
+    "2024": { "average_velocity": 96.6, "cluster": 2 },
+    "2025": { "average_velocity": 95.1, "cluster": 2 }
+  },
+  "Luis Medina": {
+    "2023": { "average_velocity": 95.9, "cluster": 2 },
+    "2024": { "average_velocity": 95.9, "cluster": 2 }
+  },
+  "Luis Mey": {
+    "2025": { "average_velocity": 98.8, "cluster": 0 }
+  },
+  "Luis Morales": {
+    "2025": { "average_velocity": 97.3, "cluster": 2 }
+  },
+  "Luis Ortiz": {
+    "2023": { "average_velocity": 95.9, "cluster": 0 },
+    "2024": { "average_velocity": 94.2, "cluster": 0 },
+    "2025": { "average_velocity": 94.6, "cluster": 0 }
+  },
+  "Luis Oviedo": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Luis Patiño": {
+    "2021": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 94.7, "cluster": 0 }
+  },
+  "Luis Peralta": {
+    "2025": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Luis Severino": {
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.1, "cluster": 2 },
+    "2024": { "average_velocity": 95.6, "cluster": 2 },
+    "2025": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Luke Jackson": {
+    "2021": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 94.6, "cluster": 2 },
+    "2025": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Luke Little": {
+    "2024": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "Luke Weaver": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 },
+    "2025": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Lyon Richardson": {
+    "2025": { "average_velocity": 95.2, "cluster": 0 }
+  },
+  "MacKenzie Gore": {
+    "2022": { "average_velocity": 94.9, "cluster": 2 },
+    "2023": { "average_velocity": 95.0, "cluster": 2 },
+    "2024": { "average_velocity": 95.0, "cluster": 2 },
+    "2025": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Madison Bumgarner": {
+    "2021": { "average_velocity": 88.3, "cluster": 1 },
+    "2022": { "average_velocity": 89.1, "cluster": 1 },
+    "2023": { "average_velocity": 87.8, "cluster": 1 }
+  },
+  "Manny Banuelos": {
+    "2022": { "average_velocity": 93.7, "cluster": 0 }
+  },
+  "Manuel Rodríguez": {
+    "2021": { "average_velocity": 97.1, "cluster": 0 },
+    "2024": { "average_velocity": 96.7, "cluster": 0 }
+  },
+  "Marco Gonzales": {
+    "2021": { "average_velocity": 87.8, "cluster": 2 },
+    "2022": { "average_velocity": 87.7, "cluster": 2 },
+    "2023": { "average_velocity": 88.4, "cluster": 2 },
+    "2024": { "average_velocity": 88.3, "cluster": 2 }
+  },
+  "Marcos Diplán": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Marcus Stroman": {
+    "2021": { "average_velocity": 91.4, "cluster": 0 },
+    "2022": { "average_velocity": 91.7, "cluster": 0 },
+    "2023": { "average_velocity": 91.2, "cluster": 0 },
+    "2024": { "average_velocity": 89.4, "cluster": 0 },
+    "2025": { "average_velocity": 89.5, "cluster": 0 }
+  },
+  "Mark Leiter Jr.": {
+    "2022": { "average_velocity": 90.4, "cluster": 0 },
+    "2023": { "average_velocity": 90.4, "cluster": 0 },
+    "2024": { "average_velocity": 90.9, "cluster": 0 },
+    "2025": { "average_velocity": 93.6, "cluster": 0 }
+  },
+  "Mark Melancon": {
+    "2021": { "average_velocity": 92.0, "cluster": 1 },
+    "2022": { "average_velocity": 90.8, "cluster": 1 }
+  },
+  "Martín Pérez": {
+    "2021": { "average_velocity": 91.5, "cluster": 0 },
+    "2022": { "average_velocity": 91.7, "cluster": 0 },
+    "2023": { "average_velocity": 90.9, "cluster": 0 },
+    "2024": { "average_velocity": 89.8, "cluster": 0 },
+    "2025": { "average_velocity": 87.4, "cluster": 0 }
+  },
+  "Mason Black": {
+    "2024": { "average_velocity": 92.4, "cluster": 0 }
+  },
+  "Mason Englert": {
+    "2023": { "average_velocity": 91.1, "cluster": 2 },
+    "2025": { "average_velocity": 91.4, "cluster": 1 }
+  },
+  "Mason Fluharty": {
+    "2025": { "average_velocity": 90.2, "cluster": 1 }
+  },
+  "Mason Miller": {
+    "2023": { "average_velocity": 97.6, "cluster": 2 },
+    "2024": { "average_velocity": 100.9, "cluster": 2 },
+    "2025": { "average_velocity": 101.2, "cluster": 2 }
+  },
+  "Mason Montgomery": {
+    "2025": { "average_velocity": 98.9, "cluster": 2 }
+  },
+  "Mason Thompson": {
+    "2021": { "average_velocity": 96.2, "cluster": 0 },
+    "2022": { "average_velocity": 95.7, "cluster": 0 },
+    "2023": { "average_velocity": 94.7, "cluster": 0 }
+  },
+  "Matt Andriese": {
+    "2021": { "average_velocity": 91.2, "cluster": 2 }
+  },
+  "Matt Barnes": {
+    "2021": { "average_velocity": 95.8, "cluster": 2 },
+    "2022": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Matt Bowman": {
+    "2024": { "average_velocity": 91.6, "cluster": 0 },
+    "2025": { "average_velocity": 90.2, "cluster": 0 }
+  },
+  "Matt Brash": {
+    "2022": { "average_velocity": 96.8, "cluster": 2 },
+    "2023": { "average_velocity": 97.5, "cluster": 2 }
+  },
+  "Matt Bush": {
+    "2022": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Matt Carasiti": {
+    "2023": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Matt Festa": {
+    "2022": { "average_velocity": 92.5, "cluster": 2 },
+    "2024": { "average_velocity": 90.9, "cluster": 1 },
+    "2025": { "average_velocity": 91.8, "cluster": 1 }
+  },
+  "Matt Foster": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Matt Harvey": {
+    "2021": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "Matt Koch": {
+    "2023": { "average_velocity": 91.6, "cluster": 1 }
+  },
+  "Matt Manning": {
+    "2021": { "average_velocity": 93.6, "cluster": 2 },
+    "2022": { "average_velocity": 93.2, "cluster": 2 },
+    "2023": { "average_velocity": 93.4, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Matt Moore": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 },
+    "2022": { "average_velocity": 93.8, "cluster": 2 },
+    "2023": { "average_velocity": 94.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Matt Peacock": {
+    "2021": { "average_velocity": 93.4, "cluster": 0 }
+  },
+  "Matt Sauer": {
+    "2025": { "average_velocity": 92.1, "cluster": 1 }
+  },
+  "Matt Shoemaker": {
+    "2021": { "average_velocity": 91.6, "cluster": 2 }
+  },
+  "Matt Strahm": {
+    "2022": { "average_velocity": 92.6, "cluster": 2 },
+    "2023": { "average_velocity": 92.6, "cluster": 2 },
+    "2024": { "average_velocity": 92.6, "cluster": 2 },
+    "2025": { "average_velocity": 91.3, "cluster": 2 }
+  },
+  "Matt Svanson": {
+    "2025": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "Matt Swarmer": {
+    "2022": { "average_velocity": 90.5, "cluster": 2 }
+  },
+  "Matt Waldron": {
+    "2023": { "average_velocity": 90.2, "cluster": 0 },
+    "2024": { "average_velocity": 89.7, "cluster": 2 }
+  },
+  "Matthew Boyd": {
+    "2021": { "average_velocity": 91.9, "cluster": 2 },
+    "2023": { "average_velocity": 91.3, "cluster": 2 },
+    "2024": { "average_velocity": 92.0, "cluster": 2 },
+    "2025": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Matthew Liberatore": {
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.3, "cluster": 2 },
+    "2025": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Mauricio Llovera": {
+    "2023": { "average_velocity": 94.4, "cluster": 0 }
+  },
+  "Max Castillo": {
+    "2022": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Max Fried": {
+    "2021": { "average_velocity": 93.9, "cluster": 1 },
+    "2022": { "average_velocity": 93.9, "cluster": 1 },
+    "2023": { "average_velocity": 93.2, "cluster": 1 },
+    "2024": { "average_velocity": 93.3, "cluster": 1 },
+    "2025": { "average_velocity": 94.2, "cluster": 1 }
+  },
+  "Max Kranick": {
+    "2021": { "average_velocity": 94.2, "cluster": 2 }
+  },
+  "Max Lazar": {
+    "2025": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Max Meyer": {
+    "2024": { "average_velocity": 94.0, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Max Scherzer": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 },
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 92.8, "cluster": 2 },
+    "2024": { "average_velocity": 91.8, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "McCade Brown": {
+    "2025": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Merrill Kelly": {
+    "2021": { "average_velocity": 91.5, "cluster": 2 },
+    "2022": { "average_velocity": 92.2, "cluster": 2 },
+    "2023": { "average_velocity": 91.9, "cluster": 2 },
+    "2024": { "average_velocity": 91.3, "cluster": 1 },
+    "2025": { "average_velocity": 91.7, "cluster": 2 }
+  },
+  "Michael Feliz": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Michael Fulmer": {
+    "2021": { "average_velocity": 93.6, "cluster": 1 },
+    "2022": { "average_velocity": 91.7, "cluster": 1 },
+    "2023": { "average_velocity": 92.7, "cluster": 1 }
+  },
+  "Michael Grove": {
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.9, "cluster": 2 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Michael King": {
+    "2021": { "average_velocity": 92.9, "cluster": 0 },
+    "2022": { "average_velocity": 95.8, "cluster": 0 },
+    "2023": { "average_velocity": 94.3, "cluster": 0 },
+    "2024": { "average_velocity": 93.4, "cluster": 0 },
+    "2025": { "average_velocity": 93.2, "cluster": 0 }
+  },
+  "Michael Kopech": {
+    "2021": { "average_velocity": 97.3, "cluster": 2 },
+    "2022": { "average_velocity": 95.0, "cluster": 2 },
+    "2023": { "average_velocity": 95.1, "cluster": 2 },
+    "2024": { "average_velocity": 97.7, "cluster": 2 }
+  },
+  "Michael Lorenzen": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 },
+    "2022": { "average_velocity": 93.5, "cluster": 0 },
+    "2023": { "average_velocity": 94.0, "cluster": 2 },
+    "2024": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Michael McGreevy": {
+    "2024": { "average_velocity": 91.7, "cluster": 0 },
+    "2025": { "average_velocity": 91.6, "cluster": 0 }
+  },
+  "Michael Petersen": {
+    "2024": { "average_velocity": 97.1, "cluster": 2 }
+  },
+  "Michael Pineda": {
+    "2021": { "average_velocity": 90.6, "cluster": 2 }
+  },
+  "Michael Rucker": {
+    "2021": { "average_velocity": 92.8, "cluster": 2 },
+    "2022": { "average_velocity": 94.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Michael Soroka": {
+    "2023": { "average_velocity": 92.9, "cluster": 2 },
+    "2024": { "average_velocity": 93.0, "cluster": 2 },
+    "2025": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Michael Tonkin": {
+    "2023": { "average_velocity": 93.5, "cluster": 0 },
+    "2024": { "average_velocity": 92.9, "cluster": 0 }
+  },
+  "Michael Wacha": {
+    "2021": { "average_velocity": 92.1, "cluster": 2 },
+    "2022": { "average_velocity": 91.8, "cluster": 2 },
+    "2023": { "average_velocity": 90.8, "cluster": 2 },
+    "2024": { "average_velocity": 92.6, "cluster": 2 },
+    "2025": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Michel Otañez": {
+    "2024": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Miguel Castro": {
+    "2021": { "average_velocity": 98.0, "cluster": 0 },
+    "2023": { "average_velocity": 96.7, "cluster": 0 }
+  },
+  "Miguel Díaz": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Miguel Yajure": {
+    "2022": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Mike Baumann": {
+    "2022": { "average_velocity": 95.8, "cluster": 2 },
+    "2023": { "average_velocity": 96.4, "cluster": 2 },
+    "2024": { "average_velocity": 96.5, "cluster": 2 }
+  },
+  "Mike Burrows": {
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Mike Clevinger": {
+    "2022": { "average_velocity": 92.0, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Mike Foltynewicz": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Mike Mayers": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 },
+    "2022": { "average_velocity": 92.7, "cluster": 2 },
+    "2023": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Mike Minor": {
+    "2021": { "average_velocity": 90.9, "cluster": 1 },
+    "2022": { "average_velocity": 90.4, "cluster": 2 }
+  },
+  "Mike Vasil": {
+    "2025": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "Miles Mikolas": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 },
+    "2022": { "average_velocity": 93.2, "cluster": 2 },
+    "2023": { "average_velocity": 93.0, "cluster": 2 },
+    "2024": { "average_velocity": 92.8, "cluster": 2 },
+    "2025": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Mitch Farris": {
+    "2025": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Mitch Keller": {
+    "2021": { "average_velocity": 91.4, "cluster": 2 },
+    "2022": { "average_velocity": 95.2, "cluster": 2 },
+    "2023": { "average_velocity": 93.0, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Mitch Spence": {
+    "2024": { "average_velocity": 91.0, "cluster": 1 },
+    "2025": { "average_velocity": 91.4, "cluster": 1 }
+  },
+  "Mitch White": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Mitchell Parker": {
+    "2024": { "average_velocity": 92.5, "cluster": 2 },
+    "2025": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Mychal Givens": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.3, "cluster": 1 }
+  },
+  "Nabil Crismatt": {
+    "2021": { "average_velocity": 89.9, "cluster": 2 },
+    "2022": { "average_velocity": 90.4, "cluster": 2 }
+  },
+  "Nate Pearson": {
+    "2023": { "average_velocity": 97.8, "cluster": 2 },
+    "2024": { "average_velocity": 97.7, "cluster": 2 }
+  },
+  "Nathan Eovaldi": {
+    "2021": { "average_velocity": 95.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 94.2, "cluster": 0 },
+    "2025": { "average_velocity": 92.6, "cluster": 1 }
+  },
+  "Nestor Cortes": {
+    "2021": { "average_velocity": 88.9, "cluster": 2 },
+    "2022": { "average_velocity": 89.6, "cluster": 2 },
+    "2023": { "average_velocity": 89.8, "cluster": 2 },
+    "2024": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Nick Anderson": {
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Nick Lodolo": {
+    "2022": { "average_velocity": 94.2, "cluster": 0 },
+    "2023": { "average_velocity": 93.2, "cluster": 0 },
+    "2024": { "average_velocity": 94.1, "cluster": 0 },
+    "2025": { "average_velocity": 93.7, "cluster": 0 }
+  },
+  "Nick Martinez": {
+    "2022": { "average_velocity": 91.9, "cluster": 2 },
+    "2023": { "average_velocity": 91.9, "cluster": 0 },
+    "2024": { "average_velocity": 91.2, "cluster": 2 },
+    "2025": { "average_velocity": 91.3, "cluster": 2 }
+  },
+  "Nick Mears": {
+    "2021": { "average_velocity": 95.6, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 96.7, "cluster": 2 },
+    "2025": { "average_velocity": 95.2, "cluster": 2 }
+  },
+  "Nick Nastrini": {
+    "2024": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Nick Neidert": {
+    "2021": { "average_velocity": 91.7, "cluster": 0 }
+  },
+  "Nick Nelson": {
+    "2022": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Nick Pivetta": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 91.8, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Nick Ramirez": {
+    "2023": { "average_velocity": 89.1, "cluster": 0 }
+  },
+  "Nick Robertson": {
+    "2023": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Nick Sandlin": {
+    "2021": { "average_velocity": 94.5, "cluster": 0 },
+    "2022": { "average_velocity": 93.6, "cluster": 0 },
+    "2023": { "average_velocity": 92.2, "cluster": 0 },
+    "2024": { "average_velocity": 92.6, "cluster": 0 }
+  },
+  "Nick Wittgren": {
+    "2021": { "average_velocity": 91.8, "cluster": 2 },
+    "2022": { "average_velocity": 90.3, "cluster": 2 },
+    "2023": { "average_velocity": 90.8, "cluster": 2 }
+  },
+  "Noah Cameron": {
+    "2025": { "average_velocity": 90.3, "cluster": 2 }
+  },
+  "Noah Davis": {
+    "2023": { "average_velocity": 92.2, "cluster": 0 },
+    "2024": { "average_velocity": 92.2, "cluster": 0 }
+  },
+  "Noah Murdock": {
+    "2025": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "Noah Syndergaard": {
+    "2022": { "average_velocity": 93.6, "cluster": 0 },
+    "2023": { "average_velocity": 91.6, "cluster": 0 }
+  },
+  "Nolan McLean": {
+    "2025": { "average_velocity": 94.3, "cluster": 0 }
+  },
+  "Noé Ramirez": {
+    "2021": { "average_velocity": 89.1, "cluster": 0 },
+    "2022": { "average_velocity": 89.8, "cluster": 0 }
+  },
+  "Oliver Ortega": {
+    "2022": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Orion Kerkering": {
+    "2024": { "average_velocity": 97.1, "cluster": 2 },
+    "2025": { "average_velocity": 97.3, "cluster": 2 }
+  },
+  "Osvaldo Bido": {
+    "2023": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Pablo López": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 },
+    "2022": { "average_velocity": 92.7, "cluster": 1 },
+    "2023": { "average_velocity": 94.9, "cluster": 2 },
+    "2024": { "average_velocity": 94.9, "cluster": 2 },
+    "2025": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Packy Naughton": {
+    "2021": { "average_velocity": 90.5, "cluster": 2 },
+    "2022": { "average_velocity": 92.5, "cluster": 2 }
+  },
+  "Paolo Espino": {
+    "2021": { "average_velocity": 88.9, "cluster": 2 },
+    "2022": { "average_velocity": 88.6, "cluster": 2 }
+  },
+  "Parker Messick": {
+    "2025": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Patrick Corbin": {
+    "2021": { "average_velocity": 92.5, "cluster": 0 },
+    "2022": { "average_velocity": 92.5, "cluster": 0 },
+    "2023": { "average_velocity": 92.0, "cluster": 0 },
+    "2024": { "average_velocity": 89.6, "cluster": 0 },
+    "2025": { "average_velocity": 89.7, "cluster": 1 }
+  },
+  "Patrick Murphy": {
+    "2021": { "average_velocity": 96.6, "cluster": 2 }
+  },
+  "Patrick Sandoval": {
+    "2021": { "average_velocity": 93.2, "cluster": 2 },
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Paul Blackburn": {
+    "2021": { "average_velocity": 89.7, "cluster": 0 },
+    "2022": { "average_velocity": 90.4, "cluster": 0 },
+    "2023": { "average_velocity": 90.8, "cluster": 0 },
+    "2024": { "average_velocity": 90.6, "cluster": 1 }
+  },
+  "Paul Campbell": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Paul Fry": {
+    "2021": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Paul Sewald": {
+    "2021": { "average_velocity": 92.3, "cluster": 2 },
+    "2022": { "average_velocity": 92.4, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 2 },
+    "2024": { "average_velocity": 91.4, "cluster": 2 }
+  },
+  "Paul Skenes": {
+    "2024": { "average_velocity": 98.8, "cluster": 0 },
+    "2025": { "average_velocity": 98.0, "cluster": 0 }
+  },
+  "Pedro Avila": {
+    "2023": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Penn Murfee": {
+    "2022": { "average_velocity": 88.9, "cluster": 1 }
+  },
+  "Pete Fairbanks": {
+    "2021": { "average_velocity": 97.1, "cluster": 2 },
+    "2023": { "average_velocity": 98.9, "cluster": 2 },
+    "2024": { "average_velocity": 97.3, "cluster": 2 },
+    "2025": { "average_velocity": 96.6, "cluster": 2 }
+  },
+  "Peter Lambert": {
+    "2023": { "average_velocity": 93.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Peter Strzelecki": {
+    "2022": { "average_velocity": 93.4, "cluster": 2 },
+    "2023": { "average_velocity": 91.7, "cluster": 2 }
+  },
+  "Peyton Battenfield": {
+    "2023": { "average_velocity": 89.1, "cluster": 2 }
+  },
+  "Phil Bickford": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Phil Maton": {
+    "2021": { "average_velocity": 91.2, "cluster": 1 },
+    "2022": { "average_velocity": 90.8, "cluster": 1 },
+    "2023": { "average_velocity": 89.0, "cluster": 1 },
+    "2024": { "average_velocity": 88.7, "cluster": 1 },
+    "2025": { "average_velocity": 90.3, "cluster": 1 }
+  },
+  "Phillips Valdez": {
+    "2021": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Pierce Johnson": {
+    "2021": { "average_velocity": 95.5, "cluster": 2 },
+    "2023": { "average_velocity": 95.9, "cluster": 2 },
+    "2024": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Porter Hodge": {
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 96.1, "cluster": 2 }
+  },
+  "Quinn Priester": {
+    "2023": { "average_velocity": 93.3, "cluster": 0 },
+    "2024": { "average_velocity": 93.1, "cluster": 0 },
+    "2025": { "average_velocity": 93.3, "cluster": 0 }
+  },
+  "Rafael Dolis": {
+    "2021": { "average_velocity": 94.6, "cluster": 0 }
+  },
+  "Rafael Montero": {
+    "2021": { "average_velocity": 95.5, "cluster": 2 },
+    "2022": { "average_velocity": 96.2, "cluster": 2 },
+    "2023": { "average_velocity": 95.9, "cluster": 2 },
+    "2024": { "average_velocity": 95.2, "cluster": 2 },
+    "2025": { "average_velocity": 95.1, "cluster": 2 }
+  },
+  "Raisel Iglesias": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 },
+    "2022": { "average_velocity": 95.0, "cluster": 2 },
+    "2023": { "average_velocity": 95.1, "cluster": 2 },
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Ralph Garza Jr.": {
+    "2021": { "average_velocity": 90.9, "cluster": 0 },
+    "2022": { "average_velocity": 88.8, "cluster": 0 }
+  },
+  "Randy Dobnak": {
+    "2021": { "average_velocity": 91.7, "cluster": 0 }
+  },
+  "Randy Rodríguez": {
+    "2024": { "average_velocity": 97.5, "cluster": 2 },
+    "2025": { "average_velocity": 97.3, "cluster": 2 }
+  },
+  "Randy Vásquez": {
+    "2023": { "average_velocity": 92.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Ranger Suarez": {
+    "2021": { "average_velocity": 93.0, "cluster": 0 },
+    "2022": { "average_velocity": 92.3, "cluster": 0 },
+    "2023": { "average_velocity": 91.9, "cluster": 0 },
+    "2024": { "average_velocity": 90.3, "cluster": 0 },
+    "2025": { "average_velocity": 89.8, "cluster": 0 }
+  },
+  "Ray Kerr": {
+    "2023": { "average_velocity": 95.9, "cluster": 2 }
+  },
+  "Reed Garrett": {
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.5, "cluster": 1 },
+    "2025": { "average_velocity": 94.7, "cluster": 1 }
+  },
+  "Reese Olson": {
+    "2023": { "average_velocity": 94.8, "cluster": 2 },
+    "2024": { "average_velocity": 94.2, "cluster": 0 },
+    "2025": { "average_velocity": 94.4, "cluster": 0 }
+  },
+  "Reid Detmers": {
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 },
+    "2025": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Reiss Knehr": {
+    "2021": { "average_velocity": 92.5, "cluster": 2 }
+  },
+  "Reiver Sanmartin": {
+    "2022": { "average_velocity": 90.5, "cluster": 0 }
+  },
+  "Rex Brothers": {
+    "2021": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Reyes Moronta": {
+    "2022": { "average_velocity": 95.4, "cluster": 2 }
+  },
+  "Reynaldo López": {
+    "2021": { "average_velocity": 95.8, "cluster": 2 },
+    "2022": { "average_velocity": 97.0, "cluster": 2 },
+    "2023": { "average_velocity": 98.2, "cluster": 2 },
+    "2024": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Rhett Lowder": {
+    "2024": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Rich Hill": {
+    "2021": { "average_velocity": 87.7, "cluster": 2 },
+    "2022": { "average_velocity": 87.4, "cluster": 2 },
+    "2023": { "average_velocity": 86.8, "cluster": 2 }
+  },
+  "Richard Bleier": {
+    "2021": { "average_velocity": 89.3, "cluster": 0 },
+    "2022": { "average_velocity": 89.0, "cluster": 0 },
+    "2023": { "average_velocity": 87.1, "cluster": 0 }
+  },
+  "Richard Fitts": {
+    "2025": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Richard Lovelady": {
+    "2024": { "average_velocity": 92.3, "cluster": 0 }
+  },
+  "Richard Rodríguez": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Riley O'Brien": {
+    "2025": { "average_velocity": 98.1, "cluster": 0 }
+  },
+  "Riley Smith": {
+    "2021": { "average_velocity": 91.6, "cluster": 0 }
+  },
+  "Roansy Contreras": {
+    "2022": { "average_velocity": 95.6, "cluster": 2 },
+    "2023": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Rob Zastryzny": {
+    "2023": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Robbie Ray": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 93.3, "cluster": 2 },
+    "2024": { "average_velocity": 94.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Robert Garcia": {
+    "2023": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 94.5, "cluster": 2 },
+    "2025": { "average_velocity": 94.3, "cluster": 2 }
+  },
+  "Robert Gasser": {
+    "2024": { "average_velocity": 92.1, "cluster": 0 }
+  },
+  "Robert Gsellman": {
+    "2021": { "average_velocity": 94.0, "cluster": 0 }
+  },
+  "Robert Stephenson": {
+    "2021": { "average_velocity": 96.1, "cluster": 2 },
+    "2022": { "average_velocity": 96.8, "cluster": 2 },
+    "2023": { "average_velocity": 91.6, "cluster": 1 }
+  },
+  "Robert Suarez": {
+    "2022": { "average_velocity": 97.3, "cluster": 2 },
+    "2023": { "average_velocity": 97.5, "cluster": 2 },
+    "2024": { "average_velocity": 99.0, "cluster": 2 },
+    "2025": { "average_velocity": 98.5, "cluster": 2 }
+  },
+  "Roddery Muñoz": {
+    "2024": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Roki Sasaki": {
+    "2025": { "average_velocity": 96.6, "cluster": 2 }
+  },
+  "Ron Marinaccio": {
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 2 },
+    "2024": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Ronel Blanco": {
+    "2023": { "average_velocity": 94.5, "cluster": 2 },
+    "2024": { "average_velocity": 93.4, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Ronny Henriquez": {
+    "2025": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Rony García": {
+    "2022": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Ross Detwiler": {
+    "2021": { "average_velocity": 88.9, "cluster": 1 },
+    "2022": { "average_velocity": 89.2, "cluster": 1 }
+  },
+  "Ross Stripling": {
+    "2021": { "average_velocity": 91.8, "cluster": 2 },
+    "2022": { "average_velocity": 91.5, "cluster": 2 },
+    "2023": { "average_velocity": 91.7, "cluster": 2 },
+    "2024": { "average_velocity": 90.2, "cluster": 2 }
+  },
+  "Rowan Wick": {
+    "2021": { "average_velocity": 94.3, "cluster": 2 },
+    "2022": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Ryan Bergert": {
+    "2025": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Ryan Brasier": {
+    "2022": { "average_velocity": 95.8, "cluster": 2 },
+    "2023": { "average_velocity": 95.0, "cluster": 2 },
+    "2024": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Ryan Burr": {
+    "2021": { "average_velocity": 91.2, "cluster": 1 },
+    "2024": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Ryan Feltner": {
+    "2022": { "average_velocity": 94.2, "cluster": 2 },
+    "2023": { "average_velocity": 94.6, "cluster": 2 },
+    "2024": { "average_velocity": 94.5, "cluster": 2 },
+    "2025": { "average_velocity": 93.5, "cluster": 1 }
+  },
+  "Ryan Fernandez": {
+    "2024": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Ryan Gusto": {
+    "2025": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Ryan Helsley": {
+    "2021": { "average_velocity": 97.4, "cluster": 2 },
+    "2022": { "average_velocity": 99.7, "cluster": 2 },
+    "2023": { "average_velocity": 99.7, "cluster": 2 },
+    "2024": { "average_velocity": 99.5, "cluster": 2 },
+    "2025": { "average_velocity": 98.9, "cluster": 2 }
+  },
+  "Ryan Hendrix": {
+    "2021": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Ryan Pepiot": {
+    "2022": { "average_velocity": 94.0, "cluster": 2 },
+    "2023": { "average_velocity": 94.0, "cluster": 2 },
+    "2024": { "average_velocity": 94.6, "cluster": 2 },
+    "2025": { "average_velocity": 94.5, "cluster": 2 }
+  },
+  "Ryan Pressly": {
+    "2021": { "average_velocity": 95.3, "cluster": 2 },
+    "2022": { "average_velocity": 94.3, "cluster": 2 },
+    "2023": { "average_velocity": 94.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Ryan Tepera": {
+    "2021": { "average_velocity": 93.2, "cluster": 2 },
+    "2022": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Ryan Thompson": {
+    "2021": { "average_velocity": 90.1, "cluster": 0 },
+    "2022": { "average_velocity": 90.1, "cluster": 0 },
+    "2023": { "average_velocity": 90.7, "cluster": 0 },
+    "2024": { "average_velocity": 91.2, "cluster": 0 },
+    "2025": { "average_velocity": 89.8, "cluster": 0 }
+  },
+  "Ryan Walker": {
+    "2023": { "average_velocity": 94.8, "cluster": 0 },
+    "2024": { "average_velocity": 95.6, "cluster": 0 },
+    "2025": { "average_velocity": 96.0, "cluster": 0 }
+  },
+  "Ryan Weathers": {
+    "2021": { "average_velocity": 93.9, "cluster": 2 },
+    "2023": { "average_velocity": 95.1, "cluster": 2 },
+    "2024": { "average_velocity": 95.6, "cluster": 2 },
+    "2025": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Ryan Yarbrough": {
+    "2021": { "average_velocity": 83.0, "cluster": 1 },
+    "2022": { "average_velocity": 83.9, "cluster": 1 },
+    "2023": { "average_velocity": 85.8, "cluster": 0 },
+    "2024": { "average_velocity": 85.8, "cluster": 0 },
+    "2025": { "average_velocity": 85.8, "cluster": 0 }
+  },
+  "Ryan Zeferjahn": {
+    "2025": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Ryne Nelson": {
+    "2023": { "average_velocity": 92.8, "cluster": 2 },
+    "2024": { "average_velocity": 94.2, "cluster": 2 },
+    "2025": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Ryne Stanek": {
+    "2021": { "average_velocity": 97.6, "cluster": 2 },
+    "2022": { "average_velocity": 98.4, "cluster": 2 },
+    "2023": { "average_velocity": 98.1, "cluster": 2 },
+    "2024": { "average_velocity": 97.6, "cluster": 2 },
+    "2025": { "average_velocity": 98.5, "cluster": 2 }
+  },
+  "Sal Romano": {
+    "2021": { "average_velocity": 93.6, "cluster": 0 }
+  },
+  "Sam Clay": {
+    "2021": { "average_velocity": 92.3, "cluster": 0 }
+  },
+  "Sam Coonrod": {
+    "2021": { "average_velocity": 97.8, "cluster": 0 }
+  },
+  "Sam Hentges": {
+    "2021": { "average_velocity": 94.3, "cluster": 2 },
+    "2022": { "average_velocity": 95.7, "cluster": 2 },
+    "2023": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Sam Howard": {
+    "2021": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Sam Long": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.7, "cluster": 2 },
+    "2023": { "average_velocity": 94.0, "cluster": 2 },
+    "2024": { "average_velocity": 94.3, "cluster": 2 }
+  },
+  "Sam Moll": {
+    "2022": { "average_velocity": 93.3, "cluster": 0 },
+    "2023": { "average_velocity": 93.7, "cluster": 0 },
+    "2024": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Sam Selman": {
+    "2021": { "average_velocity": 90.9, "cluster": 2 }
+  },
+  "Sandy Alcantara": {
+    "2021": { "average_velocity": 95.4, "cluster": 0 },
+    "2022": { "average_velocity": 95.4, "cluster": 0 },
+    "2023": { "average_velocity": 95.6, "cluster": 0 },
+    "2025": { "average_velocity": 95.1, "cluster": 0 }
+  },
+  "Scott Alexander": {
+    "2023": { "average_velocity": 92.8, "cluster": 0 },
+    "2024": { "average_velocity": 92.1, "cluster": 0 },
+    "2025": { "average_velocity": 91.3, "cluster": 0 }
+  },
+  "Scott Barlow": {
+    "2021": { "average_velocity": 95.3, "cluster": 2 },
+    "2022": { "average_velocity": 93.4, "cluster": 1 },
+    "2023": { "average_velocity": 93.0, "cluster": 2 },
+    "2024": { "average_velocity": 91.3, "cluster": 1 },
+    "2025": { "average_velocity": 92.3, "cluster": 1 }
+  },
+  "Scott Effross": {
+    "2022": { "average_velocity": 90.3, "cluster": 0 }
+  },
+  "Scott McGough": {
+    "2023": { "average_velocity": 93.5, "cluster": 2 },
+    "2024": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Sean Burke": {
+    "2025": { "average_velocity": 94.3, "cluster": 2 }
+  },
+  "Sean Doolittle": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Sean Guenther": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 }
+  },
+  "Sean Hjelle": {
+    "2022": { "average_velocity": 93.8, "cluster": 0 },
+    "2023": { "average_velocity": 94.8, "cluster": 0 },
+    "2024": { "average_velocity": 94.3, "cluster": 0 }
+  },
+  "Sean Manaea": {
+    "2021": { "average_velocity": 92.2, "cluster": 0 },
+    "2022": { "average_velocity": 91.3, "cluster": 2 },
+    "2023": { "average_velocity": 93.5, "cluster": 0 },
+    "2024": { "average_velocity": 91.9, "cluster": 0 },
+    "2025": { "average_velocity": 91.8, "cluster": 0 }
+  },
+  "Sean Newcomb": {
+    "2021": { "average_velocity": 93.2, "cluster": 2 },
+    "2022": { "average_velocity": 92.1, "cluster": 2 },
+    "2025": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Sean Nolin": {
+    "2021": { "average_velocity": 87.9, "cluster": 2 }
+  },
+  "Sean Poppen": {
+    "2021": { "average_velocity": 94.2, "cluster": 0 },
+    "2022": { "average_velocity": 94.4, "cluster": 0 }
+  },
+  "Sean Reid-Foley": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Seranthony Domínguez": {
+    "2022": { "average_velocity": 97.8, "cluster": 0 },
+    "2023": { "average_velocity": 97.8, "cluster": 2 },
+    "2024": { "average_velocity": 97.8, "cluster": 2 },
+    "2025": { "average_velocity": 97.7, "cluster": 2 }
+  },
+  "Sergio Romo": {
+    "2021": { "average_velocity": 85.5, "cluster": 0 }
+  },
+  "Seth Halvorsen": {
+    "2025": { "average_velocity": 99.9, "cluster": 2 }
+  },
+  "Seth Lugo": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 },
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 2 },
+    "2024": { "average_velocity": 91.8, "cluster": 2 },
+    "2025": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Seth Martinez": {
+    "2022": { "average_velocity": 90.9, "cluster": 2 },
+    "2023": { "average_velocity": 90.8, "cluster": 0 },
+    "2024": { "average_velocity": 90.4, "cluster": 0 }
+  },
+  "Shane Baz": {
+    "2024": { "average_velocity": 95.6, "cluster": 2 },
+    "2025": { "average_velocity": 95.6, "cluster": 2 }
+  },
+  "Shane Bieber": {
+    "2021": { "average_velocity": 92.3, "cluster": 2 },
+    "2022": { "average_velocity": 89.9, "cluster": 2 },
+    "2023": { "average_velocity": 89.2, "cluster": 2 },
+    "2025": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Shane Greene": {
+    "2021": { "average_velocity": 90.2, "cluster": 0 }
+  },
+  "Shane McClanahan": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 },
+    "2022": { "average_velocity": 96.8, "cluster": 2 },
+    "2023": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Shane Smith": {
+    "2025": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Shawn Armstrong": {
+    "2021": { "average_velocity": 92.1, "cluster": 2 },
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.3, "cluster": 1 },
+    "2024": { "average_velocity": 92.5, "cluster": 2 },
+    "2025": { "average_velocity": 92.8, "cluster": 2 }
+  },
+  "Shawn Dubin": {
+    "2024": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Shelby Miller": {
+    "2021": { "average_velocity": 92.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.5, "cluster": 2 },
+    "2024": { "average_velocity": 93.5, "cluster": 2 },
+    "2025": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Shintaro Fujinami": {
+    "2023": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Shohei Ohtani": {
+    "2021": { "average_velocity": 93.7, "cluster": 2 },
+    "2022": { "average_velocity": 95.8, "cluster": 2 },
+    "2023": { "average_velocity": 94.8, "cluster": 2 },
+    "2025": { "average_velocity": 97.7, "cluster": 2 }
+  },
+  "Shota Imanaga": {
+    "2024": { "average_velocity": 91.5, "cluster": 2 },
+    "2025": { "average_velocity": 90.8, "cluster": 2 }
+  },
+  "Simeon Woods Richardson": {
+    "2024": { "average_velocity": 93.1, "cluster": 2 },
+    "2025": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Sixto Sánchez": {
+    "2024": { "average_velocity": 88.8, "cluster": 1 }
+  },
+  "Slade Cecconi": {
+    "2023": { "average_velocity": 94.2, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 },
+    "2025": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Sonny Gray": {
+    "2021": { "average_velocity": 92.3, "cluster": 0 },
+    "2022": { "average_velocity": 92.0, "cluster": 0 },
+    "2023": { "average_velocity": 91.7, "cluster": 1 },
+    "2024": { "average_velocity": 91.1, "cluster": 1 },
+    "2025": { "average_velocity": 91.0, "cluster": 1 }
+  },
+  "Spencer Arrighetti": {
+    "2024": { "average_velocity": 92.2, "cluster": 2 }
+  },
+  "Spencer Bivens": {
+    "2024": { "average_velocity": 93.8, "cluster": 0 },
+    "2025": { "average_velocity": 93.1, "cluster": 0 }
+  },
+  "Spencer Howard": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 }
+  },
+  "Spencer Patton": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 }
+  },
+  "Spencer Schwellenbach": {
+    "2024": { "average_velocity": 95.0, "cluster": 2 },
+    "2025": { "average_velocity": 96.1, "cluster": 2 }
+  },
+  "Spencer Strider": {
+    "2022": { "average_velocity": 98.2, "cluster": 2 },
+    "2023": { "average_velocity": 97.3, "cluster": 2 },
+    "2025": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Spencer Turnbull": {
+    "2021": { "average_velocity": 94.2, "cluster": 1 },
+    "2023": { "average_velocity": 93.0, "cluster": 1 },
+    "2024": { "average_velocity": 92.3, "cluster": 1 }
+  },
+  "Spenser Watkins": {
+    "2021": { "average_velocity": 89.2, "cluster": 2 },
+    "2022": { "average_velocity": 89.7, "cluster": 1 }
+  },
+  "Stefan Crichton": {
+    "2021": { "average_velocity": 90.9, "cluster": 0 }
+  },
+  "Stephen Kolek": {
+    "2024": { "average_velocity": 94.6, "cluster": 0 },
+    "2025": { "average_velocity": 93.2, "cluster": 0 }
+  },
+  "Stephen Nogosek": {
+    "2022": { "average_velocity": 92.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Steve Cishek": {
+    "2021": { "average_velocity": 90.1, "cluster": 0 },
+    "2022": { "average_velocity": 89.5, "cluster": 0 }
+  },
+  "Steven Brault": {
+    "2021": { "average_velocity": 90.7, "cluster": 0 }
+  },
+  "Steven Cruz": {
+    "2025": { "average_velocity": 96.7, "cluster": 2 }
+  },
+  "Steven Matz": {
+    "2021": { "average_velocity": 94.4, "cluster": 0 },
+    "2022": { "average_velocity": 94.4, "cluster": 0 },
+    "2023": { "average_velocity": 94.1, "cluster": 0 },
+    "2024": { "average_velocity": 93.9, "cluster": 0 },
+    "2025": { "average_velocity": 94.4, "cluster": 0 }
+  },
+  "Steven Okert": {
+    "2021": { "average_velocity": 92.2, "cluster": 2 },
+    "2022": { "average_velocity": 93.7, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 2 },
+    "2024": { "average_velocity": 92.9, "cluster": 2 },
+    "2025": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Steven Wilson": {
+    "2022": { "average_velocity": 95.2, "cluster": 2 },
+    "2023": { "average_velocity": 94.3, "cluster": 2 },
+    "2024": { "average_velocity": 93.3, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "T.J. McFarland": {
+    "2021": { "average_velocity": 88.9, "cluster": 0 },
+    "2022": { "average_velocity": 88.8, "cluster": 0 },
+    "2024": { "average_velocity": 88.0, "cluster": 0 }
+  },
+  "Taijuan Walker": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 },
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 91.0, "cluster": 0 },
+    "2024": { "average_velocity": 90.5, "cluster": 0 },
+    "2025": { "average_velocity": 89.6, "cluster": 1 }
+  },
+  "Taj Bradley": {
+    "2023": { "average_velocity": 93.5, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 },
+    "2025": { "average_velocity": 93.9, "cluster": 2 }
+  },
+  "Tanner Banks": {
+    "2022": { "average_velocity": 92.8, "cluster": 2 },
+    "2023": { "average_velocity": 92.6, "cluster": 2 },
+    "2024": { "average_velocity": 93.2, "cluster": 2 },
+    "2025": { "average_velocity": 92.4, "cluster": 2 }
+  },
+  "Tanner Bibee": {
+    "2023": { "average_velocity": 91.2, "cluster": 2 },
+    "2024": { "average_velocity": 91.6, "cluster": 2 },
+    "2025": { "average_velocity": 91.5, "cluster": 2 }
+  },
+  "Tanner Gordon": {
+    "2024": { "average_velocity": 92.1, "cluster": 2 },
+    "2025": { "average_velocity": 92.0, "cluster": 2 }
+  },
+  "Tanner Houck": {
+    "2021": { "average_velocity": 94.2, "cluster": 0 },
+    "2022": { "average_velocity": 94.7, "cluster": 0 },
+    "2023": { "average_velocity": 93.0, "cluster": 0 },
+    "2024": { "average_velocity": 93.3, "cluster": 0 },
+    "2025": { "average_velocity": 94.5, "cluster": 0 }
+  },
+  "Tanner Rainey": {
+    "2021": { "average_velocity": 96.3, "cluster": 2 },
+    "2022": { "average_velocity": 96.8, "cluster": 2 },
+    "2024": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Tanner Scott": {
+    "2021": { "average_velocity": 96.7, "cluster": 2 },
+    "2022": { "average_velocity": 96.7, "cluster": 2 },
+    "2023": { "average_velocity": 96.8, "cluster": 2 },
+    "2024": { "average_velocity": 97.1, "cluster": 2 },
+    "2025": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Tarik Skubal": {
+    "2021": { "average_velocity": 94.4, "cluster": 2 },
+    "2022": { "average_velocity": 94.3, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 96.8, "cluster": 2 },
+    "2025": { "average_velocity": 97.8, "cluster": 2 }
+  },
+  "Tayler Saucedo": {
+    "2023": { "average_velocity": 92.3, "cluster": 0 },
+    "2024": { "average_velocity": 91.3, "cluster": 0 }
+  },
+  "Tayler Scott": {
+    "2024": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Taylor Clarke": {
+    "2021": { "average_velocity": 95.5, "cluster": 2 },
+    "2022": { "average_velocity": 95.5, "cluster": 2 },
+    "2023": { "average_velocity": 94.8, "cluster": 2 }
+  },
+  "Taylor Hearn": {
+    "2021": { "average_velocity": 94.7, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 }
+  },
+  "Taylor Rogers": {
+    "2021": { "average_velocity": 95.7, "cluster": 0 },
+    "2022": { "average_velocity": 94.3, "cluster": 0 },
+    "2023": { "average_velocity": 93.3, "cluster": 0 },
+    "2024": { "average_velocity": 93.0, "cluster": 0 },
+    "2025": { "average_velocity": 92.7, "cluster": 0 }
+  },
+  "Taylor Widener": {
+    "2021": { "average_velocity": 92.6, "cluster": 2 },
+    "2022": { "average_velocity": 94.0, "cluster": 2 }
+  },
+  "Thaddeus Ward": {
+    "2023": { "average_velocity": 91.4, "cluster": 0 }
+  },
+  "Thomas Eshelman": {
+    "2021": { "average_velocity": 86.5, "cluster": 0 }
+  },
+  "Thomas Hatch": {
+    "2023": { "average_velocity": 91.4, "cluster": 1 }
+  },
+  "Thyago Vieira": {
+    "2024": { "average_velocity": 97.3, "cluster": 0 }
+  },
+  "Tim Herrin": {
+    "2023": { "average_velocity": 96.5, "cluster": 2 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 },
+    "2025": { "average_velocity": 94.2, "cluster": 2 }
+  },
+  "Tim Hill": {
+    "2021": { "average_velocity": 91.6, "cluster": 0 },
+    "2022": { "average_velocity": 90.1, "cluster": 0 },
+    "2023": { "average_velocity": 89.5, "cluster": 0 },
+    "2024": { "average_velocity": 89.2, "cluster": 0 },
+    "2025": { "average_velocity": 88.4, "cluster": 0 }
+  },
+  "Tim Mayza": {
+    "2021": { "average_velocity": 93.8, "cluster": 0 },
+    "2022": { "average_velocity": 93.7, "cluster": 0 },
+    "2023": { "average_velocity": 93.4, "cluster": 0 },
+    "2024": { "average_velocity": 92.5, "cluster": 0 },
+    "2025": { "average_velocity": 93.6, "cluster": 0 }
+  },
+  "Tobias Myers": {
+    "2024": { "average_velocity": 91.7, "cluster": 2 },
+    "2025": { "average_velocity": 91.4, "cluster": 2 }
+  },
+  "Tom Cosgrove": {
+    "2023": { "average_velocity": 91.5, "cluster": 0 }
+  },
+  "Tommy Doyle": {
+    "2023": { "average_velocity": 92.2, "cluster": 1 }
+  },
+  "Tommy Henry": {
+    "2022": { "average_velocity": 91.6, "cluster": 2 },
+    "2023": { "average_velocity": 90.7, "cluster": 2 },
+    "2024": { "average_velocity": 90.0, "cluster": 2 }
+  },
+  "Tommy Hunter": {
+    "2023": { "average_velocity": 91.3, "cluster": 0 }
+  },
+  "Tommy Nance": {
+    "2021": { "average_velocity": 95.3, "cluster": 0 },
+    "2022": { "average_velocity": 93.9, "cluster": 0 }
+  },
+  "Tomoyuki Sugano": {
+    "2025": { "average_velocity": 91.4, "cluster": 2 }
+  },
+  "Tony Gonsolin": {
+    "2021": { "average_velocity": 93.8, "cluster": 2 },
+    "2022": { "average_velocity": 93.2, "cluster": 2 },
+    "2023": { "average_velocity": 92.4, "cluster": 2 },
+    "2025": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Tony Santillan": {
+    "2021": { "average_velocity": 95.0, "cluster": 2 },
+    "2022": { "average_velocity": 96.2, "cluster": 2 },
+    "2024": { "average_velocity": 97.2, "cluster": 2 },
+    "2025": { "average_velocity": 96.2, "cluster": 2 }
+  },
+  "Tony Watson": {
+    "2021": { "average_velocity": 92.4, "cluster": 0 }
+  },
+  "Touki Toussaint": {
+    "2021": { "average_velocity": 92.8, "cluster": 0 },
+    "2023": { "average_velocity": 93.2, "cluster": 0 }
+  },
+  "Travis Adams": {
+    "2025": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Travis Lakins": {
+    "2021": { "average_velocity": 92.3, "cluster": 1 }
+  },
+  "Trent Thornton": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.6, "cluster": 2 },
+    "2023": { "average_velocity": 93.9, "cluster": 2 },
+    "2024": { "average_velocity": 94.8, "cluster": 2 },
+    "2025": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Trevor Bauer": {
+    "2021": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Trevor Cahill": {
+    "2021": { "average_velocity": 88.2, "cluster": 0 }
+  },
+  "Trevor Gott": {
+    "2022": { "average_velocity": 93.6, "cluster": 2 },
+    "2023": { "average_velocity": 91.6, "cluster": 1 }
+  },
+  "Trevor Kelley": {
+    "2022": { "average_velocity": 90.0, "cluster": 0 }
+  },
+  "Trevor May": {
+    "2021": { "average_velocity": 96.5, "cluster": 2 },
+    "2022": { "average_velocity": 96.1, "cluster": 2 },
+    "2023": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Trevor Megill": {
+    "2021": { "average_velocity": 96.4, "cluster": 2 },
+    "2022": { "average_velocity": 98.1, "cluster": 2 },
+    "2023": { "average_velocity": 99.2, "cluster": 2 },
+    "2024": { "average_velocity": 98.8, "cluster": 2 },
+    "2025": { "average_velocity": 98.8, "cluster": 2 }
+  },
+  "Trevor Richards": {
+    "2021": { "average_velocity": 92.7, "cluster": 2 },
+    "2022": { "average_velocity": 93.4, "cluster": 2 },
+    "2023": { "average_velocity": 92.8, "cluster": 2 },
+    "2024": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Trevor Rogers": {
+    "2021": { "average_velocity": 92.0, "cluster": 2 },
+    "2022": { "average_velocity": 94.6, "cluster": 2 },
+    "2023": { "average_velocity": 91.2, "cluster": 2 },
+    "2024": { "average_velocity": 89.2, "cluster": 2 },
+    "2025": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Trevor Stephan": {
+    "2021": { "average_velocity": 96.2, "cluster": 2 },
+    "2022": { "average_velocity": 96.5, "cluster": 2 },
+    "2023": { "average_velocity": 94.9, "cluster": 2 }
+  },
+  "Trevor Williams": {
+    "2021": { "average_velocity": 91.1, "cluster": 1 },
+    "2022": { "average_velocity": 90.8, "cluster": 2 },
+    "2023": { "average_velocity": 89.3, "cluster": 0 },
+    "2024": { "average_velocity": 88.6, "cluster": 1 },
+    "2025": { "average_velocity": 87.4, "cluster": 1 }
+  },
+  "Trey Yesavage": {
+    "2025": { "average_velocity": 94.3, "cluster": 2 }
+  },
+  "Tristan Beck": {
+    "2023": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Triston McKenzie": {
+    "2021": { "average_velocity": 92.1, "cluster": 2 },
+    "2022": { "average_velocity": 92.4, "cluster": 2 },
+    "2024": { "average_velocity": 91.1, "cluster": 2 }
+  },
+  "Troy Melton": {
+    "2025": { "average_velocity": 96.5, "cluster": 2 }
+  },
+  "Tucker Davidson": {
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 91.3, "cluster": 2 }
+  },
+  "Ty Blach": {
+    "2022": { "average_velocity": 89.6, "cluster": 0 },
+    "2023": { "average_velocity": 88.0, "cluster": 0 },
+    "2024": { "average_velocity": 87.8, "cluster": 0 }
+  },
+  "Ty Madden": {
+    "2024": { "average_velocity": 92.6, "cluster": 2 }
+  },
+  "Tyler Alexander": {
+    "2021": { "average_velocity": 88.2, "cluster": 1 },
+    "2022": { "average_velocity": 88.2, "cluster": 2 },
+    "2023": { "average_velocity": 88.2, "cluster": 1 },
+    "2024": { "average_velocity": 87.5, "cluster": 1 },
+    "2025": { "average_velocity": 89.4, "cluster": 2 }
+  },
+  "Tyler Anderson": {
+    "2021": { "average_velocity": 88.4, "cluster": 2 },
+    "2022": { "average_velocity": 88.9, "cluster": 2 },
+    "2023": { "average_velocity": 88.3, "cluster": 2 },
+    "2024": { "average_velocity": 87.9, "cluster": 2 },
+    "2025": { "average_velocity": 87.5, "cluster": 2 }
+  },
+  "Tyler Beede": {
+    "2022": { "average_velocity": 95.6, "cluster": 0 }
+  },
+  "Tyler Chatwood": {
+    "2021": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Tyler Danish": {
+    "2022": { "average_velocity": 90.9, "cluster": 0 }
+  },
+  "Tyler Duffey": {
+    "2021": { "average_velocity": 92.5, "cluster": 2 },
+    "2022": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Tyler Ferguson": {
+    "2024": { "average_velocity": 94.8, "cluster": 2 },
+    "2025": { "average_velocity": 93.7, "cluster": 2 }
+  },
+  "Tyler Gilbert": {
+    "2021": { "average_velocity": 87.9, "cluster": 1 },
+    "2022": { "average_velocity": 88.5, "cluster": 1 },
+    "2023": { "average_velocity": 90.4, "cluster": 1 },
+    "2025": { "average_velocity": 89.4, "cluster": 0 }
+  },
+  "Tyler Glasnow": {
+    "2021": { "average_velocity": 97.0, "cluster": 2 },
+    "2023": { "average_velocity": 96.4, "cluster": 2 },
+    "2024": { "average_velocity": 96.4, "cluster": 2 },
+    "2025": { "average_velocity": 96.0, "cluster": 2 }
+  },
+  "Tyler Holton": {
+    "2023": { "average_velocity": 90.3, "cluster": 2 },
+    "2024": { "average_velocity": 90.0, "cluster": 1 },
+    "2025": { "average_velocity": 90.1, "cluster": 1 }
+  },
+  "Tyler Kinley": {
+    "2021": { "average_velocity": 95.9, "cluster": 2 },
+    "2024": { "average_velocity": 95.8, "cluster": 2 },
+    "2025": { "average_velocity": 95.1, "cluster": 2 }
+  },
+  "Tyler Mahle": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 },
+    "2022": { "average_velocity": 91.7, "cluster": 2 },
+    "2025": { "average_velocity": 90.7, "cluster": 2 }
+  },
+  "Tyler Matzek": {
+    "2021": { "average_velocity": 96.2, "cluster": 2 },
+    "2022": { "average_velocity": 94.1, "cluster": 2 }
+  },
+  "Tyler Phillips": {
+    "2024": { "average_velocity": 93.4, "cluster": 0 },
+    "2025": { "average_velocity": 95.1, "cluster": 0 }
+  },
+  "Tyler Rogers": {
+    "2021": { "average_velocity": 82.7, "cluster": 0 },
+    "2022": { "average_velocity": 83.2, "cluster": 0 },
+    "2023": { "average_velocity": 82.8, "cluster": 0 },
+    "2024": { "average_velocity": 82.3, "cluster": 0 },
+    "2025": { "average_velocity": 83.4, "cluster": 0 }
+  },
+  "Tyler Thornburg": {
+    "2022": { "average_velocity": 93.5, "cluster": 2 }
+  },
+  "Tyler Webb": {
+    "2021": { "average_velocity": 90.7, "cluster": 2 }
+  },
+  "Tyler Wells": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 },
+    "2022": { "average_velocity": 91.1, "cluster": 2 },
+    "2023": { "average_velocity": 91.3, "cluster": 2 }
+  },
+  "Tyler Zuber": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Tylor Megill": {
+    "2021": { "average_velocity": 94.6, "cluster": 2 },
+    "2022": { "average_velocity": 95.4, "cluster": 2 },
+    "2023": { "average_velocity": 94.9, "cluster": 2 },
+    "2024": { "average_velocity": 94.4, "cluster": 2 },
+    "2025": { "average_velocity": 95.0, "cluster": 2 }
+  },
+  "Tyson Miller": {
+    "2024": { "average_velocity": 89.6, "cluster": 1 }
+  },
+  "Valente Bellozo": {
+    "2024": { "average_velocity": 86.6, "cluster": 1 },
+    "2025": { "average_velocity": 87.6, "cluster": 1 }
+  },
+  "Victor González": {
+    "2021": { "average_velocity": 94.3, "cluster": 0 },
+    "2023": { "average_velocity": 94.6, "cluster": 0 }
+  },
+  "Victor Vodnik": {
+    "2024": { "average_velocity": 98.0, "cluster": 2 },
+    "2025": { "average_velocity": 98.1, "cluster": 2 }
+  },
+  "Vince Velasquez": {
+    "2021": { "average_velocity": 93.1, "cluster": 2 },
+    "2022": { "average_velocity": 93.0, "cluster": 2 },
+    "2023": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Vladimir Gutierrez": {
+    "2021": { "average_velocity": 93.2, "cluster": 2 },
+    "2022": { "average_velocity": 92.9, "cluster": 2 }
+  },
+  "Víctor Arano": {
+    "2022": { "average_velocity": 94.1, "cluster": 0 }
+  },
+  "Wade Davis": {
+    "2021": { "average_velocity": 90.9, "cluster": 2 }
+  },
+  "Wade LeBlanc": {
+    "2021": { "average_velocity": 86.5, "cluster": 1 }
+  },
+  "Wade Miley": {
+    "2021": { "average_velocity": 86.6, "cluster": 1 },
+    "2022": { "average_velocity": 86.2, "cluster": 1 },
+    "2023": { "average_velocity": 88.3, "cluster": 1 }
+  },
+  "Walker Buehler": {
+    "2021": { "average_velocity": 94.5, "cluster": 2 },
+    "2022": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.8, "cluster": 2 },
+    "2025": { "average_velocity": 92.7, "cluster": 2 }
+  },
+  "Wander Suero": {
+    "2021": { "average_velocity": 92.1, "cluster": 1 }
+  },
+  "Wandy Peralta": {
+    "2021": { "average_velocity": 95.1, "cluster": 0 },
+    "2022": { "average_velocity": 95.4, "cluster": 0 },
+    "2023": { "average_velocity": 95.8, "cluster": 0 },
+    "2024": { "average_velocity": 95.1, "cluster": 0 },
+    "2025": { "average_velocity": 95.4, "cluster": 0 }
+  },
+  "Wes Benjamin": {
+    "2021": { "average_velocity": 89.1, "cluster": 2 }
+  },
+  "Wil Crowe": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 },
+    "2022": { "average_velocity": 94.6, "cluster": 2 }
+  },
+  "Will Klein": {
+    "2025": { "average_velocity": 96.8, "cluster": 2 }
+  },
+  "Will Smith": {
+    "2021": { "average_velocity": 92.9, "cluster": 2 },
+    "2022": { "average_velocity": 92.0, "cluster": 2 },
+    "2023": { "average_velocity": 92.3, "cluster": 2 }
+  },
+  "Will Vest": {
+    "2021": { "average_velocity": 93.5, "cluster": 2 },
+    "2022": { "average_velocity": 95.1, "cluster": 2 },
+    "2023": { "average_velocity": 95.2, "cluster": 2 },
+    "2024": { "average_velocity": 96.0, "cluster": 2 },
+    "2025": { "average_velocity": 96.5, "cluster": 2 }
+  },
+  "Will Warren": {
+    "2024": { "average_velocity": 93.0, "cluster": 2 },
+    "2025": { "average_velocity": 93.2, "cluster": 2 }
+  },
+  "Wily Peralta": {
+    "2021": { "average_velocity": 93.9, "cluster": 0 },
+    "2022": { "average_velocity": 95.5, "cluster": 2 }
+  },
+  "Xzavion Curry": {
+    "2023": { "average_velocity": 92.5, "cluster": 2 },
+    "2024": { "average_velocity": 92.1, "cluster": 2 }
+  },
+  "Yacksel Ríos": {
+    "2021": { "average_velocity": 97.1, "cluster": 2 }
+  },
+  "Yariel Rodríguez": {
+    "2024": { "average_velocity": 93.8, "cluster": 1 },
+    "2025": { "average_velocity": 95.7, "cluster": 2 }
+  },
+  "Yency Almonte": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "Yennier Cano": {
+    "2023": { "average_velocity": 96.3, "cluster": 0 },
+    "2024": { "average_velocity": 96.1, "cluster": 0 },
+    "2025": { "average_velocity": 95.0, "cluster": 0 }
+  },
+  "Yennsy Díaz": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 }
+  },
+  "Yerry De los Santos": {
+    "2023": { "average_velocity": 94.9, "cluster": 0 }
+  },
+  "Yerry Rodríguez": {
+    "2024": { "average_velocity": 96.3, "cluster": 2 }
+  },
+  "Yilber Díaz": {
+    "2024": { "average_velocity": 96.0, "cluster": 2 }
+  },
+  "Yimi García": {
+    "2021": { "average_velocity": 95.7, "cluster": 2 },
+    "2022": { "average_velocity": 94.6, "cluster": 2 },
+    "2023": { "average_velocity": 95.8, "cluster": 2 },
+    "2024": { "average_velocity": 96.3, "cluster": 2 },
+    "2025": { "average_velocity": 95.8, "cluster": 2 }
+  },
+  "Yoendrys Gómez": {
+    "2025": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Yohan Ramírez": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 },
+    "2022": { "average_velocity": 95.4, "cluster": 0 },
+    "2023": { "average_velocity": 95.1, "cluster": 0 },
+    "2024": { "average_velocity": 94.5, "cluster": 0 }
+  },
+  "Yonny Chirinos": {
+    "2023": { "average_velocity": 92.4, "cluster": 0 },
+    "2024": { "average_velocity": 92.8, "cluster": 0 }
+  },
+  "Yoshinobu Yamamoto": {
+    "2024": { "average_velocity": 95.0, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Yu Darvish": {
+    "2021": { "average_velocity": 94.1, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.7, "cluster": 2 },
+    "2024": { "average_velocity": 93.5, "cluster": 2 },
+    "2025": { "average_velocity": 93.0, "cluster": 0 }
+  },
+  "Yuki Matsui": {
+    "2024": { "average_velocity": 92.2, "cluster": 2 },
+    "2025": { "average_velocity": 91.9, "cluster": 2 }
+  },
+  "Yunior Marte": {
+    "2022": { "average_velocity": 97.1, "cluster": 0 },
+    "2023": { "average_velocity": 97.7, "cluster": 0 },
+    "2024": { "average_velocity": 96.4, "cluster": 0 }
+  },
+  "Yusei Kikuchi": {
+    "2021": { "average_velocity": 93.3, "cluster": 2 },
+    "2022": { "average_velocity": 94.6, "cluster": 2 },
+    "2023": { "average_velocity": 95.0, "cluster": 2 },
+    "2024": { "average_velocity": 95.5, "cluster": 2 },
+    "2025": { "average_velocity": 94.7, "cluster": 2 }
+  },
+  "Yusmeiro Petit": {
+    "2021": { "average_velocity": 86.6, "cluster": 2 }
+  },
+  "Zac Gallen": {
+    "2021": { "average_velocity": 93.0, "cluster": 2 },
+    "2022": { "average_velocity": 93.1, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 },
+    "2024": { "average_velocity": 93.4, "cluster": 2 },
+    "2025": { "average_velocity": 93.4, "cluster": 2 }
+  },
+  "Zac Lowther": {
+    "2021": { "average_velocity": 90.8, "cluster": 2 }
+  },
+  "Zach Agnos": {
+    "2025": { "average_velocity": 94.2, "cluster": 1 }
+  },
+  "Zach Davies": {
+    "2021": { "average_velocity": 87.8, "cluster": 0 },
+    "2022": { "average_velocity": 89.4, "cluster": 0 },
+    "2023": { "average_velocity": 89.1, "cluster": 0 }
+  },
+  "Zach Eflin": {
+    "2021": { "average_velocity": 92.6, "cluster": 0 },
+    "2022": { "average_velocity": 92.3, "cluster": 0 },
+    "2023": { "average_velocity": 90.8, "cluster": 0 },
+    "2024": { "average_velocity": 90.3, "cluster": 0 },
+    "2025": { "average_velocity": 90.3, "cluster": 1 }
+  },
+  "Zach Jackson": {
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 93.1, "cluster": 2 }
+  },
+  "Zach Logue": {
+    "2022": { "average_velocity": 88.7, "cluster": 2 }
+  },
+  "Zach Neal": {
+    "2023": { "average_velocity": 87.8, "cluster": 1 }
+  },
+  "Zach Plesac": {
+    "2021": { "average_velocity": 92.8, "cluster": 2 },
+    "2022": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Zach Pop": {
+    "2021": { "average_velocity": 95.3, "cluster": 0 },
+    "2022": { "average_velocity": 96.4, "cluster": 0 },
+    "2024": { "average_velocity": 95.8, "cluster": 0 }
+  },
+  "Zach Thompson": {
+    "2021": { "average_velocity": 89.6, "cluster": 1 },
+    "2022": { "average_velocity": 89.8, "cluster": 1 }
+  },
+  "Zack Britton": {
+    "2021": { "average_velocity": 92.5, "cluster": 0 }
+  },
+  "Zack Greinke": {
+    "2021": { "average_velocity": 88.8, "cluster": 2 },
+    "2022": { "average_velocity": 88.1, "cluster": 1 },
+    "2023": { "average_velocity": 89.0, "cluster": 2 }
+  },
+  "Zack Kelly": {
+    "2024": { "average_velocity": 94.2, "cluster": 2 },
+    "2025": { "average_velocity": 93.9, "cluster": 1 }
+  },
+  "Zack Littell": {
+    "2021": { "average_velocity": 94.9, "cluster": 2 },
+    "2022": { "average_velocity": 94.4, "cluster": 2 },
+    "2023": { "average_velocity": 93.8, "cluster": 2 },
+    "2024": { "average_velocity": 92.1, "cluster": 2 },
+    "2025": { "average_velocity": 91.8, "cluster": 2 }
+  },
+  "Zack Thompson": {
+    "2022": { "average_velocity": 94.6, "cluster": 2 },
+    "2023": { "average_velocity": 93.6, "cluster": 2 }
+  },
+  "Zack Wheeler": {
+    "2021": { "average_velocity": 95.4, "cluster": 2 },
+    "2022": { "average_velocity": 94.5, "cluster": 2 },
+    "2023": { "average_velocity": 94.8, "cluster": 2 },
+    "2024": { "average_velocity": 94.6, "cluster": 2 },
+    "2025": { "average_velocity": 95.3, "cluster": 2 }
+  },
+  "Zebby Matthews": {
+    "2024": { "average_velocity": 93.8, "cluster": 2 },
+    "2025": { "average_velocity": 95.5, "cluster": 2 }
+  }
+}
