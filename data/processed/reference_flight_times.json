@@ -1,0 +1,24 @@
+{
+  "train_years": [
+    2021,
+    2022,
+    2023
+  ],
+  "min_flight_time_s": 0.25,
+  "max_flight_time_s": 0.6,
+  "reference_times": {
+    "FF": 0.4005089031303783,
+    "SI": 0.4037359513148274,
+    "FC": 0.4236724076182824
+  },
+  "sample_sizes": {
+    "FF": 717454,
+    "SI": 326743,
+    "FC": 160047
+  },
+  "source_files": [
+    "2021_processed.csv",
+    "2022_processed.csv",
+    "2023_processed.csv"
+  ]
+}
