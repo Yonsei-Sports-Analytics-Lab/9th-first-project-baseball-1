@@ -8,17 +8,44 @@
 
 API
 ---
-``GET /{player_id}/{year}``
-    1. ``src/utils/find_nearest_pitcher.find_nearest_pitcher(player_id, year, top_n)``
-       로 가장 비슷한 투수-시즌 ``(MLB ID, 연도)`` 를 찾고
-    2. 입력 ``(player_id, year)`` 와 찾은 ``(MLB ID, 연도)`` 를
-       ``src/utils/llm_client.llm_client`` 에 넣어 LLM 답변(dict)을 받아
-    3. 아래 형태로 돌려준다::
+LLM 분석은 오래 걸리므로 두 단계로 나눠 호출한다. 프론트엔드는 1번 응답으로 유사 투수를 먼저
+보여 주고, 이어서 2번을 호출하는 동안 로딩을 띄운다.
+
+``GET /{player_id}/{year}`` — 유사 투수 (빠름)
+    ``src/utils/find_nearest_pitcher.find_nearest_pitcher(player_id, year, top_n)`` 로
+    가장 비슷한 투수-시즌 ``(MLB ID, 연도)`` 를 찾아 돌려준다::
 
         {
+          "matched": true,
+          "message": null,
           "query":   {"player_id": 660271, "year": 2023},
           "nearest": {"player_id": 543037, "year": 2021},
-          "llm":     { ... llm_client 가 돌려준 dict ... }
+          "llm_url": "/660271/2023/llm"
+        }
+
+``GET /{player_id}/{year}/llm`` — LLM 분석 (느림)
+    유사 투수를 서버에서 다시 찾은 뒤(프로필이 메모리에 있어 빠름) 입력 ``(player_id, year)`` 와
+    찾은 ``(MLB ID, 연도)`` 를 ``src/utils/llm_client.llm_client`` 에 넣어 답변(dict)을 돌려준다.
+    같은 조합의 답변은 메모리에 캐시해 두 번째 요청부터는 바로 응답한다::
+
+        {
+          "matched": true,
+          "message": null,
+          "query":   {"player_id": 660271, "year": 2023},
+          "nearest": {"player_id": 543037, "year": 2021},
+          "llm":     { ... llm_client 가 돌려준 dict ... },
+          "cached":  false
+        }
+
+두 API 모두 ``find_nearest_pitcher`` 가 ``None`` 을 돌려주면(조건에 맞는 유사 투수 없음) 오류가
+아니라 정상 응답(200)으로 ``"matched": false`` 와 안내 문구를 보내고, LLM 은 호출하지 않는다::
+
+        {
+          "matched": false,
+          "message": "조건에 맞는 유사 투수를 찾지 못했습니다.",
+          "query":   {"player_id": 660271, "year": 2023},
+          "nearest": null,
+          "llm_url": null            (/llm 에서는 "llm": null)
         }
 
 ``GET /health``
@@ -61,6 +88,8 @@ from src.preprocessing.preprocess_pipeline import (  # noqa: E402
     run_pipeline,
 )
 
+from src.utils.find_nearest_pitcher import PROFILE_FILE, build_profile, find_nearest_pitcher
+
 # --------------------------------------------------------------------------- #
 # 설정
 # --------------------------------------------------------------------------- #
@@ -76,6 +105,9 @@ ENV_TOP_N = "NEAREST_TOP_N"
 ENV_CORS = "CORS_ORIGINS"  # 쉼표로 구분 (예: "http://localhost:3000,http://127.0.0.1:3000")
 
 DEFAULT_TOP_N = 1
+
+#: 유사 투수가 없을 때 프론트엔드에 보낼 안내 문구
+NO_MATCH_MESSAGE = "조건에 맞는 유사 투수를 찾지 못했습니다."
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8000
 
@@ -131,13 +163,11 @@ app.add_middleware(
 # --------------------------------------------------------------------------- #
 
 
-def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[int, int]:
-    """``find_nearest_pitcher`` 를 호출해 ``(MLB ID, 연도)`` 하나를 받는다."""
-    try:
-        from src.utils.find_nearest_pitcher import find_nearest_pitcher
-    except ImportError as error:
-        raise HTTPException(503, f"find_nearest_pitcher 를 불러올 수 없습니다: {error}") from error
+def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[int, int] | None:
+    """``find_nearest_pitcher`` 를 호출해 ``(MLB ID, 연도)`` 하나를 받는다.
 
+    조건에 맞는 유사 투수가 없으면 ``None`` 을 돌려준다.
+    """
     try:
         result = find_nearest_pitcher(player_id, year, top_n)
     except Exception as error:  # 팀원 코드의 예외를 API 오류로 변환
@@ -148,7 +178,8 @@ def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[in
     if isinstance(result, list):
         result = result[0] if result else None
     if result is None:
-        raise HTTPException(404, f"({player_id}, {year}) 와 비슷한 투수를 찾지 못했습니다.")
+        logger.info("(%s, %s) 와 매칭되는 유사 투수 없음", player_id, year)
+        return None
     try:
         nearest_id, nearest_year = result
         return int(nearest_id), int(nearest_year)  # numpy 정수 → 파이썬 int
@@ -189,16 +220,12 @@ def health() -> dict[str, Any]:
         "top_n": app.state.top_n,
         "cluster_file": CLUSTER_FILE_NAME,
         "pitchers_loaded": len(app.state.clusters),
+        "llm_cache_size": len(_llm_cache),
     }
 
 
-# LLM 호출이 동기(blocking) 함수일 것이므로 async 가 아닌 def 로 둔다
-# (FastAPI 가 별도 스레드에서 실행해 다른 요청을 막지 않는다).
-@app.get("/{player_id}/{year}")
-def compare_pitcher(
-    player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
-    year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
-) -> dict[str, Any]:
+def validate_season(player_id: int, year: int) -> None:
+    """``pitcher_clustered.json`` 에 없는 (ID, 연도) 면 404."""
     clusters = app.state.clusters
     if clusters and str(year) not in clusters.get(str(player_id), {}):
         seasons = sorted(clusters.get(str(player_id), {}))
@@ -208,13 +235,75 @@ def compare_pitcher(
         )
         raise HTTPException(404, detail)
 
+
+def no_match_response(query: dict[str, int], extra_key: str) -> dict[str, Any]:
+    """유사 투수가 없을 때의 응답 — 프론트엔드가 안내 문구를 띄울 수 있게 알려 준다."""
+    return {
+        "matched": False,
+        "message": NO_MATCH_MESSAGE,
+        "query": query,
+        "nearest": None,
+        extra_key: None,
+    }
+
+
+#: LLM 답변 캐시 {((입력 id, 연도), (유사 id, 연도)): dict} — 서버를 다시 켜면 비워진다
+_llm_cache: dict[tuple[tuple[int, int], tuple[int, int]], dict[str, Any]] = {}
+
+
+# 두 엔드포인트 모두 async 가 아닌 def 로 둔다
+# (FastAPI 가 별도 스레드에서 실행해, LLM 호출이 길어져도 다른 요청을 막지 않는다).
+@app.get("/{player_id}/{year}")
+def compare_pitcher(
+    player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
+    year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
+) -> dict[str, Any]:
+    """1단계: 유사 투수만 빠르게 돌려준다."""
+    validate_season(player_id, year)
+    query = {"player_id": player_id, "year": year}
+
     nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
-    answer = call_llm_client((player_id, year), nearest)
+    if nearest is None:
+        return no_match_response(query, "llm_url")
 
     return {
-        "query": {"player_id": player_id, "year": year},
+        "matched": True,
+        "message": None,
+        "query": query,
         "nearest": {"player_id": nearest[0], "year": nearest[1]},
-        "llm": answer,
+        "llm_url": f"/{player_id}/{year}/llm",
+    }
+
+
+@app.get("/{player_id}/{year}/llm")
+def compare_pitcher_llm(
+    player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
+    year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
+) -> dict[str, Any]:
+    """2단계: 유사 투수를 서버에서 다시 찾아 LLM 분석을 돌려준다.
+
+    유사 투수를 URL 로 받지 않는 이유: 프론트엔드가 임의의 투수 조합으로 LLM 을 돌리지 못하게 하고,
+    1단계와 항상 같은 매칭을 쓰기 위해서다.
+    """
+    validate_season(player_id, year)
+    query = {"player_id": player_id, "year": year}
+
+    nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
+    if nearest is None:
+        return no_match_response(query, "llm")
+
+    key = ((player_id, year), nearest)
+    cached = key in _llm_cache
+    if not cached:
+        _llm_cache[key] = call_llm_client(*key)   # 실패하면 예외가 나서 캐시에 남지 않는다
+
+    return {
+        "matched": True,
+        "message": None,
+        "query": query,
+        "nearest": {"player_id": nearest[0], "year": nearest[1]},
+        "llm": _llm_cache[key],
+        "cached": cached,
     }
 
 
@@ -259,6 +348,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         results = run_pipeline(k=args.k, force=args.force, cluster_output=CLUSTER_FILE_NAME)
         for result in results:
             logger.info(result.summary())
+
+    # 유사 투수 탐색용 프로필 (data/processed/pitcher_profile.csv)
+    # 없거나, 클러스터 JSON 이 프로필보다 나중에 만들어졌으면(K 변경·--force cluster 등) 다시 생성
+    cluster_file = PROCESSED_DIR / CLUSTER_FILE_NAME
+    if not PROFILE_FILE.exists():
+        logger.info("투수 프로필이 없어 생성합니다: %s", PROFILE_FILE)
+        build_profile()
+    elif cluster_file.exists() and cluster_file.stat().st_mtime > PROFILE_FILE.stat().st_mtime:
+        logger.info("%s 가 새로 만들어져 투수 프로필을 다시 생성합니다.", cluster_file.name)
+        build_profile()
+    else:
+        logger.info("투수 프로필이 최신입니다 — 생성을 건너뜁니다: %s", PROFILE_FILE.name)
 
     if args.cors_origins:
         # 미들웨어는 앱 시작 전에만 바꿀 수 있으므로, 환경변수 대신 여기서 다시 설정한다

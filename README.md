@@ -23,10 +23,10 @@ data/processed/pitcher_clustered.json            {MLB ID: {연도: {average_velo
         │
         ▼
 main.py (FastAPI 백엔드)
-  GET /{player_id}/{year}
+  GET /{player_id}/{year}         (빠름)
     → src/utils/find_nearest_pitcher : 가장 비슷한 (MLB ID, 연도) 찾기
+  GET /{player_id}/{year}/llm     (느림)
     → src/utils/llm_client           : 두 투수-시즌을 LLM 으로 분석 (dict)
-    → 프론트엔드로 JSON 응답
 ```
 
 1~4단계는 `src/preprocessing/preprocess_pipeline.py` 가 순서대로 실행하며, `main.py` 는 서버를 띄우기 전에 이 파이프라인을 먼저 돌립니다.
@@ -91,30 +91,63 @@ main.py (FastAPI 백엔드)
 
 ## 🌐 API
 
-### `GET /{player_id}/{year}`
+LLM 분석은 오래 걸리므로 API 를 두 개로 나눴습니다. 프론트엔드는 ① 을 받아 유사 투수를 먼저 보여 주고, 이어서 ② 를 호출하는 동안 로딩을 띄우면 됩니다. `player_id` 는 MLB(MLBAM) 선수 ID, `year` 는 시즌 연도입니다.
 
-`player_id` 는 MLB(MLBAM) 선수 ID, `year` 는 시즌 연도입니다.
+### ① `GET /{player_id}/{year}` — 유사 투수 (빠름)
 
 ```json
 {
+  "matched": true,
+  "message": null,
   "query":   { "player_id": 660271, "year": 2023 },
   "nearest": { "player_id": 543037, "year": 2021 },
-  "llm":     { "...": "llm_client 가 돌려준 dict" }
+  "llm_url": "/660271/2023/llm"
 }
 ```
 
+### ② `GET /{player_id}/{year}/llm` — LLM 분석 (느림)
+
+유사 투수는 서버가 다시 찾으므로 URL 에 넣지 않습니다. 같은 조합의 답변은 메모리에 캐시되어 두 번째 요청부터는 바로 응답합니다(`"cached": true`, 서버를 다시 켜면 비워짐).
+
+```json
+{
+  "matched": true,
+  "message": null,
+  "query":   { "player_id": 660271, "year": 2023 },
+  "nearest": { "player_id": 543037, "year": 2021 },
+  "llm":     { "...": "llm_client 가 돌려준 dict" },
+  "cached":  false
+}
+```
+
+### 유사 투수가 없을 때
+
+두 API 모두 오류가 아닌 `200` 으로 아래처럼 응답하고, LLM 은 호출하지 않습니다. 프론트엔드는 `matched` 로 구분해 `message` 를 보여 주면 됩니다.
+
+```json
+{
+  "matched": false,
+  "message": "조건에 맞는 유사 투수를 찾지 못했습니다.",
+  "query":   { "player_id": 660271, "year": 2023 },
+  "nearest": null,
+  "llm_url": null
+}
+```
+
+(`/llm` 에서는 `"llm_url"` 대신 `"llm": null` 이 옵니다.)
+
 | 상태 코드 | 의미 |
 |---|---|
-| `200` | 성공 |
-| `404` | `pitcher_clustered.json` 에 없는 (ID, 연도) — 응답에 그 선수의 가능한 연도가 함께 옴 / 유사 투수를 찾지 못함 |
+| `200` | 성공 (유사 투수가 없을 때도 `200`, `"matched": false`) |
+| `404` | `pitcher_clustered.json` 에 없는 (ID, 연도) — 응답에 그 선수의 가능한 연도가 함께 옴 |
 | `422` | ID·연도가 숫자가 아니거나 범위를 벗어남 |
 | `500` | `find_nearest_pitcher` 실행 오류 또는 반환 형식 오류 |
-| `502` | `llm_client` 호출 오류 또는 dict 가 아닌 반환 |
-| `503` | `src/utils` 의 모듈을 아직 불러올 수 없음 |
+| `502` | (`/llm`) `llm_client` 호출 오류 또는 dict 가 아닌 반환 |
+| `503` | (`/llm`) `src/utils/llm_client.py` 를 아직 불러올 수 없음 |
 
 ### `GET /health`
 
-서버 상태, K, 로드된 투수 수를 돌려줍니다.
+서버 상태, K, 로드된 투수 수, LLM 캐시 개수를 돌려줍니다.
 
 ---
 
