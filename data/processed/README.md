@@ -37,7 +37,7 @@
 
 * **키:** MLB(MLBAM) 선수 ID(Statcast `pitcher` 컬럼) → 시즌 연도. JSON 키라서 둘 다 문자열입니다.
 * **`cluster`:** 그 투수-시즌의 투구가 가장 많이 속한 GMM 클러스터 번호 (0 ~ K-1). 동률이면 번호가 작은 쪽.
-* **`average_velocity`:** 그 투수-시즌 패스트볼(FF/SI/FC)의 평균 `release_speed` (mph, 소수점 첫째 자리).
+* **`average_velocity`:** 그 투수-시즌 **주 패스트볼**(FF/SI/FC 중 가장 많이 던진 구종, 동률이면 코드 알파벳순 앞쪽)의 평균 `release_speed` (mph, 소수점 첫째 자리). `src/utils/llm_client.py` 의 `primary_fastball` 과 같은 기준입니다. 세 구종을 섞어 평균 내면 커터 비중이 큰 투수의 구속이 낮게 잡혀, 유사 투수 매칭의 구속 조건(±2 mph)이 엉뚱한 투수를 통과시킬 수 있기 때문입니다.
 * 투구가 **200구 미만인 투수-시즌은 제외** 됩니다 (`--min-pitches` 로 변경 가능).
 * 클러스터 번호는 모델마다 의미가 다릅니다. K 나 모델이 바뀌면 같은 번호라도 다른 유형입니다.
 
@@ -48,7 +48,7 @@
 | 컬럼 | 출처 | 설명 |
 |---|---|---|
 | `player_id`, `game_year` | 클러스터 JSON | MLB ID, 시즌 |
-| `average_velocity`, `cluster` | 클러스터 JSON | 평균 구속, 최빈 클러스터 |
+| `average_velocity`, `cluster` | 클러스터 JSON | 주 패스트볼 평균 구속, 최빈 클러스터 |
 | `release_pos_x_arm` | 원본 Statcast | 릴리스 좌우 위치 평균 (ft, **암사이드 +** 로 좌우완 통일) |
 | `release_pos_z` | 원본 Statcast | 릴리스 높이 평균 (ft) |
 | `release_extension` | 원본 Statcast | 익스텐션 평균 (ft) |
