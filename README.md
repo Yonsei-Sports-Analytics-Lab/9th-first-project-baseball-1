@@ -69,12 +69,29 @@ main.py (FastAPI 백엔드)
    .venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
    pip install -r requirements.txt
    ```
-3. **원본 데이터 배치** — 아래 구글 드라이브에서 받아 `data/raw/{연도}/statcast_{연도}-{MM}.csv` 형태로 넣습니다. 자세한 규칙은 [`data/raw/README.md`](data/raw/README.md) 참고.
-4. **실행**
+3. **원본 데이터 배치** — 아래 구글 드라이브에서 받아 `data/raw/{연도}/statcast_{연도}-{MM}.csv` 형태로 넣고, `fip_2021_2025.csv` 는 `data/raw/` 바로 아래에 둡니다. 자세한 규칙은 [`data/raw/README.md`](data/raw/README.md) 참고.
+4. **`.env` 설정 (LLM API 키)** — 예시 파일을 복사해 프로젝트 루트에 `.env` 를 만들고 키를 채웁니다.
+   ```bash
+   copy .env.example .env          # macOS/Linux: cp .env.example .env
+   ```
+   | 변수 | 필수 | 설명 |
+   |---|---|---|
+   | `GEMINI_API_KEY` | 둘 중 하나 | Gemini API 키 (무료) — https://aistudio.google.com/apikey |
+   | `OPENAI_API_KEY` | 둘 중 하나 | OpenAI API 키 (유료) — https://platform.openai.com/api-keys. **둘 다 있으면 OpenAI 를 사용** |
+   | `LLM_MODEL` | 선택 | 사용할 모델 이름. 비우면 제공자 기본 모델 |
+   | `LLM_FALLBACK_MODELS` | 선택 | 기본 모델이 혼잡할 때 차례로 시도할 모델 (쉼표 구분). 비우면 기본 순서 |
+   | `DATA_DRIVE_SECRET_LINK`, `SPORTS_API_KEY` | – | 템플릿 항목. 현재 코드에서는 사용하지 않음 |
+
+   * `.env` 는 `.gitignore` 에 포함되어 있어 커밋되지 않습니다. **키를 코드·README·이슈·PR 에 절대 적지 마세요.** 새 변수가 필요하면 값 없이 이름만 `.env.example` 에 추가합니다.
+   * 키가 없어도 서버와 유사 투수 API(①)는 동작합니다. LLM 분석 API(②)만 `502` 오류를 돌려줍니다.
+5. **실행**
    ```bash
    python main.py --k 6
    ```
-   처음 실행하면 전처리(원본 5개 연도 기준 수 분 소요)를 끝낸 뒤 서버가 `http://127.0.0.1:8000` 에 뜹니다. 이미 만들어진 산출물은 다시 만들지 않으므로 두 번째 실행부터는 바로 서버가 뜹니다. 브라우저에서 `http://127.0.0.1:8000/docs` 로 API 를 직접 호출해 볼 수 있습니다.
+   처음 실행하면 아래 준비를 마친 뒤 서버가 `http://127.0.0.1:8000` 에 뜹니다. 이미 만들어진 파일은 다시 만들지 않으므로 두 번째 실행부터는 바로 서버가 뜹니다. 브라우저에서 `http://127.0.0.1:8000/docs` 로 API 를 직접 호출해 볼 수 있고, [`docs/api_demo.html`](docs/api_demo.html) 을 열어 화면에서 확인할 수도 있습니다.
+   1. 전처리 파이프라인 → `data/processed/pitcher_clustered.json` (원본 5개 연도 기준 수 분)
+   2. 유사 투수 탐색용 프로필 → `data/processed/pitcher_profile.csv`
+   3. LLM 입력용 구종 집계 → `data/processed/interim/pitch_arsenal.pkl` (약 1분)
 
 ### `main.py` 옵션
 
