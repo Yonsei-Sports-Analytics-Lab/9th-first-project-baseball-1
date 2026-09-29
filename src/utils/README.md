@@ -5,7 +5,7 @@
 | 파일 | 상태 | 역할 |
 |---|---|---|
 | `find_nearest_pitcher.py` | ✅ 구현 | 입력한 투수-시즌과 비슷한 투수-시즌 `(MLB ID, 연도)` 찾기 |
-| `llm_client.py` | 🚧 작업 중 | 두 투수-시즌을 받아 LLM 분석(dict) 반환 |
+| `llm_client.py` | ✅ 구현 | 두 투수-시즌을 받아 LLM 변화구 추천(dict) 반환 |
 
 ---
 
@@ -73,24 +73,34 @@ rank_candidates(543037, 2023, min_ip=50).head() # 후보 전체 확인
 
 ---
 
-## `llm_client.py` — 🚧 작업 중
+## `llm_client.py`
 
-`main.py` 는 아래 형태를 기준으로 호출합니다.
+입력 투수와 유사 투수의 Statcast 구종 데이터를 정리해 LLM(Gemini 또는 OpenAI)에 넘기고, **변화구 추천** 답변을 받습니다. 자세한 반환 구조는 파일 맨 위 설명을 참고하세요.
 
 ```python
 from src.utils.llm_client import llm_client
-answer = llm_client((player_id, year), (nearest_id, nearest_year))   # -> dict
+
+result = llm_client(
+    input_mlbid=543037, input_year=2023,        # 사용자가 입력한 투수-시즌
+    similar_mlbid=650556, similar_year=2022,    # find_nearest_pitcher 가 찾은 투수-시즌
+    search_context={...},                       # (선택) 유사 투수 검색 정보
+)
+result["response"]["recommendations"]           # LLM 답변 (dict)
 ```
 
-| 인자 | 타입 | 설명 |
-|---|---|---|
-| 첫 번째 | `(int, int)` | 사용자가 입력한 `(MLB ID, 연도)` |
-| 두 번째 | `(int, int)` | `find_nearest_pitcher` 가 돌려준 `(MLB ID, 연도)` |
+| 인자 | 설명 |
+|---|---|
+| `input_mlbid`, `input_year` | 사용자가 입력한 `(MLB ID, 연도)` |
+| `similar_mlbid`, `similar_year` | `find_nearest_pitcher` 가 돌려준 `(MLB ID, 연도)` |
+| `search_context` | (선택) 검색 단계 정보. `main.py` 는 `pitcher_profile.csv` 에서 `cluster`, `input_avg_velocity`, `similar_avg_velocity`, `input_fip`, `similar_fip`, `form_distance`(투구 폼 거리)를 넣음 |
+| `model` | (선택) 모델 이름. 생략하면 `.env` 의 `LLM_MODEL` → 제공자 기본값 |
 
-**반환:** `dict` — `/llm` 응답의 `"llm"` 필드에 그대로 들어갑니다.
+**반환:** `{"model", "created_at", "payload", "response", "validation_warnings"}` dict — `/llm` 응답의 `"llm"` 필드에 그대로 들어갑니다.
 
-> `llm_client.py` 가 생기기 전까지 `GET /{player_id}/{year}/llm` 은 `503` 을 돌려줍니다. 유사 투수 API(`GET /{player_id}/{year}`)는 LLM 과 무관하게 동작합니다.
-> 같은 `(입력, 유사 투수)` 조합의 답변은 `main.py` 가 메모리에 캐시하므로, `llm_client` 는 같은 입력에 대해 한 번만 호출됩니다(서버 재시작 시 초기화).
+**준비:**
+* 레포 루트 `.env` 에 `GEMINI_API_KEY` 또는 `OPENAI_API_KEY` (`.env.example` 참고). 둘 다 있으면 OpenAI 를 씁니다.
+* 첫 호출 때 `data/raw/` 전체로 구종 집계 캐시(`data/processed/interim/pitch_arsenal.pkl`)를 만들므로, **맨 처음 한 번은 오래 걸립니다.** 이후에는 캐시를 재사용합니다.
+* 같은 `(입력, 유사 투수)` 조합의 답변은 `main.py` 가 메모리에 캐시하므로 LLM 은 한 번만 호출됩니다(서버 재시작 시 초기화).
 
 ---
 
@@ -105,7 +115,9 @@ GET /{player_id}/{year}          ← 1단계 (빠름)
 
 GET /{player_id}/{year}/llm      ← 2단계 (느림, 1단계 응답을 받은 뒤 호출)
   1~3. 1단계와 같음 (유사 투수를 서버에서 다시 찾음 — 프로필이 메모리에 있어 빠름)
-  4. answer = llm_client((player_id, year), nearest)                   # 캐시에 있으면 생략
+  4. answer = llm_client(input_mlbid=player_id, input_year=year,
+                          similar_mlbid=nearest[0], similar_year=nearest[1],
+                          search_context=...)                          # 캐시에 있으면 생략
   5. {"matched": true, "message": null, "query": {...}, "nearest": {...}, "llm": answer, "cached": bool}
 ```
 
@@ -127,8 +139,10 @@ GET /{player_id}/{year}/llm      ← 2단계 (느림, 1단계 응답을 받은 �
 |---|---|
 | `find_nearest_pitcher` 가 `None` 또는 빈 리스트를 반환 | `200` + `"matched": false` |
 | `find_nearest_pitcher` 가 예외를 던지거나 `(ID, 연도)` 형태가 아닌 값을 반환 | `500` |
-| `llm_client.py` 가 없거나 import 중 오류 | `503` |
-| `llm_client` 가 예외를 던지거나 `dict` 가 아닌 값을 반환 | `502` |
+| `llm_client.py` 또는 필요한 패키지(`openai` 등)를 불러올 수 없음 | `503` |
+| LLM 서버 혼잡·한도 초과 (`TransientLLMError`) | `503` — 잠시 후 다시 시도 |
+| 해당 시즌 구종 데이터 없음 (`ValueError`) | `404` |
+| 그 외 예외(API 키 없음, 응답 파싱 실패 등) 또는 `dict` 가 아닌 반환 | `502` |
 
 * 반환값에 numpy 정수가 섞여 있어도 `main.py` 가 파이썬 `int` 로 바꿉니다.
 * 두 함수는 FastAPI 가 별도 스레드에서 실행하므로, 일반 동기 함수(`def`)로 작성하면 됩니다.

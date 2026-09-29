@@ -25,7 +25,8 @@ LLM 분석은 오래 걸리므로 두 단계로 나눠 호출한다. 프론트�
 
 ``GET /{player_id}/{year}/llm`` — LLM 분석 (느림)
     유사 투수를 서버에서 다시 찾은 뒤(프로필이 메모리에 있어 빠름) 입력 ``(player_id, year)`` 와
-    찾은 ``(MLB ID, 연도)`` 를 ``src/utils/llm_client.llm_client`` 에 넣어 답변(dict)을 돌려준다.
+    찾은 ``(MLB ID, 연도)`` 를 ``src/utils/llm_client.llm_client(input_mlbid, input_year,
+    similar_mlbid, similar_year, search_context)`` 에 넣어 답변(dict)을 돌려준다.
     같은 조합의 답변은 메모리에 캐시해 두 번째 요청부터는 바로 응답한다::
 
         {
@@ -88,7 +89,16 @@ from src.preprocessing.preprocess_pipeline import (  # noqa: E402
     run_pipeline,
 )
 
-from src.utils.find_nearest_pitcher import PROFILE_FILE, build_profile, find_nearest_pitcher
+import numpy as np
+import pandas as pd
+
+from src.utils.find_nearest_pitcher import (  # noqa: E402
+    PROFILE_FILE,
+    Z_COLS,
+    build_profile,
+    find_nearest_pitcher,
+    load_profile,
+)
 
 # --------------------------------------------------------------------------- #
 # 설정
@@ -189,16 +199,69 @@ def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[in
         ) from error
 
 
-def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[str, Any]:
-    """``llm_client(입력 (id, 연도), 찾은 (id, 연도))`` 를 호출해 dict 답변을 받는다."""
+def build_search_context(query: tuple[int, int], nearest: tuple[int, int]) -> dict[str, Any] | None:
+    """유사 투수 검색 단계의 정보를 ``llm_client`` 의 ``search_context`` 로 넘긴다.
+
+    ``pitcher_profile.csv`` (메모리 캐시)에서 두 투수-시즌의 클러스터·평균 구속·FIP 와
+    투구 폼 거리(표준화한 릴리스 좌우·높이, 익스텐션, 팔 각도의 유클리드 거리)를 꺼낸다.
+    선택 정보이므로 꺼내지 못하면 ``None`` 을 돌려주고 LLM 호출은 그대로 진행한다.
+    """
     try:
-        from src.utils.llm_client import llm_client
+        profile = load_profile()
+
+        def row(pid_year: tuple[int, int]):
+            pid, year = pid_year
+            rows = profile[(profile["player_id"] == pid) & (profile["game_year"] == year)]
+            return None if rows.empty else rows.iloc[0]
+
+        target, similar = row(query), row(nearest)
+        if target is None or similar is None:
+            return None
+
+        def num(value, digits=2):
+            return None if pd.isna(value) else round(float(value), digits)
+
+        distance = np.sqrt(((target[Z_COLS].to_numpy(dtype=float)
+                             - similar[Z_COLS].to_numpy(dtype=float)) ** 2).sum())
+        return {
+            "cluster": int(target["cluster"]),
+            "input_avg_velocity": num(target["average_velocity"], 1),
+            "similar_avg_velocity": num(similar["average_velocity"], 1),
+            "input_fip": num(target["FIP"]),
+            "similar_fip": num(similar["FIP"]),
+            "form_distance": num(distance, 3),
+        }
+    except Exception:  # 부가 정보라 실패해도 LLM 호출은 막지 않는다
+        logger.warning("search_context 를 만들지 못해 생략합니다 (%s, %s)", query, nearest, exc_info=True)
+        return None
+
+
+def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[str, Any]:
+    """``llm_client(input_mlbid, input_year, similar_mlbid, similar_year, search_context)`` 를
+    호출해 dict 답변(``model``, ``created_at``, ``payload``, ``response``, ``validation_warnings``)을 받는다.
+    """
+    try:
+        from src.utils.llm_client import TransientLLMError, llm_client
     except ImportError as error:
         raise HTTPException(503, f"llm_client 를 불러올 수 없습니다: {error}") from error
 
+    (input_mlbid, input_year), (similar_mlbid, similar_year) = query, nearest
     try:
-        answer = llm_client(query, nearest)
-    except Exception as error:
+        answer = llm_client(
+            input_mlbid=input_mlbid,
+            input_year=input_year,
+            similar_mlbid=similar_mlbid,
+            similar_year=similar_year,
+            search_context=build_search_context(query, nearest),
+        )
+    except TransientLLMError as error:     # 서버 혼잡·한도 초과 — 잠시 뒤 다시 시도하면 됨
+        logger.warning("LLM 일시적 오류 (%s, %s): %s", query, nearest, error)
+        raise HTTPException(503, f"LLM 서버가 혼잡합니다. 잠시 후 다시 시도하세요: {error}") from error
+    except ValueError as error:            # 해당 시즌 구종 데이터 없음 등
+        raise HTTPException(404, f"LLM 입력 데이터를 만들 수 없습니다: {error}") from error
+    except ImportError as error:           # openai 패키지 미설치 등
+        raise HTTPException(503, f"LLM 호출에 필요한 패키지가 없습니다: {error}") from error
+    except Exception as error:             # API 키 없음, 응답 파싱 실패 등
         logger.exception("llm_client 실패 (%s, %s)", query, nearest)
         raise HTTPException(502, f"LLM 호출 오류: {error}") from error
 
@@ -312,6 +375,30 @@ def compare_pitcher_llm(
 # --------------------------------------------------------------------------- #
 
 
+def prepare_pitch_arsenal() -> None:
+    """``llm_client`` 가 쓰는 구종 집계표를 서버 시작 전에 준비한다.
+
+    ``pitch_arsenal.pkl`` 이 없으면 ``data/raw`` 전체로 만들고(처음 한 번, 오래 걸림),
+    있으면 읽기만 한다. 어느 쪽이든 메모리에 올려 두므로 첫 ``/llm`` 요청부터 바로 쓸 수 있다.
+    실패해도 서버는 띄운다(``/llm`` 요청 때 다시 시도되고, 그때 오류가 응답으로 간다).
+    """
+    try:
+        from src.utils import llm_client as llm_module
+    except ImportError as error:
+        logger.warning("llm_client 를 불러올 수 없어 구종 집계 준비를 건너뜁니다: %s", error)
+        return
+
+    if llm_module.ARSENAL_PKL.exists():
+        logger.info("구종 집계 캐시를 불러옵니다: %s", llm_module.ARSENAL_PKL.name)
+    else:
+        logger.info("구종 집계 캐시가 없어 data/raw 전체로 생성합니다 (처음 한 번, 수 분 걸릴 수 있음)...")
+    try:
+        arsenal = llm_module._get_arsenal()   # pkl 생성·로드 + 메모리 캐시 (llm_client 가 요청 때 쓰는 것과 같은 캐시)
+        logger.info("구종 집계 준비 완료: %s행", f"{len(arsenal):,}")
+    except Exception:
+        logger.warning("구종 집계를 준비하지 못했습니다 — /llm 요청 때 다시 시도합니다.", exc_info=True)
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="전처리 파이프라인 실행 후 백엔드 서버를 띄웁니다.")
     parser.add_argument("--k", type=int, default=DEFAULT_K,
@@ -360,6 +447,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         build_profile()
     else:
         logger.info("투수 프로필이 최신입니다 — 생성을 건너뜁니다: %s", PROFILE_FILE.name)
+
+    # LLM 입력용 구종 집계 (data/processed/interim/pitch_arsenal.pkl) — 첫 LLM 요청이 느리지 않도록 미리 준비
+    prepare_pitch_arsenal()
 
     if args.cors_origins:
         # 미들웨어는 앱 시작 전에만 바꿀 수 있으므로, 환경변수 대신 여기서 다시 설정한다

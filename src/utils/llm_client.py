@@ -115,12 +115,16 @@ CALLED_STRIKE_DESC = {"called_strike"}
 # ------------------------------------------------------------
 # raw 로드
 # ------------------------------------------------------------
+# data/raw/{연도}/statcast_{연도}-{MM}.csv 만 읽는다 (fip_*.csv, 엑셀 임시파일 "~$..." 등 제외)
+RAW_FILE_PATTERN = re.compile(r"^statcast_\d{4}-\d{2}\.csv$")
+
+
 def load_raw_pitches(raw_dir: Path = RAW_DIR) -> pd.DataFrame:
-    files = [f for f in sorted(raw_dir.rglob("*.csv"))
-             if not f.name.startswith(("~$", "."))]
+    files = sorted(f for f in raw_dir.rglob("statcast_*.csv") if RAW_FILE_PATTERN.match(f.name))
     if not files:
         raise FileNotFoundError(
-            f"{rel(raw_dir)} 안에 csv가 없습니다. Baseball Savant pitch-level CSV를 넣어주세요."
+            f"{rel(raw_dir)} 안에 statcast_{{연도}}-{{MM}}.csv 가 없습니다. "
+            "Baseball Savant pitch-level CSV를 넣어주세요."
         )
     frames = []
     for f in files:
