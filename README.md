@@ -97,16 +97,30 @@ main.py (FastAPI 백엔드)
 
 ```json
 {
+  "matched": true,
+  "message": null,
   "query":   { "player_id": 660271, "year": 2023 },
   "nearest": { "player_id": 543037, "year": 2021 },
   "llm":     { "...": "llm_client 가 돌려준 dict" }
 }
 ```
 
+조건에 맞는 유사 투수가 없으면 오류가 아닌 `200` 으로 아래처럼 응답합니다. 프론트엔드는 `matched` 로 구분해 `message` 를 보여 주면 됩니다.
+
+```json
+{
+  "matched": false,
+  "message": "조건에 맞는 유사 투수를 찾지 못했습니다.",
+  "query":   { "player_id": 660271, "year": 2023 },
+  "nearest": null,
+  "llm":     null
+}
+```
+
 | 상태 코드 | 의미 |
 |---|---|
-| `200` | 성공 |
-| `404` | `pitcher_clustered.json` 에 없는 (ID, 연도) — 응답에 그 선수의 가능한 연도가 함께 옴 / 유사 투수를 찾지 못함 |
+| `200` | 성공 (유사 투수가 없을 때도 `200`, `"matched": false`) |
+| `404` | `pitcher_clustered.json` 에 없는 (ID, 연도) — 응답에 그 선수의 가능한 연도가 함께 옴 |
 | `422` | ID·연도가 숫자가 아니거나 범위를 벗어남 |
 | `500` | `find_nearest_pitcher` 실행 오류 또는 반환 형식 오류 |
 | `502` | `llm_client` 호출 오류 또는 dict 가 아닌 반환 |
