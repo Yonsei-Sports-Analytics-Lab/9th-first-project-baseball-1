@@ -16,15 +16,15 @@
 
 필요 파일 (프로젝트 루트 기준)
 ------------------------------
-- data/raw/statcast_*.csv                   : Statcast 원본 (build_profile 실행 시에만 필요)
-- data/preprocessed/pitcher_clustered.json  : {MLBID: {연도: {average_velocity, cluster}}}
+- data/raw/{연도}/statcast_{연도}-{MM}.csv  : Statcast 원본 (build_profile 실행 시에만 필요)
+- data/processed/pitcher_clustered.json     : {MLBID: {연도: {average_velocity, cluster}}}
                                               ("MLBID-연도" 형태의 키도 지원)
-- data/processed/fip_2021_2025.csv          : player_id, game_year, FIP, IP 컬럼
+- data/raw/fip_2021_2025.csv                : player_id, game_year, FIP, IP 컬럼
 - data/processed/pitcher_profile.csv        : build_profile()이 만드는 결과 파일
 """
 
-import glob
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -33,12 +33,14 @@ import pandas as pd
 # 프로젝트 루트 기준 상대 경로 (이 파일 위치: <root>/src/utils/)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
-PREPROCESSED_DIR = PROJECT_ROOT / "data" / "preprocessed"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
-CLUSTER_FILE = PREPROCESSED_DIR / "pitcher_clustered.json"
+CLUSTER_FILE = PROCESSED_DIR / "pitcher_clustered.json"   # main.py 전처리 결과 위치
 FIP_FILE = RAW_DIR / "fip_2021_2025.csv"
 PROFILE_FILE = PROCESSED_DIR / "pitcher_profile.csv"
+
+# data/raw/{연도}/statcast_{연도}-{MM}.csv (엑셀 임시파일 "~$..." 등은 제외)
+RAW_FILE_PATTERN = re.compile(r"^statcast_\d{4}-\d{2}\.csv$")
 
 PROFILE_FEATURES = ["release_pos_x_arm", "release_pos_z", "release_extension", "arm_angle"]
 Z_COLS = [f"{c}_z" for c in PROFILE_FEATURES]
@@ -64,11 +66,19 @@ def _load_cluster_json(path):
     return pd.DataFrame(records)
 
 
+def find_raw_files(raw_dir=RAW_DIR):
+    """Statcast 월별 원본 목록. 연도 폴더(data/raw/2021/...) 안과 data/raw 바로 아래를 모두 찾는다."""
+    raw_dir = Path(raw_dir)
+    candidates = list(raw_dir.glob("*/statcast_*.csv")) + list(raw_dir.glob("statcast_*.csv"))
+    return sorted(p for p in candidates if RAW_FILE_PATTERN.match(p.name))
+
+
 def build_profile(cluster_file=CLUSTER_FILE, fip_file=FIP_FILE, save=True):
     """Statcast 원본 + 클러스터 json + FIP를 합쳐 투수-시즌 프로필 표를 만든다."""
-    files = sorted(glob.glob(str(RAW_DIR / "statcast_*.csv")))
+    files = find_raw_files()
     if not files:
-        raise FileNotFoundError(f"Statcast 원본이 없습니다: {RAW_DIR}")
+        raise FileNotFoundError(
+            f"Statcast 원본이 없습니다: {RAW_DIR}/{{연도}}/statcast_{{연도}}-{{MM}}.csv")
     use_cols = ["pitcher", "player_name", "game_year", "p_throws", "release_pos_x",
                 "release_pos_z", "release_extension", "arm_angle"]
     raw = pd.concat([pd.read_csv(f, usecols=use_cols) for f in files], ignore_index=True)
