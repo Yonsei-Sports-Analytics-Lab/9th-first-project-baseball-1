@@ -37,7 +37,7 @@ PREPROCESSED_DIR = PROJECT_ROOT / "data" / "preprocessed"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
 CLUSTER_FILE = PREPROCESSED_DIR / "pitcher_clustered.json"
-FIP_FILE = PROCESSED_DIR / "fip_2021_2025.csv"
+FIP_FILE = RAW_DIR / "fip_2021_2025.csv"
 PROFILE_FILE = PROCESSED_DIR / "pitcher_profile.csv"
 
 PROFILE_FEATURES = ["release_pos_x_arm", "release_pos_z", "release_extension", "arm_angle"]
