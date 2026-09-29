@@ -11,17 +11,29 @@ API
 LLM 분석은 오래 걸리므로 두 단계로 나눠 호출한다. 프론트엔드는 1번 응답으로 유사 투수를 먼저
 보여 주고, 이어서 2번을 호출하는 동안 로딩을 띄운다.
 
-``GET /{player_id}/{year}`` — 유사 투수 (빠름)
+``GET /{player_id}/{year}`` — 유사 투수 + 선수 프로필 (빠름)
     ``src/utils/find_nearest_pitcher.find_nearest_pitcher(player_id, year, top_n)`` 로
-    가장 비슷한 투수-시즌 ``(MLB ID, 연도)`` 를 찾아 돌려준다::
+    가장 비슷한 투수-시즌 ``(MLB ID, 연도)`` 를 찾고, LLM 에 넘기는 것과 같은 선수 프로필
+    (``src/utils/llm_client.build_payload`` — 구종별 스탯, 주 패스트볼, 목표 shape)을 함께 돌려준다.
+    프로필은 서버 시작 때 메모리에 올려 둔 구종 집계표에서 꺼내므로 LLM 호출 없이 바로 나온다::
 
         {
           "matched": true,
           "message": null,
           "query":   {"player_id": 660271, "year": 2023},
           "nearest": {"player_id": 543037, "year": 2021},
+          "profiles": {
+            "input_pitcher":   {pitcher_id, player_name, season, throws, primary_fastball{...}, arsenal[...]},
+            "similar_pitcher": {... 같은 구조 ...},
+            "search_context":  {cluster, input_fip, similar_fip, form_distance, ...},
+            "transfer_targets": [{pitch_type, gap_vs_fb, target_shape, ...}]
+          },
+          "profile_error": null,
           "llm_url": "/660271/2023/llm"
         }
+
+    프로필을 만들지 못하면(구종 데이터 없음 등) ``"profiles": null`` 과 ``"profile_error"`` 에 이유가
+    들어가고, 유사 투수 결과는 그대로 온다. 유사 투수가 없을 때도 ``profiles.input_pitcher`` 는 채워진다.
 
 ``GET /{player_id}/{year}/llm`` — LLM 분석 (느림)
     유사 투수를 서버에서 다시 찾은 뒤(프로필이 메모리에 있어 빠름) 입력 ``(player_id, year)`` 와
@@ -270,6 +282,62 @@ def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[st
     return answer
 
 
+def to_jsonable(obj: Any) -> Any:
+    """numpy 스칼라·NaN 을 JSON 으로 보낼 수 있는 파이썬 값으로 바꾼다 (NaN → None)."""
+    if isinstance(obj, dict):
+        return {str(k): to_jsonable(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [to_jsonable(v) for v in obj]
+    if isinstance(obj, np.generic):
+        obj = obj.item()
+    if isinstance(obj, float) and not np.isfinite(obj):
+        return None
+    return obj
+
+
+def build_profiles(
+    query: tuple[int, int], nearest: tuple[int, int] | None
+) -> tuple[dict[str, Any] | None, str | None]:
+    """LLM 에 넘기는 것과 같은 선수 프로필을 만든다 (LLM 호출 없음).
+
+    Returns
+    -------
+    (profiles, error)
+        ``profiles`` : ``{"input_pitcher", "similar_pitcher", "search_context", "transfer_targets"}``
+        ``error``    : 만들지 못한 이유 (성공하면 ``None``)
+    """
+    try:
+        from src.utils import llm_client as llm_module
+    except ImportError as error:
+        return None, f"llm_client 를 불러올 수 없습니다: {error}"
+
+    try:
+        if nearest is None:
+            # 유사 투수가 없어도 입력 투수 프로필은 보여 준다
+            arsenal = llm_module._get_arsenal()
+            pid = llm_module._check_pitcher(arsenal, query[0], query[1])
+            profiles = {
+                "input_pitcher": llm_module.pitcher_season_summary(arsenal, pid, query[1]),
+                "similar_pitcher": None,
+                "search_context": None,
+                "transfer_targets": [],
+            }
+        else:
+            payload = llm_module.build_payload(
+                input_mlbid=query[0],
+                input_year=query[1],
+                similar_mlbid=nearest[0],
+                similar_year=nearest[1],
+                search_context=build_search_context(query, nearest),
+            )
+            payload.pop("task", None)
+            profiles = payload
+        return to_jsonable(profiles), None
+    except Exception as error:  # 프로필은 부가 정보 — 실패해도 유사 투수 결과는 보낸다
+        logger.warning("선수 프로필 생성 실패 (%s, %s): %s", query, nearest, error)
+        return None, str(error)
+
+
 # --------------------------------------------------------------------------- #
 # 엔드포인트
 # --------------------------------------------------------------------------- #
@@ -321,21 +389,26 @@ def compare_pitcher(
     player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
     year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
 ) -> dict[str, Any]:
-    """1단계: 유사 투수만 빠르게 돌려준다."""
+    """1단계: 유사 투수와 두 선수의 프로필을 빠르게 돌려준다 (LLM 호출 없음)."""
     validate_season(player_id, year)
     query = {"player_id": player_id, "year": year}
 
     nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
-    if nearest is None:
-        return no_match_response(query, "llm_url")
+    profiles, profile_error = build_profiles((player_id, year), nearest)
 
-    return {
-        "matched": True,
-        "message": None,
-        "query": query,
-        "nearest": {"player_id": nearest[0], "year": nearest[1]},
-        "llm_url": f"/{player_id}/{year}/llm",
-    }
+    if nearest is None:
+        response = no_match_response(query, "llm_url")
+    else:
+        response = {
+            "matched": True,
+            "message": None,
+            "query": query,
+            "nearest": {"player_id": nearest[0], "year": nearest[1]},
+            "llm_url": f"/{player_id}/{year}/llm",
+        }
+    response["profiles"] = profiles
+    response["profile_error"] = profile_error
+    return response
 
 
 @app.get("/{player_id}/{year}/llm")
@@ -358,7 +431,7 @@ def compare_pitcher_llm(
     key = ((player_id, year), nearest)
     cached = key in _llm_cache
     if not cached:
-        _llm_cache[key] = call_llm_client(*key)   # 실패하면 예외가 나서 캐시에 남지 않는다
+        _llm_cache[key] = to_jsonable(call_llm_client(*key))   # 실패하면 예외가 나서 캐시에 남지 않는다
 
     return {
         "matched": True,

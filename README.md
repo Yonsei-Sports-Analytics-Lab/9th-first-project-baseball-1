@@ -110,17 +110,33 @@ main.py (FastAPI 백엔드)
 
 LLM 분석은 오래 걸리므로 API 를 두 개로 나눴습니다. 프론트엔드는 ① 을 받아 유사 투수를 먼저 보여 주고, 이어서 ② 를 호출하는 동안 로딩을 띄우면 됩니다. `player_id` 는 MLB(MLBAM) 선수 ID, `year` 는 시즌 연도입니다.
 
-### ① `GET /{player_id}/{year}` — 유사 투수 (빠름)
+### ① `GET /{player_id}/{year}` — 유사 투수 + 선수 프로필 (빠름)
+
+LLM 에 넘기는 것과 같은 두 선수의 프로필(구종별 스탯, 주 패스트볼)을 함께 돌려줍니다. LLM 을 부르지 않으므로 바로 응답합니다.
 
 ```json
 {
   "matched": true,
   "message": null,
   "query":   { "player_id": 660271, "year": 2023 },
-  "nearest": { "player_id": 543037, "year": 2021 },
-  "llm_url": "/660271/2023/llm"
+  "nearest": { "player_id": 668390, "year": 2025 },
+  "llm_url": "/660271/2023/llm",
+  "profiles": {
+    "input_pitcher":    { "pitcher_id": 660271, "player_name": "Ohtani, Shohei", "season": 2023, "throws": "R",
+                          "primary_fastball": { "pitch_type": "FF", "velo_mph": 96.8, "ivb_in": 14.1, "hb_in": 4.1, "arm_angle_deg": 36.4, "...": "..." },
+                          "arsenal": [ { "pitch_type": "ST", "pitch_name": "Sweeper", "usage_pct": 35.0, "velo_mph": 83.7,
+                                         "whiff_pct": 35.9, "rv_per_100": 1.22, "...": "..." } ] },
+    "similar_pitcher":  { "...": "input_pitcher 와 같은 구조" },
+    "search_context":   { "cluster": 4, "input_fip": 4.0, "similar_fip": 3.9, "form_distance": 0.91, "...": "..." },
+    "transfer_targets": [ { "pitch_type": "FC", "target_shape": { "velo_mph": 91.9, "ivb_in": 5.2, "hb_in": -5.6 }, "...": "..." } ]
+  },
+  "profile_error": null
 }
 ```
+
+* 필드 의미는 `src/utils/llm_client.py` 맨 위 설명과 같습니다 (HB 는 암사이드 +, RV/100 은 + 가 투수에게 좋음).
+* 프로필을 만들지 못하면 `"profiles": null` 이고 `"profile_error"` 에 이유가 들어갑니다. 유사 투수 결과는 그대로 옵니다.
+* 유사 투수가 없을 때(`"matched": false`)도 `profiles.input_pitcher` 는 채워지고 `similar_pitcher` 는 `null` 입니다.
 
 ### ② `GET /{player_id}/{year}/llm` — LLM 분석 (느림)
 
