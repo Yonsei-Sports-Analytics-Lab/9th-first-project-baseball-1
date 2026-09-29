@@ -1,16 +1,55 @@
-# 🛠️ Utils (공통 유틸리티 모듈)
+# 🛠️ Utils (유사 투수 탐색 · LLM 클라이언트)
 
-이 폴더는 데이터 수집, 전처리, 모델링 등 프로젝트 전반에서 공통으로 반복해서 사용되는 헬퍼(Helper) 함수와 환경 설정 파일들을 모아두는 곳입니다.
+백엔드 API(`main.py` 의 `GET /{player_id}/{year}`)가 호출하는 모듈을 두는 폴더입니다. 🚧 **담당 팀원이 작업 중입니다.**
+
+## 📄 모듈 인터페이스
+
+`main.py` 는 아래 이름과 형태를 기준으로 두 함수를 호출합니다. 이름·인자·반환 형태가 바뀌면 `main.py` 의 `call_find_nearest_pitcher()`, `call_llm_client()` 도 함께 고쳐야 합니다.
+
+### `find_nearest_pitcher.py` — `find_nearest_pitcher(player_id, year, top_n)`
+
+입력한 투수-시즌과 가장 비슷한 투수-시즌을 찾습니다.
+
+| 인자 | 타입 | 설명 |
+|---|---|---|
+| `player_id` | `int` | MLB(MLBAM) 선수 ID |
+| `year` | `int` | 시즌 연도 |
+| `top_n` | `int` | `main.py --top-n` 으로 전달 (기본값 `1`) |
+
+**반환:** `(MLB ID, 연도)` 튜플 하나.
+
+### `llm_client.py` — `llm_client(query, nearest)`
+
+두 투수-시즌을 받아 LLM 답변을 돌려줍니다.
+
+| 인자 | 타입 | 설명 |
+|---|---|---|
+| `query` | `(int, int)` | 사용자가 입력한 `(MLB ID, 연도)` |
+| `nearest` | `(int, int)` | `find_nearest_pitcher` 가 돌려준 `(MLB ID, 연도)` |
+
+**반환:** `dict` — `main.py` 가 응답의 `"llm"` 필드에 그대로 넣어 프론트엔드로 보냅니다.
+
+## 🔗 `main.py` 에서의 처리
+
+```
+GET /{player_id}/{year}
+  1. pitcher_clustered.json 에 (player_id, year) 가 있는지 확인     → 없으면 404
+  2. nearest = find_nearest_pitcher(player_id, year, top_n)
+  3. answer  = llm_client((player_id, year), nearest)
+  4. {"query": {...}, "nearest": {...}, "llm": answer} 응답
+```
+
+| 상황 | 응답 코드 |
+|---|---|
+| 모듈 파일이 없거나 import 중 오류 | `503` |
+| `find_nearest_pitcher` 가 예외를 던지거나 `(ID, 연도)` 형태가 아닌 값을 반환 | `500` |
+| `find_nearest_pitcher` 가 `None` 또는 빈 리스트를 반환 | `404` |
+| `llm_client` 가 예외를 던지거나 `dict` 가 아닌 값을 반환 | `502` |
+
+* 반환값에 numpy 정수가 섞여 있어도 `main.py` 가 파이썬 `int` 로 바꿉니다.
+* 두 함수는 FastAPI 가 별도 스레드에서 실행하므로, 일반 동기 함수(`def`)로 작성하면 됩니다.
 
 ## ⚠️ 작업 규칙
 
-1. **순환 참조(Circular Import) 주의:** 
-   `utils/` 폴더 안의 코드는 가장 기초적인 뼈대 역할을 해야 합니다. 이곳에서 `src/models/`나 `src/preprocessing/`의 모듈을 불러오면 코드 구조가 꼬일 수 있으므로, 최대한 외부 의존성이 없도록 가볍게 작성해 주세요.
-2. **상수(Constant) 중앙 관리:** 
-   프로젝트 내에서 반복적으로 쓰이는 상대 경로명, 하드코딩된 변수명 등은 개별 스크립트에 흩뿌려두지 말고 이곳에서 통합 관리해야 유지보수가 쉽습니다.
-
-## 📄 파일 구성 예시
-
-* `config.py`: 기본 데이터 디렉토리 경로, 모델의 기본 하이퍼파라미터(예: 시퀀스 길이, 클래스 가중치 등) 설정 변수들을 모아둔 파일
-* `logger.py`: 파이프라인 실행 시 현재 어떤 데이터가 처리되고 있는지, 혹은 모델 학습 진행률이 어떻게 되는지 터미널에 깔끔하게 출력해 주는 로깅 유틸리티
-* `metrics.py`: 다중 분류(Multi-class) 시 클래스 불균형을 고려한 오차 행렬(Confusion Matrix) 계산이나, 모델 평가 시 반복적으로 쓰이는 사용자 정의 정확도 계산 함수
+* **API 키 관리:** LLM 호출에 필요한 키 등은 코드에 직접 쓰지 말고 `.env` 에 두세요. 필요한 변수 이름은 `.env.example` 에 추가합니다.
+* **import 경로:** `main.py` 는 `from src.utils.find_nearest_pitcher import find_nearest_pitcher`, `from src.utils.llm_client import llm_client` 로 불러옵니다. 파일명과 함수명을 이대로 유지해 주세요.
