@@ -1,32 +1,56 @@
-# 📂 Processed Data (전처리 완료 데이터)
+# 📂 Processed Data (전처리 결과)
 
-이 폴더는 `data/raw/`에 있는 원본 데이터를 바탕으로 정제, 변환, 스케일링 등의 전처리 작업이 완료된 **모델 학습용 데이터**를 보관하는 곳입니다.
+`src/preprocessing/` 의 전처리 파이프라인이 만든 **중간 데이터, GMM 모델, 투수-시즌 클러스터 결과** 가 저장되는 폴더입니다.
 
-## ⚠️ 작업 규칙 및 주의사항
+## ⚠️ 작업 규칙
 
-1. **직접 수정 금지:** 
-   이 폴더에 있는 CSV 파일이나 넘파이 배열(`.npy`) 등은 엑셀 등으로 직접 열어서 값을 수정하면 안 됩니다. 모든 변경 사항은 코드를 통해 추적 가능해야 합니다.
-2. **재현 가능성 (Reproducibility):** 
-   이 폴더 안의 데이터가 실수로 삭제되더라도, `src/preprocessing/` 폴더에 있는 파이썬 스크립트를 실행하면 **언제든 똑같이 다시 생성될 수 있어야 합니다.**
-3. **용량 주의:** 
-   전처리가 끝난 전체 데이터셋(예: 5만 건 이상의 피처 엔지니어링 결과) 역시 용량이 클 수 있으므로 GitHub에 직접 커밋되지 않도록 `.gitignore` 규칙을 따릅니다.
+1. **직접 수정 금지:** 이 폴더의 파일은 엑셀 등으로 열어 고치지 않습니다. 모든 변경은 코드로 추적 가능해야 합니다.
+2. **재현 가능성:** 파일이 지워져도 `python src/preprocessing/preprocess_pipeline.py` (또는 `python main.py`)를 실행하면 다시 만들어집니다.
+3. **git 에 올리지 않음:** `.gitignore` 에 의해 `README.md`, `data_description.json` 을 제외한 모든 파일은 커밋되지 않습니다.
 
-## 📝 파일 네이밍 컨벤션 (Naming Convention)
+## 📄 파일 목록
 
-생성된 데이터 파일은 어떤 과정을 거쳤는지 쉽게 알 수 있도록 명확하게 이름을 짓습니다.
+| 파일 | 만드는 모듈 | 내용 |
+|---|---|---|
+| `{연도}_processed.csv` | `extract_fastball` | 월별 원본을 연도로 합치고 FF/SI/FC 만 남긴 투구 (필수 컬럼 결측 행 제거) |
+| `{연도}_movement_reconciliation.csv` | `compute_movement_reconciliation` | 위 파일 + 체공시간 보정 무브먼트 컬럼 (`ivb_ft`, `hb_ft` 등) |
+| `reference_flight_times.json` | `compute_movement_reconciliation` | 구종별 기준 체공시간 (학습연도 2021~2023 중앙값). 있으면 새 연도 처리 때 재사용 |
+| `pitch_type_gmm_k{K}.joblib` | `fit_pitch_gmm` | 1차 클러스터링 GMM 모델 (표준화기 포함) |
+| `pitcher_clustered.json` | `cluster_pitcher_repertoire` | 투수-시즌별 최빈 클러스터와 평균 구속 — **`main.py` 가 쓰는 파일** |
+| `pitcher_repertoire_clusters_k{K}.json` | `cluster_pitcher_repertoire` | 위와 같은 형식. 파이프라인·모듈을 단독 실행할 때의 기본 파일명 |
+| `pipeline_state.json` | `preprocess_pipeline` | 클러스터 JSON 을 어떤 모델로 만들었는지 기록 (K 가 바뀌면 다시 만들기 위해) |
+| `data_description.json` | (수동 작성) | 클러스터 JSON 형식 예시 — git 에 포함 |
 
-* `[데이터성격]_[처리내용]_[버전/날짜].csv`
-* **예시:**
-  * `pitch_data_cleaned_v1.csv` (결측치 제거 완료)
-  * `pitch_features_scaled_202603.csv` (스케일링 및 파생 변수 추가 완료)
-  * `X_train_lstm.npy`, `y_train_lstm.npy` (LSTM 모델 입력용으로 형태 변환 완료)
+체공시간 보정 무브먼트의 계산 방법은 루트의 [`체공시간_보정_무브먼트_계산_가이드.md`](../../체공시간_보정_무브먼트_계산_가이드.md) 를 참고하세요.
 
-## 🔄 전처리 실행 방법
+## 🧾 클러스터 JSON 형식
 
-새로운 파생 변수를 추가하거나 정제 로직을 바꾼 경우, 아래와 같이 전처리 파이프라인 스크립트를 실행하여 이 폴더의 데이터를 갱신합니다.
+```json
+{
+  "660271": {
+    "2023": { "average_velocity": 100.0, "cluster": 3 },
+    "2024": { "average_velocity": 99.9, "cluster": 3 }
+  }
+}
+```
+
+* **키:** MLB(MLBAM) 선수 ID(Statcast `pitcher` 컬럼) → 시즌 연도. JSON 키라서 둘 다 문자열입니다.
+* **`cluster`:** 그 투수-시즌의 투구가 가장 많이 속한 GMM 클러스터 번호 (0 ~ K-1). 동률이면 번호가 작은 쪽.
+* **`average_velocity`:** 그 투수-시즌 패스트볼(FF/SI/FC)의 평균 `release_speed` (mph, 소수점 첫째 자리).
+* 투구가 **200구 미만인 투수-시즌은 제외** 됩니다 (`--min-pitches` 로 변경 가능).
+* 클러스터 번호는 모델마다 의미가 다릅니다. K 나 모델이 바뀌면 같은 번호라도 다른 유형입니다.
+
+## 🔄 다시 만들기
+
 ```bash
-# 예시 스크립트 실행
-python src/preprocessing/data_pipeline.py
+# 없는 산출물만 생성
+python src/preprocessing/preprocess_pipeline.py --k 6 --cluster-output pitcher_clustered.json
 
-### 📥 데이터 다운로드 링크
-* **2024시즌 전체 투구 데이터 (Statcast):** [구글 드라이브 링크(클릭)](#)
+# 무엇이 실행될지 확인만
+python src/preprocessing/preprocess_pipeline.py --k 6 --cluster-output pitcher_clustered.json --dry-run
+
+# 특정 단계를 강제로 다시 실행
+python src/preprocessing/preprocess_pipeline.py --k 6 --cluster-output pitcher_clustered.json --force fit cluster
+```
+
+자세한 옵션은 [`src/preprocessing/README.md`](../../src/preprocessing/README.md) 를 참고하세요.

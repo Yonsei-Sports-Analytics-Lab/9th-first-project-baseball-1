@@ -1,15 +1,31 @@
 # 💻 Source Code (`src/`)
 
-이 폴더는 프로젝트의 핵심 로직을 담당하는 파이썬 모듈들이 모여 있는 공간입니다. 각 폴더는 데이터의 흐름(수집 ➡️ 전처리 ➡️ 학습 및 평가 ➡️ 시각화)에 따라 역할을 분담하고 있습니다.
+프로젝트의 핵심 로직을 담당하는 파이썬 모듈입니다. 전체 실행은 루트의 `main.py` 가 담당합니다.
 
 ## 📁 디렉토리 구조 및 역할
 
-모든 스크립트는 재사용 가능한 함수나 클래스 형태로 작성되어야 하며, 전체 파이프라인의 실행은 최상단의 `main.py` 또는 `app.py`를 통해 이루어집니다.
+| 폴더 | 상태 | 역할 |
+|---|---|---|
+| [`preprocessing/`](preprocessing/README.md) | ✅ 구현 | 원본 → 패스트볼 추출 → 체공시간 보정 무브먼트 → GMM 적합 → 투수-시즌 클러스터 JSON. 파이프라인과 GMM 평가 포함 |
+| [`utils/`](utils/README.md) | 🚧 작업 중 | 유사 투수 탐색(`find_nearest_pitcher`), LLM 호출(`llm_client`) |
+| [`collection/`](collection/README.md) | 예정 | 원본 데이터 수집 자동화 (현재는 Baseball Savant 에서 직접 내려받음) |
+| [`models/`](models/README.md) | 예정 | 별도 학습 모델 (현재 GMM 은 `preprocessing/` 에 있음) |
+| [`visualization/`](visualization/README.md) | 예정 | 클러스터·투수 비교 시각화 |
 
-* **`collection/`**: API 호출(pybaseball 등) 및 웹 크롤링을 통한 원본 데이터 수집 모듈
-* **`preprocessing/`**: 결측치 처리, 피처 엔지니어링, 스케일링 등 학습용 데이터 정제 모듈
-* **`models/`**: 딥러닝/머신러닝 모델 아키텍처(LSTM 등) 정의, 학습(Train) 및 평가(Evaluate) 로직
-* **`visualization/`**: 데이터 시각화, 투구 궤적 렌더링, 대시보드 연동을 위한 데이터 가공 모듈
-* **`utils/`**: 프로젝트 전반에서 공통으로 사용되는 유틸리티 함수(로깅, 설정값 불러오기 등)
+## 🔄 데이터 흐름
 
-> 각 하위 폴더 내부의 `README.md`를 참고하여, 코드 작성 규칙과 파일 네이밍 컨벤션을 준수해 주세요.
+```
+data/raw  ──preprocessing──▶  data/processed/pitcher_clustered.json
+                                         │
+main.py  GET /{player_id}/{year}  ◀──────┘
+   ├─ utils.find_nearest_pitcher  →  가장 비슷한 (MLB ID, 연도)
+   └─ utils.llm_client            →  두 투수-시즌 LLM 분석 (dict)
+```
+
+## ⚠️ 작성 규칙
+
+* **재사용 가능한 함수로 작성:** 스크립트로 실행하는 모듈도 핵심 로직은 `run()` 같은 함수로 두고, `argparse` 는 `main()` 과 `if __name__ == "__main__":` 안에서만 씁니다. 그래야 다른 모듈과 노트북에서 import 해서 쓸 수 있습니다.
+* **패키지 경로로 import:** 모듈끼리는 `from src.preprocessing.xxx import ...` 처럼 프로젝트 루트 기준 경로로 불러옵니다. 루트에서 실행하는 `main.py` 는 그대로 동작하고, 노트북은 루트를 `sys.path` 에 추가해야 합니다.
+* **경로 하드코딩 금지:** 데이터 경로는 `Path(__file__)` 기준으로 프로젝트 루트를 구해 만듭니다.
+
+> 각 하위 폴더의 `README.md` 에 모듈별 사용법과 규칙이 있습니다.

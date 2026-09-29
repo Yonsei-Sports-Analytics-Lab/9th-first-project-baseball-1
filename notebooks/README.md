@@ -1,30 +1,44 @@
-# 📓 Notebooks (탐색적 데이터 분석 및 실험)
+# 📓 Notebooks (EDA 및 실험)
 
-이 폴더는 Jupyter Notebook(`.ipynb`)을 활용하여 **데이터 탐색(EDA), 시각화 프로토타이핑, 그리고 가벼운 모델 실험**을 자유롭게 진행하는 공간입니다.
+Jupyter Notebook 으로 **데이터 탐색(EDA), 군집 알고리즘 실험, 시각화 프로토타입** 을 진행하는 폴더입니다.
+노트북은 **실험 기록용** 이고, 검증된 로직은 `src/` 의 파이썬 모듈로 옮깁니다.
 
-## ⚠️ 작업 규칙 및 주의사항
+## 📄 노트북 목록
 
-1. **코드 모듈화 (중요):**
-   노트북에서 실험 후 성공적으로 작동하는 전처리 로직이나 딥러닝 모델 아키텍처(예: LSTM 클래스 설계)는 **최종적으로 `src/` 폴더 하위의 파이썬 파일(`.py`)로 옮겨 모듈화**해야 합니다. 노트북 파일은 어디까지나 '실험 기록용'입니다.
-2. **출력 결과(Output) 정리:**
-   수만 건의 데이터 프레임 출력이나 무거운 그래프 시각화 결과가 포함된 채로 커밋하면 파일 용량이 매우 커지고, PR 코드 리뷰 시 충돌(Conflict)을 해결하기 매우 어렵습니다. 가급적 **커밋 전 'Clear All Outputs'를 실행**하여 코드만 깔끔하게 올려주세요.
-3. **절대 경로 사용 금지:**
-   데이터를 불러올 때는 본인 컴퓨터의 절대 경로(예: `C:/Users/...`)를 사용하지 말고, 항상 프로젝트 최상단을 기준으로 하는 상대 경로(예: `../data/raw/sample_data.csv`)를 사용해 주세요.
+| 노트북 | 내용 | 결론 / 현재 코드와의 관계 |
+|---|---|---|
+| `example.ipynb` | 노트북 작성 템플릿 (경로 설정, autoreload) | 새 노트북을 만들 때 복사해서 사용 |
+| `DBSCAN_EDA.ipynb` | `ivb_ft` × `hb_ft` 평면에 DBSCAN 적용 (eps 탐색, 실루엣 등 평가) | 패스트볼 무브먼트는 밀도가 끊기는 곳이 없는 연속체라 DBSCAN 으로는 나뉘지 않음 → GMM 으로 전환 |
+| `GMM_pitch_repertoire.ipynb` | `ivb_ft`, `hb_ft`, `arm_angle` 로 GMM 적합, BIC 로 K 탐색, 투수 레퍼토리 군집화 실험 | K 선택 근거를 여기서 확인. 투구 단위 GMM 부분은 `src/preprocessing/` 로 옮겨짐 |
 
-## 📝 파일 네이밍 컨벤션 (Naming Convention)
+> **현재 파이프라인과의 차이:** `GMM_pitch_repertoire.ipynb` 는 2021~2023년으로만 GMM 을 적합하고, 투수-시즌 확률 벡터를 KMeans 로 한 번 더 군집화합니다. 지금 `src/preprocessing/` 파이프라인은 **모든 연도로 GMM 을 적합** 하고, 투수-시즌마다 **가장 많이 속한 GMM 클러스터(최빈값)** 를 기록합니다. 두 번째 KMeans 단계는 없습니다.
 
-팀원들이 각자 어떤 실험을 어떤 순서로 진행했는지 파악할 수 있도록 접두사를 붙여 파일명을 작성합니다.
+## ⚠️ 작업 규칙
 
-* `[순서번호]_[작업자이니셜]_[작업내용].ipynb`
-* **예시:**
-  * `01_YS_pitch_type_distribution_EDA.ipynb` (구종별 분포 탐색 시각화)
-  * `02_YS_lstm_baseline_model_test.ipynb` (LSTM 베이스라인 모델 성능 실험)
-  * `03_JD_handle_class_imbalance.ipynb` (클래스 불균형 해결을 위한 가중치 조정 실험)
+1. **코드 모듈화:** 노트북에서 검증한 전처리·모델 로직은 `src/` 하위 `.py` 파일로 옮깁니다.
+2. **출력 결과 정리:** 큰 데이터프레임이나 그래프 출력이 남은 채로 커밋하면 파일이 커지고 PR 충돌이 잦아집니다. 커밋 전에 **Clear All Outputs** 를 실행해 주세요.
+3. **절대 경로 사용 금지:** `C:/Users/...` 같은 개인 경로 대신 프로젝트 루트 기준 상대 경로(`../data/processed/...`)를 사용합니다.
 
-> **💡 실행 환경 설정:** 
-> 노트북 파일 내에서 `src/` 폴더의 모듈을 정상적으로 import 하려면, 노트북 최상단 셀에 다음 코드를 추가해 프로젝트 루트 디렉토리를 시스템 경로에 추가해 주세요.
-> ```python
-> import sys, os
-> # 현재 위치(notebooks)의 상위 폴더(프로젝트 최상단)를 경로에 추가
-> sys.path.append(os.path.abspath('..'))
-> ```
+## 📝 파일 네이밍
+
+`[순서번호]_[작업자이니셜]_[작업내용].ipynb` 형식을 권장합니다. (예: `03_BG_gmm_k_selection.ipynb`)
+
+## 💡 `src/` 모듈 불러오기
+
+노트북 최상단 셀에 프로젝트 루트를 경로로 추가하면 `src.` 로 시작하는 import 를 쓸 수 있습니다.
+
+```python
+import sys, os
+sys.path.append(os.path.abspath('..'))   # notebooks/ 의 상위 = 프로젝트 루트
+
+from src.preprocessing.load_movement_data import find_movement_files, load_pitch_data
+from src.preprocessing.fit_pitch_gmm import load_model
+from src.preprocessing.cluster_pitcher_repertoire import run as cluster_run
+
+model = load_model('../data/processed/pitch_type_gmm_k6.joblib')
+seasons, model, pitches = cluster_run(
+    model=model, processed_dir='../data/processed', save_json=False,   # 파일 저장 없이 DataFrame 으로 받기
+)
+```
+
+CLI 스크립트의 `main()` 을 노트북에서 부를 때는 반드시 인자 리스트를 넘기세요 (`main(["--k", "6", "--dry-run"])`). 빈 괄호로 부르면 Jupyter 의 실행 인자를 argparse 가 읽어 오류가 납니다.
