@@ -1,6 +1,6 @@
 # 🛠️ Utils (유사 투수 탐색 · LLM 클라이언트)
 
-백엔드 API(`main.py` 의 `GET /{player_id}/{year}`)가 호출하는 모듈을 두는 폴더입니다.
+백엔드 API(`main.py` 의 `GET /{player_id}/{year}`, `GET /{player_id}/{year}/llm`)가 호출하는 모듈을 두는 폴더입니다.
 
 | 파일 | 상태 | 역할 |
 |---|---|---|
@@ -87,21 +87,26 @@ answer = llm_client((player_id, year), (nearest_id, nearest_year))   # -> dict
 | 첫 번째 | `(int, int)` | 사용자가 입력한 `(MLB ID, 연도)` |
 | 두 번째 | `(int, int)` | `find_nearest_pitcher` 가 돌려준 `(MLB ID, 연도)` |
 
-**반환:** `dict` — 응답의 `"llm"` 필드에 그대로 들어갑니다.
+**반환:** `dict` — `/llm` 응답의 `"llm"` 필드에 그대로 들어갑니다.
 
-> 현재 `main.py` 에서는 LLM 호출(`call_llm_client`)이 주석 처리되어 있어 `"llm"` 에 빈 dict(`{}`)가 들어갑니다. `llm_client.py` 가 완성되면 `compare_pitcher()` 의 주석을 풀어 주세요.
+> `llm_client.py` 가 생기기 전까지 `GET /{player_id}/{year}/llm` 은 `503` 을 돌려줍니다. 유사 투수 API(`GET /{player_id}/{year}`)는 LLM 과 무관하게 동작합니다.
+> 같은 `(입력, 유사 투수)` 조합의 답변은 `main.py` 가 메모리에 캐시하므로, `llm_client` 는 같은 입력에 대해 한 번만 호출됩니다(서버 재시작 시 초기화).
 
 ---
 
 ## 🔗 `main.py` 에서의 처리
 
 ```
-GET /{player_id}/{year}
+GET /{player_id}/{year}          ← 1단계 (빠름)
   1. pitcher_clustered.json 에 (player_id, year) 가 있는지 확인        → 없으면 404
   2. nearest = find_nearest_pitcher(player_id, year, top_n)            # top_n 이 rank 로 전달됨
-  3. nearest 가 None 이면 LLM 을 부르지 않고 "matched": false 응답
-  4. answer  = llm_client((player_id, year), nearest)
-  5. {"matched": true, "message": null, "query": {...}, "nearest": {...}, "llm": answer} 응답
+  3. nearest 가 None 이면 "matched": false 응답
+  4. {"matched": true, "message": null, "query": {...}, "nearest": {...}, "llm_url": "/{id}/{year}/llm"}
+
+GET /{player_id}/{year}/llm      ← 2단계 (느림, 1단계 응답을 받은 뒤 호출)
+  1~3. 1단계와 같음 (유사 투수를 서버에서 다시 찾음 — 프로필이 메모리에 있어 빠름)
+  4. answer = llm_client((player_id, year), nearest)                   # 캐시에 있으면 생략
+  5. {"matched": true, "message": null, "query": {...}, "nearest": {...}, "llm": answer, "cached": bool}
 ```
 
 매칭되는 선수가 없을 때의 응답 (`200`):
@@ -112,9 +117,11 @@ GET /{player_id}/{year}
   "message": "조건에 맞는 유사 투수를 찾지 못했습니다.",
   "query":   { "player_id": 660271, "year": 2023 },
   "nearest": null,
-  "llm":     null
+  "llm_url": null
 }
 ```
+
+(`/llm` 에서는 `"llm_url"` 대신 `"llm": null` 이 옵니다.)
 
 | 상황 | 응답 |
 |---|---|
