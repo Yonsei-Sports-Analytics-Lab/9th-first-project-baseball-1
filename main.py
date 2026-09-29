@@ -1,1 +1,283 @@
-# 메인 실행 공간
+"""백엔드 서버 진입점.
+
+실행하면
+1. ``src/preprocessing/preprocess_pipeline.py`` 로 전처리를 끝낸 뒤
+   (산출물이 이미 있는 단계는 건너뜀, ``--force`` 는 그대로 전달)
+   클러스터 결과는 ``data/processed/pitcher_clustered.json`` 에 저장된다.
+2. FastAPI 서버를 띄운다.
+
+API
+---
+``GET /{player_id}/{year}``
+    1. ``src/utils/find_nearest_pitcher.find_nearest_pitcher(player_id, year, top_n)``
+       로 가장 비슷한 투수-시즌 ``(MLB ID, 연도)`` 를 찾고
+    2. 입력 ``(player_id, year)`` 와 찾은 ``(MLB ID, 연도)`` 를
+       ``src/utils/llm_client.llm_client`` 에 넣어 LLM 답변(dict)을 받아
+    3. 아래 형태로 돌려준다::
+
+        {
+          "query":   {"player_id": 660271, "year": 2023},
+          "nearest": {"player_id": 543037, "year": 2021},
+          "llm":     { ... llm_client 가 돌려준 dict ... }
+        }
+
+``GET /health``
+    서버 상태와 로드된 클러스터 JSON 정보.
+
+실행 예시
+---------
+.. code-block:: bash
+
+    python main.py                         # 전처리(K=10) 후 서버 시작 (127.0.0.1:8000)
+    python main.py --k 6 --force cluster   # 클러스터 결과를 다시 만든 뒤 서버 시작
+    python main.py --skip-preprocess       # 전처리 없이 서버만
+    python main.py --host 0.0.0.0 --port 8000 --cors-origins http://localhost:3000
+
+브라우저에서 ``http://127.0.0.1:8000/docs`` 로 API 를 직접 호출해 볼 수 있다.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import os
+import sys
+from contextlib import asynccontextmanager
+from pathlib import Path
+from typing import Any, Sequence
+
+from fastapi import FastAPI, HTTPException
+from fastapi import Path as PathParam
+from fastapi.middleware.cors import CORSMiddleware
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.preprocessing.preprocess_pipeline import (  # noqa: E402
+    DEFAULT_K,
+    STAGES,
+    run_pipeline,
+)
+
+# --------------------------------------------------------------------------- #
+# 설정
+# --------------------------------------------------------------------------- #
+
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+
+#: 서버가 쓰는 클러스터 JSON (전처리 파이프라인이 이 이름으로 저장한다)
+CLUSTER_FILE_NAME = "pitcher_clustered.json"
+
+#: `uvicorn main:app` / `fastapi dev main.py` 처럼 main() 을 거치지 않고 띄울 때 쓰는 기본값
+ENV_K = "PITCH_GMM_K"
+ENV_TOP_N = "NEAREST_TOP_N"
+ENV_CORS = "CORS_ORIGINS"  # 쉼표로 구분 (예: "http://localhost:3000,http://127.0.0.1:3000")
+
+DEFAULT_TOP_N = 1
+DEFAULT_HOST = "127.0.0.1"
+DEFAULT_PORT = 8000
+
+logger = logging.getLogger("backend")
+
+
+def load_cluster_index() -> dict[str, dict[str, dict[str, Any]]]:
+    """``pitcher_clustered.json`` → ``{MLB ID: {연도: {...}}}``.
+
+    없으면 빈 딕셔너리를 돌려주고, 요청 검증 없이 동작한다.
+    """
+    path = PROCESSED_DIR / CLUSTER_FILE_NAME
+    if not path.exists():
+        logger.warning("클러스터 JSON 이 없습니다: %s — 입력 (id, 연도) 검증을 건너뜁니다.", path)
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    logger.info("클러스터 JSON 로드: %s (투수 %s명)", path.name, f"{len(data):,}")
+    return data
+
+
+# --------------------------------------------------------------------------- #
+# 앱
+# --------------------------------------------------------------------------- #
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # main() 에서 app.state 에 넣어 둔 값이 있으면 그것을, 없으면 환경변수를 쓴다.
+    state = app.state
+    state.k = getattr(state, "k", None) or int(os.getenv(ENV_K, DEFAULT_K))
+    state.top_n = getattr(state, "top_n", None) or int(os.getenv(ENV_TOP_N, DEFAULT_TOP_N))
+    state.clusters = load_cluster_index()
+    yield
+
+
+app = FastAPI(
+    title="Pitcher Repertoire API",
+    description="입력한 투수-시즌과 가장 비슷한 투수-시즌을 찾아 LLM 분석을 돌려줍니다.",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in os.getenv(ENV_CORS, "*").split(",") if o.strip()],
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
+
+
+# --------------------------------------------------------------------------- #
+# 다른 모듈 호출 (src/utils — 다른 팀원이 작업 중)
+#   함수 이름·인자가 바뀌면 이 두 함수만 고치면 된다.
+# --------------------------------------------------------------------------- #
+
+
+def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[int, int]:
+    """``find_nearest_pitcher`` 를 호출해 ``(MLB ID, 연도)`` 하나를 받는다."""
+    try:
+        from src.utils.find_nearest_pitcher import find_nearest_pitcher
+    except ImportError as error:
+        raise HTTPException(503, f"find_nearest_pitcher 를 불러올 수 없습니다: {error}") from error
+
+    try:
+        result = find_nearest_pitcher(player_id, year, top_n)
+    except Exception as error:  # 팀원 코드의 예외를 API 오류로 변환
+        logger.exception("find_nearest_pitcher 실패 (%s, %s)", player_id, year)
+        raise HTTPException(500, f"find_nearest_pitcher 실행 오류: {error}") from error
+
+    # top_n > 1 이면 리스트로 올 수도 있으니 첫 번째만 쓴다
+    if isinstance(result, list):
+        result = result[0] if result else None
+    if result is None:
+        raise HTTPException(404, f"({player_id}, {year}) 와 비슷한 투수를 찾지 못했습니다.")
+    try:
+        nearest_id, nearest_year = result
+        return int(nearest_id), int(nearest_year)  # numpy 정수 → 파이썬 int
+    except (TypeError, ValueError) as error:
+        raise HTTPException(
+            500, f"find_nearest_pitcher 반환값이 (MLB ID, 연도) 형태가 아닙니다: {result!r}"
+        ) from error
+
+
+def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[str, Any]:
+    """``llm_client(입력 (id, 연도), 찾은 (id, 연도))`` 를 호출해 dict 답변을 받는다."""
+    try:
+        from src.utils.llm_client import llm_client
+    except ImportError as error:
+        raise HTTPException(503, f"llm_client 를 불러올 수 없습니다: {error}") from error
+
+    try:
+        answer = llm_client(query, nearest)
+    except Exception as error:
+        logger.exception("llm_client 실패 (%s, %s)", query, nearest)
+        raise HTTPException(502, f"LLM 호출 오류: {error}") from error
+
+    if not isinstance(answer, dict):
+        raise HTTPException(502, f"llm_client 가 dict 가 아닌 {type(answer).__name__} 를 반환했습니다.")
+    return answer
+
+
+# --------------------------------------------------------------------------- #
+# 엔드포인트
+# --------------------------------------------------------------------------- #
+
+
+@app.get("/health")
+def health() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "k": app.state.k,
+        "top_n": app.state.top_n,
+        "cluster_file": CLUSTER_FILE_NAME,
+        "pitchers_loaded": len(app.state.clusters),
+    }
+
+
+# LLM 호출이 동기(blocking) 함수일 것이므로 async 가 아닌 def 로 둔다
+# (FastAPI 가 별도 스레드에서 실행해 다른 요청을 막지 않는다).
+@app.get("/{player_id}/{year}")
+def compare_pitcher(
+    player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
+    year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
+) -> dict[str, Any]:
+    clusters = app.state.clusters
+    if clusters and str(year) not in clusters.get(str(player_id), {}):
+        seasons = sorted(clusters.get(str(player_id), {}))
+        detail = (
+            f"MLB ID {player_id} 의 {year} 시즌 데이터가 없습니다."
+            + (f" 가능한 연도: {seasons}" if seasons else " (등록되지 않은 투수)")
+        )
+        raise HTTPException(404, detail)
+
+    nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
+    answer = call_llm_client((player_id, year), nearest)
+
+    return {
+        "query": {"player_id": player_id, "year": year},
+        "nearest": {"player_id": nearest[0], "year": nearest[1]},
+        "llm": answer,
+    }
+
+
+# --------------------------------------------------------------------------- #
+# 실행
+# --------------------------------------------------------------------------- #
+
+
+def build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="전처리 파이프라인 실행 후 백엔드 서버를 띄웁니다.")
+    parser.add_argument("--k", type=int, default=DEFAULT_K,
+                        help=f"1차 클러스터(GMM) 개수 K (기본값: {DEFAULT_K})")
+    parser.add_argument(
+        "--force", nargs="+", choices=STAGES, default=[], metavar="STAGE",
+        help=f"전처리에서 산출물이 있어도 다시 실행할 단계 ({', '.join(STAGES)})",
+    )
+    parser.add_argument("--skip-preprocess", action="store_true",
+                        help="전처리 파이프라인을 건너뛰고 서버만 띄웁니다.")
+    parser.add_argument("--top-n", type=int, default=DEFAULT_TOP_N,
+                        help=f"find_nearest_pitcher 에 넘길 top_n (기본값: {DEFAULT_TOP_N})")
+    parser.add_argument("--host", default=DEFAULT_HOST, help=f"기본값: {DEFAULT_HOST}")
+    parser.add_argument("--port", type=int, default=DEFAULT_PORT, help=f"기본값: {DEFAULT_PORT}")
+    parser.add_argument(
+        "--cors-origins", default=None,
+        help="브라우저 접근을 허용할 프론트엔드 주소, 쉼표로 구분 (기본값: 모두 허용 *)",
+    )
+    parser.add_argument("--log-level", default="INFO",
+                        choices=["DEBUG", "INFO", "WARNING", "ERROR"])
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = build_arg_parser().parse_args(argv)
+    logging.basicConfig(
+        level=getattr(logging, args.log_level),
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
+    if not args.skip_preprocess:
+        logger.info("전처리 파이프라인 실행 (K=%d, force=%s)", args.k, args.force or "없음")
+        results = run_pipeline(k=args.k, force=args.force, cluster_output=CLUSTER_FILE_NAME)
+        for result in results:
+            logger.info(result.summary())
+
+    if args.cors_origins:
+        # 미들웨어는 앱 시작 전에만 바꿀 수 있으므로, 환경변수 대신 여기서 다시 설정한다
+        app.user_middleware = [m for m in app.user_middleware if m.cls is not CORSMiddleware]
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[o.strip() for o in args.cors_origins.split(",") if o.strip()],
+            allow_methods=["GET"],
+            allow_headers=["*"],
+        )
+
+    app.state.k = args.k
+    app.state.top_n = args.top_n
+
+    import uvicorn
+
+    uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level.lower())
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
