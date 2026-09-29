@@ -16,9 +16,22 @@ API
     3. 아래 형태로 돌려준다::
 
         {
+          "matched": true,
+          "message": null,
           "query":   {"player_id": 660271, "year": 2023},
           "nearest": {"player_id": 543037, "year": 2021},
           "llm":     { ... llm_client 가 돌려준 dict ... }
+        }
+
+    ``find_nearest_pitcher`` 가 ``None`` 을 돌려주면(조건에 맞는 유사 투수 없음) 오류가 아니라
+    정상 응답(200)으로 ``"matched": false`` 와 안내 문구를 보내고, LLM 은 호출하지 않는다::
+
+        {
+          "matched": false,
+          "message": "조건에 맞는 유사 투수를 찾지 못했습니다.",
+          "query":   {"player_id": 660271, "year": 2023},
+          "nearest": null,
+          "llm":     null
         }
 
 ``GET /health``
@@ -61,6 +74,8 @@ from src.preprocessing.preprocess_pipeline import (  # noqa: E402
     run_pipeline,
 )
 
+from src.utils.find_nearest_pitcher import PROFILE_FILE, build_profile, find_nearest_pitcher
+
 # --------------------------------------------------------------------------- #
 # 설정
 # --------------------------------------------------------------------------- #
@@ -76,6 +91,9 @@ ENV_TOP_N = "NEAREST_TOP_N"
 ENV_CORS = "CORS_ORIGINS"  # 쉼표로 구분 (예: "http://localhost:3000,http://127.0.0.1:3000")
 
 DEFAULT_TOP_N = 1
+
+#: 유사 투수가 없을 때 프론트엔드에 보낼 안내 문구
+NO_MATCH_MESSAGE = "조건에 맞는 유사 투수를 찾지 못했습니다."
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8000
 
@@ -131,13 +149,11 @@ app.add_middleware(
 # --------------------------------------------------------------------------- #
 
 
-def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[int, int]:
-    """``find_nearest_pitcher`` 를 호출해 ``(MLB ID, 연도)`` 하나를 받는다."""
-    try:
-        from src.utils.find_nearest_pitcher import find_nearest_pitcher
-    except ImportError as error:
-        raise HTTPException(503, f"find_nearest_pitcher 를 불러올 수 없습니다: {error}") from error
+def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[int, int] | None:
+    """``find_nearest_pitcher`` 를 호출해 ``(MLB ID, 연도)`` 하나를 받는다.
 
+    조건에 맞는 유사 투수가 없으면 ``None`` 을 돌려준다.
+    """
     try:
         result = find_nearest_pitcher(player_id, year, top_n)
     except Exception as error:  # 팀원 코드의 예외를 API 오류로 변환
@@ -148,7 +164,8 @@ def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[in
     if isinstance(result, list):
         result = result[0] if result else None
     if result is None:
-        raise HTTPException(404, f"({player_id}, {year}) 와 비슷한 투수를 찾지 못했습니다.")
+        logger.info("(%s, %s) 와 매칭되는 유사 투수 없음", player_id, year)
+        return None
     try:
         nearest_id, nearest_year = result
         return int(nearest_id), int(nearest_year)  # numpy 정수 → 파이썬 int
@@ -208,11 +225,26 @@ def compare_pitcher(
         )
         raise HTTPException(404, detail)
 
+    query = {"player_id": player_id, "year": year}
     nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
-    answer = call_llm_client((player_id, year), nearest)
+
+    # 매칭되는 선수가 없으면 LLM 을 부르지 않고, 프론트엔드가 안내 문구를 띄울 수 있게 알려 준다
+    if nearest is None:
+        return {
+            "matched": False,
+            "message": NO_MATCH_MESSAGE,
+            "query": query,
+            "nearest": None,
+            "llm": None,
+        }
+
+    answer = dict()
+    # answer = call_llm_client((player_id, year), nearest)
 
     return {
-        "query": {"player_id": player_id, "year": year},
+        "matched": True,
+        "message": None,
+        "query": query,
         "nearest": {"player_id": nearest[0], "year": nearest[1]},
         "llm": answer,
     }
@@ -259,6 +291,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         results = run_pipeline(k=args.k, force=args.force, cluster_output=CLUSTER_FILE_NAME)
         for result in results:
             logger.info(result.summary())
+
+    # 유사 투수 탐색용 프로필 (data/processed/pitcher_profile.csv)
+    # 없거나, 클러스터 JSON 이 프로필보다 나중에 만들어졌으면(K 변경·--force cluster 등) 다시 생성
+    cluster_file = PROCESSED_DIR / CLUSTER_FILE_NAME
+    if not PROFILE_FILE.exists():
+        logger.info("투수 프로필이 없어 생성합니다: %s", PROFILE_FILE)
+        build_profile()
+    elif cluster_file.exists() and cluster_file.stat().st_mtime > PROFILE_FILE.stat().st_mtime:
+        logger.info("%s 가 새로 만들어져 투수 프로필을 다시 생성합니다.", cluster_file.name)
+        build_profile()
+    else:
+        logger.info("투수 프로필이 최신입니다 — 생성을 건너뜁니다: %s", PROFILE_FILE.name)
 
     if args.cors_origins:
         # 미들웨어는 앱 시작 전에만 바꿀 수 있으므로, 환경변수 대신 여기서 다시 설정한다
