@@ -15,19 +15,18 @@
 
    를 구한다. 투구 수가 ``min_pitches`` (기본 200) 미만인 투수-시즌은 제외한다.
 4. **저장** (:func:`save_cluster_json`)
-   ``data/processed/data_description.json`` 과 같은 형식으로 저장한다::
+   ``data/processed/pitcher_repertoire_clusters_k{K}.json`` 에
+   ``{MLB ID: {연도: {...}}}`` 형식으로 저장한다::
 
        {
-         "Shohei Ohtani": {
+         "660271": {
            "2023": { "average_velocity": 100.0, "cluster": 10 },
            ...
          },
          ...
        }
 
-   - 선수명은 Statcast 의 ``"성, 이름"`` 을 ``"이름 성"`` 으로 바꾼다.
-   - 서로 다른 투수가 같은 이름이면(예: Luis García 여러 명) 이름 뒤에
-     ``" (pitcher_id)"`` 를 붙여 구분한다.
+   - 키는 Statcast ``pitcher`` 컬럼(MLBAM ID)이다. 이름과 달리 동명이인 문제가 없다.
 
 CLI 사용 예시
 -------------
@@ -39,10 +38,18 @@ CLI 사용 예시
     # K 지정
     python src/preprocessing/cluster_pitcher_repertoire.py --k 7
 
-    # 특정 연도만 사용 + 적합한 GMM 모델도 저장
-    python src/preprocessing/cluster_pitcher_repertoire.py --k 10 \
+    # 이미 저장한 GMM 모델로 할당만 (재적합 없음)
+    python src/preprocessing/cluster_pitcher_repertoire.py \
+        --model-in data/processed/pitch_type_gmm_k10.joblib
+
+    # 특정 연도만 사용 + 결과 JSON 경로 지정
+    python src/preprocessing/cluster_pitcher_repertoire.py --k 6 \
         --years 2023 2024 2025 \
-        --model-out data/processed/pitch_type_gmm.joblib
+        --output data/processed/pitcher_repertoire_clusters_k6.json
+
+적합한 GMM 모델은 기본으로 ``data/processed/pitch_type_gmm_k{K}.joblib`` 에
+저장된다(``evaluate_pitch_gmm.py`` 가 이 파일을 읽는다). ``--model-out`` 으로
+경로를 바꾸거나 ``--no-save-model`` 로 저장을 끌 수 있다.
 """
 
 from __future__ import annotations
@@ -68,7 +75,9 @@ if str(PROJECT_ROOT) not in sys.path:
 from src.preprocessing.fit_pitch_gmm import (  # noqa: E402
     DEFAULT_FIT_SAMPLE,
     PitchTypeGMM,
+    default_model_path,
     fit_pitch_gmm,
+    load_model,
     save_model,
     summarize_components,
 )
@@ -91,8 +100,8 @@ DEFAULT_K = 10
 #: 이보다 적게 던진 투수-시즌은 제외
 DEFAULT_MIN_PITCHES = 200
 
-#: 결과 JSON 경로 (형식은 data/processed/data_description.json 참고)
-DEFAULT_OUTPUT_PATH = DEFAULT_PROCESSED_DIR / "pitcher_repertoire_clusters.json"
+#: 결과 JSON 파일명 (형식은 data/processed/data_description.json 참고)
+OUTPUT_FILE_TEMPLATE = "pitcher_repertoire_clusters_k{k}.json"
 
 #: 평균 구속 반올림 자릿수
 VELOCITY_DECIMALS = 1
@@ -100,6 +109,11 @@ VELOCITY_DECIMALS = 1
 DEFAULT_RANDOM_STATE = 42
 
 logger = logging.getLogger(__name__)
+
+
+def default_output_path(k: int, processed_dir: Path = DEFAULT_PROCESSED_DIR) -> Path:
+    """K 에 대응하는 기본 결과 경로 (``pitcher_repertoire_clusters_k{K}.json``)."""
+    return Path(processed_dir) / OUTPUT_FILE_TEMPLATE.format(k=int(k))
 
 
 # --------------------------------------------------------------------------- #
@@ -171,7 +185,7 @@ def summarize_pitcher_seasons(
         "average_velocity", "cluster", "cluster_share",
         *[f"n_C{k}" for k in range(n_clusters)],
     ]
-    seasons = seasons[ordered].sort_values(["player_name", "game_year"])
+    seasons = seasons[ordered].sort_values(["pitcher", "game_year"])
     logger.info("투수-시즌 %s개 집계", f"{len(seasons):,}")
     return seasons.reset_index(drop=True)
 
@@ -190,51 +204,25 @@ def filter_min_pitches(seasons: pd.DataFrame, min_pitches: int) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------- #
-# 4. JSON 저장 (data_description.json 형식)
+# 4. JSON 저장 ({MLB ID: {연도: {...}}})
 # --------------------------------------------------------------------------- #
-
-
-def format_player_name(name: object) -> str:
-    """Statcast ``"Ohtani, Shohei"`` → ``"Shohei Ohtani"``."""
-    if not isinstance(name, str) or not name.strip():
-        return ""
-    last, sep, first = name.partition(",")
-    if not sep:
-        return name.strip()
-    return f"{first.strip()} {last.strip()}".strip()
-
-
-def assign_display_names(seasons: pd.DataFrame) -> pd.Series:
-    """JSON 키로 쓸 선수명. 동명이인(다른 pitcher id)은 ``" (id)"`` 를 붙인다."""
-    names = seasons["player_name"].map(format_player_name).astype(object)
-    ids = seasons["pitcher"].astype("int64").astype(str)
-    names = names.where(names != "", "pitcher " + ids)
-
-    ids_per_name = seasons.groupby(names)["pitcher"].nunique()
-    duplicated = ids_per_name[ids_per_name > 1].index
-    if len(duplicated):
-        logger.warning(
-            "동명이인 %d건 — 이름 뒤에 pitcher id 를 붙입니다: %s",
-            len(duplicated),
-            ", ".join(sorted(duplicated)),
-        )
-        mask = names.isin(duplicated)
-        names = names.where(~mask, names + " (" + ids + ")")
-    return names
 
 
 def build_description_payload(
     seasons: pd.DataFrame,
     velocity_decimals: int = VELOCITY_DECIMALS,
 ) -> dict[str, dict[str, dict[str, float | int | None]]]:
-    """``{선수명: {연도: {"average_velocity": ..., "cluster": ...}}}`` 딕셔너리."""
-    frame = seasons.assign(display_name=assign_display_names(seasons))
-    frame = frame.sort_values(["display_name", "game_year"])
+    """``{MLB ID: {연도: {"average_velocity": ..., "cluster": ...}}}`` 딕셔너리.
+
+    키는 Statcast ``pitcher`` 컬럼(MLBAM ID)을 문자열로 쓴다(JSON 키는 문자열만 가능).
+    MLB ID 오름차순, 연도 오름차순으로 정렬한다.
+    """
+    frame = seasons.sort_values(["pitcher", "game_year"])
 
     payload: dict[str, dict[str, dict[str, float | int | None]]] = {}
     for row in frame.itertuples(index=False):
         velocity = row.average_velocity
-        payload.setdefault(row.display_name, {})[str(int(row.game_year))] = {
+        payload.setdefault(str(int(row.pitcher)), {})[str(int(row.game_year))] = {
             "average_velocity": (
                 None if pd.isna(velocity) else round(float(velocity), velocity_decimals)
             ),
@@ -244,7 +232,7 @@ def build_description_payload(
 
 
 def dumps_description(payload: Mapping[str, Mapping[str, Mapping]]) -> str:
-    """data_description.json 과 같은 배치(시즌 레코드는 한 줄)로 직렬화한다."""
+    """시즌 레코드를 한 줄로 두는 배치(data_description.json 과 같은 모양)로 직렬화한다."""
     if not payload:
         return "{}\n"
 
@@ -287,7 +275,7 @@ def save_cluster_json(payload: Mapping, path: Path) -> Path:
 def run(
     k: int = DEFAULT_K,
     processed_dir: Path = DEFAULT_PROCESSED_DIR,
-    output_path: Path | None = DEFAULT_OUTPUT_PATH,
+    output_path: Path | None = None,
     years: Iterable[int] | None = None,
     features: Sequence[str] = DEFAULT_FEATURES,
     min_pitches: int = DEFAULT_MIN_PITCHES,
@@ -295,10 +283,18 @@ def run(
     chunksize: int = DEFAULT_CHUNKSIZE,
     random_state: int = DEFAULT_RANDOM_STATE,
     model_out: Path | None = None,
+    save_gmm: bool = True,
+    save_json: bool = True,
+    model: PitchTypeGMM | None = None,
 ) -> tuple[pd.DataFrame, PitchTypeGMM, pd.DataFrame]:
     """로드 → 1차 클러스터링(GMM) → 투수-시즌 집계 → JSON 저장.
 
-    ``output_path=None`` 이면 저장하지 않고 결과만 반환한다(노트북에서 쓰기 좋다).
+    - ``model`` 을 주면 GMM 을 새로 적합하지 않고 그 모델로 할당만 한다
+      (``k``, ``features``, ``fit_sample`` 은 무시되고 모델 설정을 따른다).
+    - ``save_json=True`` 면 결과를 ``output_path`` (없으면
+      ``processed_dir/pitcher_repertoire_clusters_k{K}.json``)에 저장한다.
+    - ``save_gmm=True`` 이고 새로 적합했으면 모델을 ``model_out`` (없으면
+      ``processed_dir/pitch_type_gmm_k{K}.joblib``)에 저장한다.
 
     Returns
     -------
@@ -307,18 +303,26 @@ def run(
         ``model``   : 적합한 1차 클러스터링 모델
         ``pitches`` : 모든 투구 + ``cluster`` 컬럼
     """
+    fitted_here = model is None
+    if model is not None:
+        features = model.features
+        k = model.n_components
+
     # 1. 로드 — 모든 연도(또는 years)의 모든 투구
     files = find_movement_files(processed_dir, years)
     pitches = load_pitch_data(files, features, chunksize)
 
     # 2. 1차 클러스터링 — 적합은 표본(fit_sample)으로, 할당은 모든 투구에
-    model = fit_pitch_gmm(
-        pitches,
-        n_components=k,
-        features=features,
-        fit_sample=fit_sample,
-        random_state=random_state,
-    )
+    if model is None:
+        model = fit_pitch_gmm(
+            pitches,
+            n_components=k,
+            features=features,
+            fit_sample=fit_sample,
+            random_state=random_state,
+        )
+    else:
+        logger.info("주어진 GMM 모델(K=%d)로 클러스터를 할당합니다(재적합 없음).", k)
     proba = model.predict_proba(pitches)
     labels = proba.argmax(axis=1).astype("int64")
     with pd.option_context("display.width", 160, "display.max_columns", 20):
@@ -329,8 +333,8 @@ def run(
     del proba
     pitches["cluster"] = labels
 
-    if model_out is not None:
-        save_model(model, model_out)
+    if save_gmm and fitted_here:
+        save_model(model, model_out or default_model_path(k, processed_dir))
 
     # 3. 투수-시즌 집계 (최빈 클러스터 + 평균 구속)
     seasons = summarize_pitcher_seasons(pitches, labels, model.n_components)
@@ -341,8 +345,11 @@ def run(
     )
 
     # 4. 저장
-    if output_path is not None:
-        save_cluster_json(build_description_payload(seasons), output_path)
+    if save_json:
+        save_cluster_json(
+            build_description_payload(seasons),
+            output_path or default_output_path(k, processed_dir),
+        )
 
     return seasons, model, pitches
 
@@ -356,7 +363,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "모든 투구에 GMM 1차 클러스터링을 하고, 투수-시즌별 최빈 클러스터와 "
-            "평균 구속을 {선수: {연도: {average_velocity, cluster}}} JSON 으로 저장합니다."
+            "평균 구속을 {MLB ID: {연도: {average_velocity, cluster}}} JSON 으로 저장합니다."
         ),
     )
     parser.add_argument(
@@ -368,8 +375,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help=f"입력 디렉토리 (기본값: {DEFAULT_PROCESSED_DIR})",
     )
     parser.add_argument(
-        "--output", type=Path, default=DEFAULT_OUTPUT_PATH,
-        help=f"결과 JSON 경로 (기본값: {DEFAULT_OUTPUT_PATH})",
+        "--output", type=Path, default=None,
+        help="결과 JSON 경로 (기본값: <processed-dir>/pitcher_repertoire_clusters_k{K}.json)",
+    )
+    parser.add_argument(
+        "--model-in", type=Path, default=None,
+        help="저장된 GMM 모델을 불러와 재적합 없이 할당만 합니다 (--k 등은 무시).",
     )
     parser.add_argument(
         "--years", type=int, nargs="+", default=None,
@@ -392,7 +403,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--model-out", type=Path, default=None,
-        help="적합한 GMM(+표준화기)을 joblib 으로 저장할 경로.",
+        help="GMM(+표준화기) 저장 경로 (기본값: <processed-dir>/pitch_type_gmm_k{K}.joblib)",
+    )
+    parser.add_argument(
+        "--no-save-model", action="store_true",
+        help="GMM 모델을 저장하지 않습니다.",
     )
     parser.add_argument(
         "--chunksize", type=int, default=DEFAULT_CHUNKSIZE,
@@ -430,6 +445,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         chunksize=args.chunksize,
         random_state=args.random_state,
         model_out=args.model_out,
+        save_gmm=not args.no_save_model,
+        model=load_model(args.model_in) if args.model_in else None,
     )
 
     print("\n===== 투수-시즌 1차 클러스터 요약 =====")
@@ -437,7 +454,7 @@ def main(argv: Sequence[str] | None = None) -> int:
           f"투수 {seasons['pitcher'].nunique():,}명")
     print("최빈 클러스터별 투수-시즌 수:",
           seasons["cluster"].value_counts().sort_index().to_dict())
-    print(f"저장: {args.output}")
+    print(f"저장: {args.output or default_output_path(model.n_components, args.processed_dir)}")
     return 0
 
 
