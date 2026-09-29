@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>유사 투수 API 데모</title>
+<!--
+  백엔드(main.py) API 호출 예시 페이지 — 프론트엔드 참고용
+  1) python main.py 로 백엔드 실행 (기본 http://127.0.0.1:8000)
+  2) 이 파일을 브라우저로 열기 (더블클릭)
+  3) MLB ID, 연도 입력 후 검색
+  흐름: GET /{id}/{year} → 유사 투수 표시 → GET llm_url → LLM 영역만 교체
+-->
+<style>
+  body { font-family: system-ui, "Malgun Gothic", sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; color: #222; }
+  h1 { font-size: 20px; }
+  form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  input { padding: 6px 8px; font-size: 14px; }
+  button { padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  .box { border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin-bottom: 12px; min-height: 24px; }
+  .box h2 { font-size: 14px; margin: 0 0 8px; color: #666; }
+  .muted { color: #888; }
+  .error { color: #c0392b; }
+  pre { background: #f6f6f6; padding: 10px; border-radius: 6px; overflow-x: auto; font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <h1>⚾ 유사 투수 API 데모</h1>
+
+  <form id="search-form">
+    <input id="api" value="http://127.0.0.1:8000" size="24" title="백엔드 주소">
+    <input id="player-id" type="number" placeholder="MLB ID (예: 543037)" required>
+    <input id="year" type="number" placeholder="연도 (예: 2023)" required>
+    <button type="submit">검색</button>
+  </form>
+
+  <div class="box">
+    <h2>① 유사 투수 — GET /{id}/{year}</h2>
+    <div id="nearest" class="muted">검색해 주세요.</div>
+  </div>
+
+  <div class="box">
+    <h2>② LLM 분석 — GET {llm_url}</h2>
+    <div id="llm" class="muted">-</div>
+  </div>
+
+<script>
+const nearestBox = document.getElementById("nearest");
+const llmBox = document.getElementById("llm");
+let controller = null;   // 새 검색 시 이전 요청을 취소하기 위한 컨트롤러
+
+// 오류 응답(404, 503 등)이면 FastAPI 의 detail 메시지를 꺼내 예외로 던진다
+async function getJson(url, signal) {
+  const res = await fetch(url, { signal });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`${res.status} ${body.detail ?? res.statusText}`);
+  return body;
+}
+
+function show(box, text, cls = "") {
+  box.className = cls;
+  box.textContent = text;
+}
+
+function showJson(box, data) {
+  box.className = "";
+  box.innerHTML = "";
+  const pre = document.createElement("pre");
+  pre.textContent = JSON.stringify(data, null, 2);
+  box.appendChild(pre);
+}
+
+async function search(api, id, year) {
+  controller?.abort();                 // 이전 검색의 느린 LLM 요청이 화면을 덮어쓰지 않도록 취소
+  controller = new AbortController();
+  const { signal } = controller;
+
+  show(nearestBox, "유사 투수 찾는 중...", "muted");
+  show(llmBox, "-", "muted");
+
+  try {
+    // ① 유사 투수 (빠름)
+    const first = await getJson(`${api}/${id}/${year}`, signal);
+    if (!first.matched) {
+      show(nearestBox, first.message, "muted");   // "조건에 맞는 유사 투수를 찾지 못했습니다."
+      show(llmBox, "-", "muted");
+      return;
+    }
+    show(nearestBox, `MLB ID ${first.nearest.player_id} · ${first.nearest.year} 시즌`);
+
+    // ② LLM 분석 (느림) — 이 영역만 로딩 → 결과로 교체
+    show(llmBox, "LLM 분석 중...", "muted");
+    try {
+      const second = await getJson(api + first.llm_url, signal);
+      showJson(llmBox, second.llm);
+    } catch (err) {
+      if (err.name !== "AbortError") show(llmBox, `분석을 불러오지 못했습니다: ${err.message}`, "error");
+    }
+  } catch (err) {
+    if (err.name !== "AbortError") show(nearestBox, `오류: ${err.message}`, "error");
+  }
+}
+
+document.getElementById("search-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const api = document.getElementById("api").value.replace(/\/+$/, "");
+  search(api, document.getElementById("player-id").value, document.getElementById("year").value);
+});
+</script>
+</body>
+</html>
