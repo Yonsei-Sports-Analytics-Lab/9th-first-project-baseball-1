@@ -59,19 +59,19 @@ Baseball Savant CSV의 `pfx_x/z`는 feet로 취급합니다.
 투수 목록을 확인합니다.
 
 ```bash
-python3 main.py --list-pitchers
+python3 -m src.visualization.dashboard_formatter --list-pitchers
 ```
 
 CSV에 한 투수만 있으면 바로 생성할 수 있습니다.
 
 ```bash
-python3 main.py
+python3 -m src.visualization.dashboard_formatter
 ```
 
 여러 투수가 있으면 대소문자를 무시한 완전 일치 이름으로 선택합니다.
 
 ```bash
-python3 main.py --pitcher "Shohei Ohtani"
+python3 -m src.visualization.dashboard_formatter --pitcher "Shohei Ohtani"
 ```
 
 기본 출력은 `src/visualization/pitch_3d/public/pitch-data.json`입니다. 한 번에 너무
@@ -79,13 +79,13 @@ python3 main.py --pitcher "Shohei Ohtani"
 필요하면 `--max-pitches`와 `--samples`를 조정합니다.
 
 ```bash
-python3 main.py --pitcher "Shohei Ohtani" --max-pitches 500 --samples 41
+python3 -m src.visualization.dashboard_formatter --pitcher "Shohei Ohtani" --max-pitches 500 --samples 41
 ```
 
 특정 파일이나 다른 React 앱의 public 디렉터리도 지정할 수 있습니다.
 
 ```bash
-python3 main.py data/processed/data_ohtani_2024.csv \
+python3 -m src.visualization.dashboard_formatter data/processed/data_ohtani_2024.csv \
   --output client/public/pitch-data.json
 ```
 
