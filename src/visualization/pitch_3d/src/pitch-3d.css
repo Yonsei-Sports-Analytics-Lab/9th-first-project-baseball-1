@@ -35,6 +35,10 @@
 .pitch3d__header h2 { margin: 2px 0 0; font-size: 22px; }
 .pitch3d__header > span { color: #a7f3d0; font-size: 12px; font-weight: 700; }
 .pitch3d__eyebrow { margin: 0; color: #94a3b8; font-size: 10px; font-weight: 800; letter-spacing: 0.18em; }
+.pitch3d__legend { position: absolute; z-index: 3; top: 56px; right: 22px; display: flex; gap: 13px; color: #e2e8f0; font-size: 11px; }
+.pitch3d__legend span { display: flex; align-items: center; gap: 5px; }
+.pitch3d__legend i { display: inline-block; width: 19px; height: 0; border-top: 3px solid #e2e8f0; }
+.pitch3d__legend .pitch3d__line--similar { border-top-style: dashed; }
 
 .pitch3d__toggles {
   position: absolute;
@@ -42,7 +46,9 @@
   top: 88px;
   left: 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  max-width: calc(100% - 40px);
 }
 
 .pitch3d__toggles button,
@@ -84,8 +90,31 @@
   border-left: 1px solid var(--line);
 }
 
+.pitch3d__pitcher-filter { margin-bottom: 20px; }
+.pitch3d__pitcher-filter > span { display: block; margin-bottom: 10px; color: #94a3b8; font-size: 11px; font-weight: 800; }
+.pitch3d__pitcher-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.pitch3d__pitcher-options button {
+  min-width: 0;
+  padding: 9px 7px;
+  overflow: hidden;
+  color: #cbd5e1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+}
+.pitch3d__pitcher-options button:first-child { grid-column: 1 / -1; }
+.pitch3d__pitcher-options button.is-active { color: #a7f3d0; background: rgba(52, 211, 153, 0.11); border-color: #34d399; }
 .pitch3d__filter-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; color: #94a3b8; font-size: 11px; font-weight: 800; }
+.pitch3d__selection-note { margin: 0 0 12px; color: #94a3b8; font-size: 10px; line-height: 1.5; }
 .pitch3d__filter-heading button { padding: 5px 8px; color: #7dd3fc; font-size: 9px; }
+.pitch3d__pitch-group + .pitch3d__pitch-group { margin-top: 20px; }
+.pitch3d__pitch-group h3 { margin: 0 0 8px; padding-left: 8px; color: #e2e8f0; border-left: 3px solid #a7f3d0; font-size: 11px; }
+.pitch3d__pitch-group--similar h3 { border-left-style: dashed; }
 .pitch3d__pitch-list { display: flex; flex-direction: column; gap: 7px; }
 
 .pitch3d__pitch-list > button {
@@ -107,7 +136,7 @@
 .pitch3d__pitch-list i { width: 11px; height: 11px; flex: none; border-radius: 50%; box-shadow: 0 0 10px currentColor; }
 .pitch3d__pitch-list span { display: flex; min-width: 0; flex-direction: column; }
 .pitch3d__pitch-list strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.pitch3d__pitch-list small { margin-top: 3px; color: #64748b; font: 10px ui-monospace, monospace; }
+.pitch3d__pitch-list small { margin-top: 3px; color: #94a3b8; font: 10px/1.45 ui-monospace, monospace; }
 .pitch3d__notice { margin: 18px 4px 0; color: #fbbf24; font-size: 10px; line-height: 1.5; }
 
 @media (max-width: 760px) {

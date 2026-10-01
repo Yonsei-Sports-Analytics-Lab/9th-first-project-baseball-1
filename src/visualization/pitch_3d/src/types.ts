@@ -21,6 +21,8 @@ export type PitchTypeSummary = {
   name: string;
   count: number;
   average_speed_mph: number | null;
+  season_count?: number;
+  usage_pct?: number;
 };
 
 export type PitchVisualizationData = {
@@ -29,6 +31,7 @@ export type PitchVisualizationData = {
   source_files: string[];
   pitch_count: number;
   selected_row_count: number;
+  season_pitch_count?: number;
   pitch_types: PitchTypeSummary[];
   trajectories: PitchTrajectory[];
   skipped: Array<{

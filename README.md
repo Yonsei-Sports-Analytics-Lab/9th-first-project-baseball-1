@@ -70,7 +70,7 @@ main.py (FastAPI 백엔드)
    pip install -r requirements.txt
    ```
 3. **원본 데이터 배치** — 아래 구글 드라이브에서 받아 `data/raw/{연도}/statcast_{연도}-{MM}.csv` 형태로 넣고, `fip_2021_2025.csv` 는 `data/raw/` 바로 아래에 둡니다. 자세한 규칙은 [`data/raw/README.md`](data/raw/README.md) 참고.
-4. **`.env` 설정 (LLM API 키)** — 예시 파일을 복사해 프로젝트 루트에 `.env` 를 만들고 키를 채웁니다.
+4. **`.env` 설정 (선택: 생성형 AI 설명)** — 실제 AI 설명이 필요하면 예시 파일을 복사해 프로젝트 루트에 `.env` 를 만들고 키를 채웁니다.
    ```bash
    copy .env.example .env          # macOS/Linux: cp .env.example .env
    ```
@@ -83,12 +83,12 @@ main.py (FastAPI 백엔드)
    | `DATA_DRIVE_SECRET_LINK`, `SPORTS_API_KEY` | – | 템플릿 항목. 현재 코드에서는 사용하지 않음 |
 
    * `.env` 는 `.gitignore` 에 포함되어 있어 커밋되지 않습니다. **키를 코드·README·이슈·PR 에 절대 적지 마세요.** 새 변수가 필요하면 값 없이 이름만 `.env.example` 에 추가합니다.
-   * 키가 없어도 서버와 유사 투수 API(①)는 동작합니다. LLM 분석 API(②)만 `502` 오류를 돌려줍니다.
+   * 키가 없으면 분석 API(②)가 `502` 대신 Statcast 수치에 근거한 설명을 반환합니다. 이 답변은 **AI 생성이 아니라고 명시**됩니다. 생성형 AI 분석에는 유효한 API 키가 필요합니다.
 5. **실행**
    ```bash
    python main.py --k 6
    ```
-   처음 실행하면 아래 준비를 마친 뒤 서버가 `http://127.0.0.1:8000` 에 뜹니다. 이미 만들어진 파일은 다시 만들지 않으므로 두 번째 실행부터는 바로 서버가 뜹니다. 브라우저에서 `http://127.0.0.1:8000/docs` 로 API 를 직접 호출해 볼 수 있고, [`docs/api_demo.html`](docs/api_demo.html) 을 열어 화면에서 확인할 수도 있습니다.
+   처음 실행하면 아래 준비를 마친 뒤 서버가 `http://127.0.0.1:8000` 에 뜹니다. 이미 만들어진 파일은 다시 만들지 않으므로 두 번째 실행부터는 바로 서버가 뜹니다. 브라우저에서 서버 주소를 열면 [`frontend/`](frontend/README.md)의 PITCH TWIN 화면으로 이동하고, `http://127.0.0.1:8000/docs` 에서 API를 직접 호출할 수도 있습니다.
    1. 전처리 파이프라인 → `data/processed/pitcher_clustered.json` (원본 5개 연도 기준 수 분)
    2. 유사 투수 탐색용 프로필 → `data/processed/pitcher_profile.csv`
    3. LLM 입력용 구종 집계 → `data/processed/interim/pitch_arsenal.pkl` (약 1분)
@@ -137,10 +137,17 @@ LLM 에 넘기는 것과 같은 두 선수의 프로필(구종별 스탯, 주 �
 * 필드 의미는 `src/utils/llm_client.py` 맨 위 설명과 같습니다 (HB 는 암사이드 +, RV/100 은 + 가 투수에게 좋음).
 * 프로필을 만들지 못하면 `"profiles": null` 이고 `"profile_error"` 에 이유가 들어갑니다. 유사 투수 결과는 그대로 옵니다.
 * 유사 투수가 없을 때(`"matched": false`)도 `profiles.input_pitcher` 는 채워지고 `similar_pitcher` 는 `null` 입니다.
+* `?rank=2`처럼 순위를 지정하면 두 번째로 가까운 후보를 반환합니다. 생략하면 서버의 `--top-n` 값(기본 1)을 사용합니다.
+
+### 투수 검색 `GET /pitchers`
+
+프런트엔드 이름 자동완성용 API입니다. `query`(이름 또는 MLB ID), `year`, `limit`을 선택적으로 받으며,
+`player_id`, 화면용 `player_name`, 보유 `seasons`를 반환합니다.
 
 ### ② `GET /{player_id}/{year}/llm` — LLM 분석 (느림)
 
 유사 투수는 서버가 다시 찾으므로 URL 에 넣지 않습니다. 같은 조합의 답변은 메모리에 캐시되어 두 번째 요청부터는 바로 응답합니다(`"cached": true`, 서버를 다시 켜면 비워짐).
+1단계와 같은 `rank` 쿼리를 전달해야 동일한 비교 대상의 분석을 받을 수 있습니다.
 
 ```json
 {
@@ -192,6 +199,18 @@ LLM 에 넘기는 것과 같은 두 선수의 프로필(구종별 스탯, 주 �
 - [`src/preprocessing/README.md`](src/preprocessing/README.md) — 전처리 모듈별 사용법
 
 ## 3D 투구 궤적 시각화
+
+비교 화면은 기존 React Three Fiber 뷰어를 사용합니다. 두 투수-시즌의 원본
+Statcast 정규시즌 CSV에서 구종별 최대 12구를 무작위 표본으로 선택하고, 기존
+`pitch_trajectory.py`로 3D 좌표를 복원합니다. 첫 조회는 원본 파일을 읽으므로
+느릴 수 있지만 이후에는 `data/processed/trajectory_cache/`를 재사용합니다.
+비교 화면에는 기본적으로 각 투수·구종에서 표본의 중앙 궤적에 가장 가까운 실제
+투구 1개만 그리며, 필요할 때 `전체 표본 보기`로 전환할 수 있습니다.
+궤적 색은 구종별로, 실선·점선은 두 투수별로 구분합니다. 끝점은 측정된
+`plate_x`·`plate_z`를 사용하며, 흰색 스트라이크 존 테두리는 타자별 판정이
+아닌 고정된 비교 가이드입니다.
+뷰어 코드를 수정한 뒤에는 `src/visualization/pitch_3d`에서 `npm ci`와
+`npm run build:comparison`을 실행해 `frontend/three-viewer.*`를 갱신합니다.
 
 `data/processed`의 `data_[설명].csv` 파일을 투수별 3D 궤적 데이터로 변환할 수
 있습니다.

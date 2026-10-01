@@ -4,6 +4,9 @@
   "private": true,
   "description": "Statcast CSV trajectory viewer for this baseball project",
   "type": "module",
+  "scripts": {
+    "build:comparison": "esbuild src/compare-entry.tsx --bundle --format=esm --minify --outfile=../../../frontend/three-viewer.js"
+  },
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
@@ -28,6 +31,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.182.0",
+    "esbuild": "^0.28.2",
     "typescript": "^5"
   }
 }

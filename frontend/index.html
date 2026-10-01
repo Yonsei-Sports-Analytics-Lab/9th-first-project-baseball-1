@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Statcast 기반 유사 투수 비교와 피치 디자인 분석">
+  <meta name="theme-color" content="#f4f2ec">
+  <title>PITCH TWIN — 패스트볼 유형이 닮은 투수 찾기</title>
+  <link rel="stylesheet" href="./styles.css?v=2">
+  <link rel="stylesheet" href="./three-viewer.css?v=5">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="PITCH TWIN 홈">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__name">PITCH TWIN</span>
+      <span class="brand__tagline">패스트볼 유형이 닮은 투수 찾기</span>
+    </a>
+    <nav class="site-nav" aria-label="주요 메뉴">
+      <button type="button" data-scroll="method">분석 방법</button>
+      <button type="button" data-scroll="data-note">데이터</button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section id="home-view" class="home-view">
+      <div class="hero shell">
+        <p class="eyebrow">MLB STATCAST 2021–2025</p>
+        <h1>같은 유형, 더 잘 던진 투수</h1>
+        <p class="hero__description">
+          보정 무브먼트와 팔 각도로 묶은 군집에서, 구속이 비슷하지만 FIP가 더 낮은 투수를 찾아
+          무엇이 달랐는지 설명해 드립니다.
+        </p>
+
+        <form id="hero-search" class="search-panel" novalidate>
+          <div class="field field--pitcher autocomplete">
+            <label for="hero-pitcher">투수</label>
+            <input id="hero-pitcher" name="pitcher" type="text" placeholder="예) Shohei Ohtani 또는 MLB ID" autocomplete="off" aria-autocomplete="list" aria-controls="hero-suggestions" required>
+            <input name="player-id" type="hidden">
+            <div id="hero-suggestions" class="suggestions" role="listbox" hidden></div>
+          </div>
+          <div class="field">
+            <label for="hero-year">시즌</label>
+            <select id="hero-year" name="year" aria-label="시즌">
+              <option>2025</option><option>2024</option><option selected>2023</option><option>2022</option><option>2021</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="hero-rank">비슷한 순위</label>
+            <select id="hero-rank" name="rank" aria-label="비슷한 순위">
+              <option value="1">1위</option><option value="2">2위</option><option value="3">3위</option><option value="4">4위</option><option value="5">5위</option>
+            </select>
+          </div>
+          <button class="button button--primary search-panel__submit" type="submit">
+            <span>비교하기</span><span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <div class="examples" aria-label="검색 예시">
+          <span>예시</span>
+          <button type="button" data-example-name="Luis Castillo" data-example-year="2023">Luis Castillo · 2023</button>
+          <button type="button" data-example-name="Spencer Strider" data-example-year="2023">Spencer Strider · 2023</button>
+          <button type="button" data-example-name="Tyler Rogers" data-example-year="2022">Tyler Rogers · 2022</button>
+          <button type="button" data-example-name="Corbin Burnes" data-example-year="2022">Corbin Burnes · 2022</button>
+        </div>
+      </div>
+
+      <section id="method" class="method shell" aria-labelledby="method-title">
+        <h2 id="method-title" class="visually-hidden">분석 방법</h2>
+        <article class="method-card">
+          <span>01</span><h3>같은 군집에서 고르기</h3>
+          <p>보정 수직·수평 무브먼트와 팔 각도로 묶은 군집 안에서 평균 구속이 비슷하고 FIP는 더 낮은 투수를 찾습니다.</p>
+        </article>
+        <article class="method-card">
+          <span>02</span><h3>차이를 문장으로</h3>
+          <p>구종 구성과 무브먼트 차이를 수치로 설명합니다. API 키를 설정하면 생성형 AI 분석도 제공합니다.</p>
+        </article>
+        <article class="method-card">
+          <span>03</span><h3>구종 shape로 확인</h3>
+          <p>실제 Statcast 투구 좌표를 복원한 3D 궤적을 겹쳐 구종별 차이를 살펴봅니다.</p>
+        </article>
+      </section>
+
+      <section id="data-note" class="data-note shell">
+        <div><span class="eyebrow">DATA SCOPE</span><h2>정규시즌 투구를 같은 기준으로</h2></div>
+        <p>Baseball Savant Statcast의 2021–2025 정규시즌 데이터를 사용합니다. 패스트볼은 FF·SI·FC 중 투수별 주 구종을 기준으로 비교하며, 결과는 관측 데이터에 기반한 참고 분석입니다.</p>
+      </section>
+    </section>
+
+    <section id="result-view" class="result-view" hidden>
+      <div class="result-search-wrap">
+        <form id="result-search" class="result-search shell" novalidate>
+          <div class="result-search__brand">PITCH TWIN</div>
+          <div class="field field--compact autocomplete">
+            <label for="result-pitcher">투수</label>
+            <input id="result-pitcher" name="pitcher" type="text" autocomplete="off" aria-autocomplete="list" aria-controls="result-suggestions" required>
+            <input name="player-id" type="hidden">
+            <div id="result-suggestions" class="suggestions" role="listbox" hidden></div>
+          </div>
+          <div class="field field--compact"><label for="result-year">시즌</label><select id="result-year" name="year"><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select></div>
+          <div class="field field--compact"><label for="result-rank">순위</label><select id="result-rank" name="rank"><option value="1">1위</option><option value="2">2위</option><option value="3">3위</option><option value="4">4위</option><option value="5">5위</option></select></div>
+          <button class="button button--primary" type="submit">다시 비교</button>
+        </form>
+      </div>
+
+      <div class="result-content shell">
+        <div id="result-status" class="status" role="status" aria-live="polite"></div>
+        <div id="result-data" hidden>
+          <div class="result-heading">
+            <div><p id="match-kicker" class="eyebrow"></p><h1 id="match-title"></h1></div>
+            <div class="rank-nav" aria-label="유사 투수 순위 이동">
+              <button id="previous-rank" type="button">← 이전 순위</button>
+              <button id="next-rank" type="button">다음 순위 →</button>
+            </div>
+          </div>
+
+          <section class="comparison" aria-label="투수 프로필 비교">
+            <article id="input-card" class="pitcher-card pitcher-card--input"></article>
+            <div class="versus" aria-hidden="true"><span>VS</span></div>
+            <article id="similar-card" class="pitcher-card pitcher-card--similar"></article>
+          </section>
+
+          <section class="analysis-card" aria-labelledby="analysis-title">
+            <div class="section-heading">
+              <div><p id="analysis-label" class="section-label">COMPARISON</p><h2 id="analysis-title">무엇이 달랐나</h2></div>
+              <span id="analysis-meta">두 투수의 지표를 읽고 설명합니다</span>
+            </div>
+            <div id="analysis-body" aria-live="polite"></div>
+            <div id="evidence-tags" class="evidence-tags"></div>
+          </section>
+
+          <section class="trajectory-section" aria-labelledby="trajectory-title">
+            <div class="section-heading section-heading--trajectory">
+              <div><p class="section-label">PITCH TRAJECTORY</p><h2 id="trajectory-title">구종별 3D 궤적 비교</h2><p>색은 구종, 실선·점선은 투수를 뜻합니다. 실제 Statcast 투구를 같은 구장에 표시합니다.</p></div>
+              <div class="legend"><span class="legend__input"></span><b id="legend-input"></b><span class="legend__similar"></span><b id="legend-similar"></b></div>
+            </div>
+            <div id="trajectory-grid" class="trajectory-grid"></div>
+            <p class="chart-note">먼저 두 투수 또는 한 투수를 선택한 뒤, 각 투수의 구종을 따로 필터링할 수 있습니다. 기본 궤적은 투수·구종별 실제 대표 투구 1개이며 ‘전체 표본 보기’에는 구종별 최대 12개가 나옵니다. 구사율과 평균 구속은 표본이 아닌 정규시즌 전체 투구 기준입니다.</p>
+            <details class="trajectory-explanation">
+              <summary>궤적 끝점과 스트라이크 존은 어떻게 정해지나요?</summary>
+              <p>궤적의 마지막 점은 Statcast가 기록한 홈플레이트 통과 좌표 <code>plate_x</code>·<code>plate_z</code>입니다. 2021–2025년 데이터는 플레이트 앞면(<code>y=17/12ft</code>)에 도달할 때까지 공개 속도·가속도 값으로 경로를 복원합니다. 끝점을 스트라이크 존 안으로 임의로 옮기지 않으므로, 존 밖에서 끝나는 투구도 정상입니다.</p>
+              <p>화면의 흰색 존 테두리는 폭 1.41ft, 높이 1.8ft(중심 높이 2.5ft)로 고정한 비교용 가이드입니다. 타자별 <code>sz_top</code>·<code>sz_bot</code>이나 실제 스트라이크·볼 판정을 반영한 판정 존은 아닙니다.</p>
+            </details>
+          </section>
+
+          <aside class="next-match">
+            <p>같은 군집에 비슷한 투수가 더 있습니다. 순위를 바꿔 다른 비교 대상을 볼 수 있어요.</p>
+            <button id="next-rank-cta" class="button button--secondary" type="button">다음 순위 투수 보기 →</button>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>데이터: Baseball Savant Statcast · 2021–2025 정규시즌</span>
+    <span>YSAL 9기 1차 프로젝트</span>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" hidden></div>
+  <script type="module" src="./app.js?v=7"></script>
+</body>
+</html>

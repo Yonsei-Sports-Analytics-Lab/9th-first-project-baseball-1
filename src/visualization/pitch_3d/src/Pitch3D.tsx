@@ -10,28 +10,32 @@ import type {
   PitchVisualizationData,
   TrajectoryPoint,
 } from "./types";
+import { representativeTrajectories } from "./representative.ts";
 import "./pitch-3d.css";
 
 const PITCH_COLORS: Record<string, string> = {
   FF: "#ef476f",
-  FA: "#ef476f",
+  FA: "#ff72ae",
   SI: "#ff9f1c",
-  FC: "#b86f52",
+  FC: "#a78bfa",
   SL: "#f6e652",
-  ST: "#d9ed92",
+  ST: "#e879f9",
   CU: "#38bdf8",
-  KC: "#22d3ee",
+  KC: "#21d9ce",
   CH: "#34d399",
-  FS: "#6387db",
-  SV: "#e879f9",
+  FS: "#6594ff",
+  SV: "#f18a65",
   KN: "#a3a3a3",
   UNK: "#ffffff",
 };
 
 type CameraView = "umpire" | "pitcher" | "batter" | "side" | "top";
+type PitcherRole = "input" | "similar";
+type PitcherSelection = "both" | PitcherRole;
 
 export type Pitch3DProps = {
   data: PitchVisualizationData;
+  comparisonData?: PitchVisualizationData;
   className?: string;
 };
 
@@ -134,18 +138,26 @@ function TrajectoryLine({
   tunnel,
   dimmed,
   onHover,
+  comparisonRole,
+  showAllSamples,
 }: {
   trajectory: PitchTrajectory;
   tunnel: boolean;
   dimmed: boolean;
   onHover: (pitchType: string | null) => void;
+  comparisonRole?: "input" | "similar";
+  showAllSamples: boolean;
 }) {
   const points = useMemo(() => toLinePoints(trajectory.points), [trajectory.points]);
   const splitIndex = Math.max(1, Math.floor(points.length / 2));
   const firstHalf = points.slice(0, splitIndex + 1);
   const secondHalf = points.slice(splitIndex);
   const endpoint = points.at(-1);
-  const color = PITCH_COLORS[trajectory.pitch_type] ?? "#ffffff";
+  const isSimilar = comparisonRole === "similar";
+  const baseColor = PITCH_COLORS[trajectory.pitch_type] ?? "#ffffff";
+  const color = isSimilar
+    ? `#${new THREE.Color(baseColor).lerp(new THREE.Color("#ffffff"), 0.28).getHexString()}`
+    : baseColor;
 
   if (points.length < 2 || !endpoint) return null;
 
@@ -161,23 +173,29 @@ function TrajectoryLine({
     <group>
       <Line
         points={firstHalf}
-        color={tunnel ? "#cbd5e1" : color}
-        lineWidth={dimmed ? 0.5 : 1.2}
-        opacity={dimmed ? 0.04 : tunnel ? 0.12 : 0.2}
+        color={color}
+        dashed={isSimilar}
+        dashSize={0.9}
+        gapSize={0.5}
+        lineWidth={dimmed ? 0.5 : showAllSamples ? 1.2 : isSimilar ? 2.9 : 2.2}
+        opacity={dimmed ? 0.04 : tunnel ? 0.16 : showAllSamples ? 0.2 : 0.45}
         transparent
         {...eventHandlers}
       />
       <Line
         points={secondHalf}
         color={color}
-        lineWidth={dimmed ? 0.5 : 1.5}
-        opacity={dimmed ? 0.04 : tunnel ? 0.65 : 0.32}
+        dashed={isSimilar}
+        dashSize={0.9}
+        gapSize={0.5}
+        lineWidth={dimmed ? 0.5 : showAllSamples ? 1.6 : isSimilar ? 4.2 : 3}
+        opacity={dimmed ? 0.04 : tunnel ? 0.7 : showAllSamples ? 0.35 : 0.9}
         transparent
         {...eventHandlers}
       />
       <mesh position={endpoint}>
-        <sphereGeometry args={[0.055, 8, 8]} />
-        <meshBasicMaterial color={color} opacity={dimmed ? 0.06 : 0.5} transparent />
+        {isSimilar ? <octahedronGeometry args={[0.12, 0]} /> : <sphereGeometry args={[0.11, 12, 12]} />}
+        <meshBasicMaterial color={color} opacity={dimmed ? 0.06 : 1} transparent />
       </mesh>
     </group>
   );
@@ -214,8 +232,8 @@ function Heatmap({ trajectories }: { trajectories: PitchTrajectory[] }) {
         <mesh key={cell.key} position={[cell.x, cell.y, -0.03]}>
           <boxGeometry args={[cell.size * 0.95, cell.size * 0.95, 0.05]} />
           <meshBasicMaterial
-            color={new THREE.Color().setHSL(0.62 - cell.intensity * 0.62, 1, 0.5)}
-            opacity={0.2 + cell.intensity * 0.7}
+            color="#ffffff"
+            opacity={0.08 + cell.intensity * 0.38}
             transparent
             depthWrite={false}
           />
@@ -225,31 +243,60 @@ function Heatmap({ trajectories }: { trajectories: PitchTrajectory[] }) {
   );
 }
 
-export default function Pitch3D({ data, className = "" }: Pitch3DProps) {
+export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3DProps) {
   const [view, setView] = useState<CameraView>("umpire");
-  const [activeTypes, setActiveTypes] = useState<string[]>([]);
+  const [pitcherSelection, setPitcherSelection] = useState<PitcherSelection>("both");
+  const [activeTypes, setActiveTypes] = useState<Record<PitcherRole, string[]>>({ input: [], similar: [] });
   const [hoveredType, setHoveredType] = useState<string | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showTunnel, setShowTunnel] = useState(false);
+  const [showAllSamples, setShowAllSamples] = useState(false);
+
+  const pitchGroups = useMemo(() => [
+    { role: "input" as const, viewerData: data },
+    ...(comparisonData ? [{ role: "similar" as const, viewerData: comparisonData }] : []),
+  ], [data, comparisonData]);
+  const selectedGroups = pitchGroups.filter(({ role }) => pitcherSelection === "both" || pitcherSelection === role);
 
   useEffect(() => {
-    setActiveTypes(data.pitch_types.map((pitchType) => pitchType.code));
-  }, [data]);
+    setPitcherSelection("both");
+    setActiveTypes({
+      input: data.pitch_types.map((pitchType) => pitchType.code),
+      similar: comparisonData?.pitch_types.map((pitchType) => pitchType.code) ?? [],
+    });
+    setShowAllSamples(false);
+  }, [data, comparisonData]);
 
-  const visibleTrajectories = useMemo(
-    () => data.trajectories.filter((item) => activeTypes.includes(item.pitch_type)),
-    [activeTypes, data.trajectories],
+  const sampledTrajectories = selectedGroups.flatMap(({ role, viewerData }) =>
+    viewerData.trajectories
+      .filter((item) => activeTypes[role].includes(item.pitch_type))
+      .map((trajectory) => ({ trajectory, source: role }))
   );
 
-  const toggleType = (pitchType: string) => {
-    setActiveTypes((current) =>
-      current.includes(pitchType)
-        ? current.filter((item) => item !== pitchType)
-        : [...current, pitchType],
-    );
+  const visibleTrajectories = !comparisonData || showAllSamples ? sampledTrajectories : selectedGroups.flatMap(({ role, viewerData }) =>
+    representativeTrajectories(viewerData.trajectories.filter((item) => activeTypes[role].includes(item.pitch_type)))
+      .map((trajectory) => ({ trajectory, source: role }))
+  );
+
+  const toggleType = (role: PitcherRole, pitchType: string) => {
+    setActiveTypes((current) => ({
+      ...current,
+      [role]: current[role].includes(pitchType)
+        ? current[role].filter((item) => item !== pitchType)
+        : [...current[role], pitchType],
+    }));
   };
 
-  const allVisible = activeTypes.length === data.pitch_types.length;
+  const allVisible = selectedGroups.every(({ role, viewerData }) =>
+    viewerData.pitch_types.every((pitchType) => activeTypes[role].includes(pitchType.code))
+  );
+  const toggleAllTypes = () => setActiveTypes((current) => {
+    const next = { ...current };
+    for (const { role, viewerData } of selectedGroups) {
+      next[role] = allVisible ? [] : viewerData.pitch_types.map((pitchType) => pitchType.code);
+    }
+    return next;
+  });
 
   return (
     <section className={`pitch3d ${className}`.trim()}>
@@ -257,14 +304,21 @@ export default function Pitch3D({ data, className = "" }: Pitch3DProps) {
         <header className="pitch3d__header">
           <div>
             <p className="pitch3d__eyebrow">PITCH TRAJECTORY</p>
-            <h2>{data.pitcher.name}</h2>
+            <h2>{comparisonData ? `${data.pitcher.name} vs ${comparisonData.pitcher.name}` : data.pitcher.name}</h2>
           </div>
-          <span>{visibleTrajectories.length.toLocaleString()} pitches</span>
+          <span>{comparisonData && !showAllSamples ? `대표 ${visibleTrajectories.length}구 / 표본 ${sampledTrajectories.length}구` : `${visibleTrajectories.length.toLocaleString()} pitches`}</span>
         </header>
 
+        {comparisonData && <div className="pitch3d__legend"><span><i className="pitch3d__line pitch3d__line--input" />{data.pitcher.name}</span><span><i className="pitch3d__line pitch3d__line--similar" />{comparisonData.pitcher.name}</span></div>}
+
         <div className="pitch3d__toggles">
+          {comparisonData && <button
+            className={showAllSamples ? "is-active" : ""}
+            aria-pressed={showAllSamples}
+            onClick={() => setShowAllSamples((value) => !value)}
+          >{showAllSamples ? "대표 궤적 보기" : "전체 표본 보기"}</button>}
           <button className={showHeatmap ? "is-active" : ""} onClick={() => setShowHeatmap((value) => !value)}>
-            {showHeatmap ? "히트맵 끄기" : "히트맵 켜기"}
+            {showHeatmap ? "도착 밀도 끄기" : "도착 밀도 보기"}
           </button>
           <button className={showTunnel ? "is-active" : ""} onClick={() => setShowTunnel((value) => !value)}>
             {showTunnel ? "터널 모드 끄기" : "터널 모드 켜기"}
@@ -295,57 +349,81 @@ export default function Pitch3D({ data, className = "" }: Pitch3DProps) {
           <StadiumElements />
           <CameraController view={view} tunnel={showTunnel} />
           <OrbitControls makeDefault target={[0, 2, 25]} maxPolarAngle={Math.PI / 1.9} />
-          {showHeatmap && <Heatmap trajectories={visibleTrajectories} />}
-          {visibleTrajectories.map((trajectory) => (
+          {showHeatmap && <Heatmap trajectories={sampledTrajectories.map((item) => item.trajectory)} />}
+          {visibleTrajectories.map(({ trajectory, source }) => (
             <TrajectoryLine
-              key={trajectory.id}
+              key={`${source}:${trajectory.id}`}
               trajectory={trajectory}
               tunnel={showTunnel}
               dimmed={hoveredType !== null && hoveredType !== trajectory.pitch_type}
               onHover={setHoveredType}
+              comparisonRole={comparisonData ? source as "input" | "similar" : undefined}
+              showAllSamples={showAllSamples}
             />
           ))}
           {hoveredType && (
             <Text position={[0, 7.5, 4]} fontSize={0.7} color="white" anchorX="center">
-              {data.pitch_types.find((item) => item.code === hoveredType)?.name ?? hoveredType}
+              {selectedGroups.flatMap(({ viewerData }) => viewerData.pitch_types).find((item) => item.code === hoveredType)?.name ?? hoveredType}
             </Text>
           )}
         </Canvas>
       </div>
 
       <aside className="pitch3d__sidebar">
+        {comparisonData && <div className="pitch3d__pitcher-filter">
+          <span>투수 선택</span>
+          <div className="pitch3d__pitcher-options" role="group" aria-label="비교할 투수 선택">
+            {([
+              ["both", "두 투수 비교"],
+              ["input", data.pitcher.name],
+              ["similar", comparisonData.pitcher.name],
+            ] as const).map(([selection, label]) => (
+              <button
+                key={selection}
+                type="button"
+                className={pitcherSelection === selection ? "is-active" : ""}
+                aria-pressed={pitcherSelection === selection}
+                onClick={() => { setPitcherSelection(selection); setHoveredType(null); }}
+              >{label}</button>
+            ))}
+          </div>
+        </div>}
         <div className="pitch3d__filter-heading">
           <span>구종 필터</span>
-          <button
-            onClick={() =>
-              setActiveTypes(allVisible ? [] : data.pitch_types.map((item) => item.code))
-            }
-          >
+          <button type="button" onClick={toggleAllTypes}>
             {allVisible ? "모두 숨기기" : "모두 보기"}
           </button>
         </div>
-        <div className="pitch3d__pitch-list">
-          {data.pitch_types.map((pitchType) => {
-            const active = activeTypes.includes(pitchType.code);
+        {comparisonData && <p className="pitch3d__selection-note">기본값은 투수별·구종별 중앙 궤적에 가장 가까운 실제 투구 1개입니다.</p>}
+        {selectedGroups.map(({ role, viewerData }) => <div className={`pitch3d__pitch-group pitch3d__pitch-group--${role}`} key={role}>
+          {comparisonData && <h3>{viewerData.pitcher.name}</h3>}
+          <div className="pitch3d__pitch-list">
+          {[...viewerData.pitch_types].sort((left, right) =>
+            (right.season_count ?? right.count) - (left.season_count ?? left.count)
+          ).map((pitchType) => {
+            const active = activeTypes[role].includes(pitchType.code);
             return (
               <button
                 key={pitchType.code}
+                type="button"
                 className={active ? "is-active" : ""}
-                onClick={() => toggleType(pitchType.code)}
+                aria-pressed={active}
+                onClick={() => toggleType(role, pitchType.code)}
                 onPointerEnter={() => setHoveredType(pitchType.code)}
                 onPointerLeave={() => setHoveredType(null)}
               >
                 <i style={{ backgroundColor: PITCH_COLORS[pitchType.code] ?? "#fff" }} />
                 <span>
-                  <strong>{pitchType.name}</strong>
+                  <strong>{pitchType.name} ({pitchType.code})</strong>
                   <small>
-                    {pitchType.count}개 · {pitchType.average_speed_mph ?? "-"} mph
+                    {(pitchType.season_count ?? pitchType.count).toLocaleString("ko-KR")}구 · {pitchType.average_speed_mph ?? "-"} mph · 구사율 {pitchType.usage_pct == null ? "—" : `${pitchType.usage_pct.toFixed(1)}%`}
                   </small>
                 </span>
               </button>
             );
           })}
-        </div>
+          </div>
+        </div>)}
         {data.skipped.length > 0 && (
           <p className="pitch3d__notice">필수 값이 없는 {data.skipped.length}개 행은 제외되었습니다.</p>
         )}
