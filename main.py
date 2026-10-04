@@ -82,9 +82,11 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import mimetypes
 import os
 import sys
 from contextlib import asynccontextmanager
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -183,6 +185,8 @@ app.add_middleware(
 )
 
 if FRONTEND_DIR.is_dir():
+    # Windows may serve .mjs as text/plain, which browsers reject for ES modules.
+    mimetypes.add_type("text/javascript", ".mjs")
     app.mount("/app", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
 
@@ -218,6 +222,23 @@ def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[in
         ) from error
 
 
+@lru_cache(maxsize=4)
+def _cluster_centers(k: int) -> dict[int, dict[str, float]]:
+    """저장된 GMM의 군집 중심을 원래 움직임(inch)·팔 각도 단위로 읽는다."""
+    from src.preprocessing.fit_pitch_gmm import default_model_path, load_model
+
+    model = load_model(default_model_path(k, PROCESSED_DIR))
+    centers = model.component_centers()
+    return {
+        int(cluster): {
+            "ivb_in": round(float(row["ivb_ft"]), 1),
+            "hb_in": round(float(row["hb_ft"]), 1),
+            "arm_angle_deg": round(float(row["arm_angle"]), 1),
+        }
+        for cluster, row in centers.iterrows()
+    }
+
+
 def build_search_context(query: tuple[int, int], nearest: tuple[int, int]) -> dict[str, Any] | None:
     """유사 투수 검색 단계의 정보를 ``llm_client`` 의 ``search_context`` 로 넘긴다.
 
@@ -242,14 +263,20 @@ def build_search_context(query: tuple[int, int], nearest: tuple[int, int]) -> di
 
         distance = np.sqrt(((target[Z_COLS].to_numpy(dtype=float)
                              - similar[Z_COLS].to_numpy(dtype=float)) ** 2).sum())
-        return {
-            "cluster": int(target["cluster"]),
+        cluster = int(target["cluster"])
+        context = {
+            "cluster": cluster,
             "input_avg_velocity": num(target["average_velocity"], 1),
             "similar_avg_velocity": num(similar["average_velocity"], 1),
             "input_fip": num(target["FIP"]),
             "similar_fip": num(similar["FIP"]),
             "form_distance": num(distance, 3),
         }
+        try:
+            context["cluster_profile"] = _cluster_centers(int(app.state.k))[cluster]
+        except (FileNotFoundError, KeyError, ValueError, AttributeError) as error:
+            logger.warning("군집 중심값을 읽지 못했습니다: %s", error)
+        return context
     except Exception:  # 부가 정보라 실패해도 LLM 호출은 막지 않는다
         logger.warning("search_context 를 만들지 못해 생략합니다 (%s, %s)", query, nearest, exc_info=True)
         return None
@@ -280,9 +307,17 @@ def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[st
             similar_year=similar_year,
             search_context=build_search_context(query, nearest),
         )
-    except TransientLLMError as error:     # 서버 혼잡·한도 초과 — 잠시 뒤 다시 시도하면 됨
+    except TransientLLMError as error:     # 모든 모델이 혼잡해도 관측값 기반 후보는 보여준다.
         logger.warning("LLM 일시적 오류 (%s, %s): %s", query, nearest, error)
-        raise HTTPException(503, f"LLM 서버가 혼잡합니다. 잠시 후 다시 시도하세요: {error}") from error
+        from src.utils.local_analysis import build_local_analysis
+
+        profiles, profile_error = build_profiles(query, nearest)
+        if profiles is None:
+            raise HTTPException(503, f"데이터 기반 설명을 만들 수 없습니다: {profile_error}") from error
+        fallback = build_local_analysis(profiles)
+        fallback["fallback_reason"] = "llm_unavailable"
+        fallback["validation_warnings"] = ["외부 AI 모델이 일시적으로 응답하지 않아 Statcast 관측값 기반 참고 분석을 제공했습니다."]
+        return fallback
     except ValueError as error:            # 해당 시즌 구종 데이터 없음 등
         raise HTTPException(404, f"LLM 입력 데이터를 만들 수 없습니다: {error}") from error
     except ImportError as error:           # openai 패키지 미설치 등

@@ -1,4 +1,4 @@
-import { getApiJson, resolveApiRoot } from "./api.mjs";
+import { getApiJson, resolveApiRoot } from "./api.mjs?v=2";
 
 const apiRoot = resolveApiRoot(location, window.PITCH_TWIN_API);
 
@@ -15,12 +15,6 @@ let activeController = null;
 let activeSearch = null;
 let toastTimer = null;
 let threeViewerModule = null;
-
-const pitchNames = {
-  FF: "4-Seam", SI: "Sinker", FC: "Cutter", SL: "Slider", ST: "Sweeper",
-  CU: "Curveball", KC: "Knuckle Curve", CH: "Changeup", FS: "Splitter",
-  SV: "Slurve", KN: "Knuckleball",
-};
 
 const format = (value, digits = 1) => value == null || Number.isNaN(Number(value)) ? "—" : Number(value).toFixed(digits);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -196,12 +190,10 @@ function setupAutocomplete(form) {
 function profileCardMarkup(role, profile, context, input) {
   const fastball = profile.primary_fastball ?? {};
   const arsenal = profile.arsenal ?? [];
-  const primary = arsenal.find((pitch) => pitch.is_primary_fastball) ?? {};
   const fip = input ? context?.input_fip : context?.similar_fip;
   const pitches = arsenal.reduce((sum, pitch) => sum + Number(pitch.n_pitches ?? 0), 0);
   const hand = profile.throws === "L" ? "좌투" : "우투";
   const name = displayName(profile.player_name);
-  const badge = primary.pitch_name ?? pitchNames[fastball.pitch_type] ?? fastball.pitch_type ?? "패스트볼";
   const metrics = [
     ["평균 구속", format(fastball.velo_mph), "mph", ""],
     ["FIP", format(fip, 2), "", "metric--fip"],
@@ -214,48 +206,84 @@ function profileCardMarkup(role, profile, context, input) {
     <p class="pitcher-card__label">${escapeHtml(role)}</p>
     <div class="pitcher-card__head">
       <div><h2>${escapeHtml(name)}</h2><p class="pitcher-card__sub">${profile.season} 시즌 · ${hand} · MLB ID ${profile.pitcher_id}</p></div>
-      <span class="pitch-badge">주 구종 ${escapeHtml(badge)}</span>
+      <span class="pitch-badge">패스트볼 클러스터 ${escapeHtml(context?.cluster ?? "—")}</span>
     </div>
     <dl class="metrics">
       ${metrics.map(([label, value, unit, className]) => `<div class="metric ${className}"><dt>${label}</dt><dd>${value}${unit ? `<small>${unit}</small>` : ""}</dd></div>`).join("")}
     </dl>`;
 }
 
-function renderAnalysisLoading() {
-  document.querySelector("#analysis-label").textContent = "COMPARISON";
-  analysisMeta.textContent = "두 투수의 지표를 분석 중입니다";
-  analysisBody.innerHTML = `<div class="analysis-loading" aria-label="AI 분석을 불러오는 중"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>`;
+function clusterIntroMarkup(profiles) {
+  const context = profiles?.search_context ?? {};
+  const center = context.cluster_profile ?? {};
+  const input = profiles?.input_pitcher;
+  const similar = profiles?.similar_pitcher;
+  const inputName = displayName(input?.player_name);
+  const similarName = displayName(similar?.player_name);
+  const centerText = center.ivb_in != null && center.hb_in != null && center.arm_angle_deg != null
+    ? `이 군집의 GMM 중심은 보정 IVB ${format(center.ivb_in)} in, 암사이드 HB ${format(center.hb_in)} in, 팔 각도 ${format(center.arm_angle_deg)}°입니다.`
+    : "이 군집은 보정 수직·수평 움직임과 팔 각도가 비슷한 패스트볼 투구로 구성됩니다.";
+  return `<div class="cluster-explanation">
+    <p class="section-label">FASTBALL CLUSTER</p>
+    <h3>패스트볼 클러스터 ${escapeHtml(context.cluster ?? "—")}</h3>
+    <p>${escapeHtml(input?.season)} 시즌 ${escapeHtml(inputName)}의 패스트볼은 이 군집에 가장 많이 속합니다. ${escapeHtml(centerText)} ${escapeHtml(similarName)}도 같은 군집에 속해 변화구 구성을 비교합니다.</p>
+    <p class="cluster-explanation__note">군집 번호는 성적 순위가 아니라 움직임·팔 각도로 만든 GMM 성분 번호입니다.</p>
+  </div>`;
+}
+
+function renderAnalysisLoading(profiles) {
+  document.querySelector("#analysis-label").textContent = "SECONDARY PITCHES";
+  analysisMeta.textContent = "변화구 후보와 근거를 불러오는 중입니다";
+  analysisBody.innerHTML = `${clusterIntroMarkup(profiles)}<div class="analysis-loading" aria-label="변화구 후보를 불러오는 중"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>`;
   document.querySelector("#evidence-tags").replaceChildren();
 }
 
-function renderAnalysis(llm) {
+function renderAnalysis(llm, profiles) {
   const response = llm?.response ?? {};
   const similarities = response.fastball_comparison?.similarities ?? [];
   const differences = response.fastball_comparison?.differences ?? [];
-  const recommendations = (response.recommendations ?? []).slice(0, 2);
+  const recommendations = (response.recommendations ?? []).filter((item) => !["FF", "SI", "FC"].includes(item.pitch_type)).slice(0, 3);
+  const excluded = (response.not_recommended ?? []).slice(0, 3);
   const summary = response.summary || "분석 설명이 제공되지 않았습니다.";
-  document.querySelector("#analysis-label").textContent = llm?.source === "rule_based" ? "DATA COMPARISON" : "AI ANALYSIS";
-  analysisMeta.textContent = `${llm?.model ?? "AI"}${llm?.source === "rule_based" ? "" : " 분석"}${llm?.created_at ? ` · ${llm.created_at}` : ""}`;
+  const ruleBased = llm?.source === "rule_based";
+  document.querySelector("#analysis-label").textContent = ruleBased ? "STATCAST PITCH TARGETS" : "AI PITCH TARGETS";
+  analysisMeta.textContent = ruleBased
+    ? (llm?.fallback_reason === "llm_unavailable"
+      ? "AI 모델 일시 오류 · Statcast 관측값 기반 참고 후보"
+      : "Statcast 관측값 기반 참고 후보 · AI 키 미설정")
+    : `${llm?.model ?? "AI"} 분석`;
   analysisBody.innerHTML = `
+    ${clusterIntroMarkup(profiles)}
     <div class="analysis-copy"><p>${escapeHtml(summary)}</p></div>
+    ${recommendations.length ? recommendations.map((item, index) => {
+      const shape = item.target_shape ?? {};
+      const shapeText = [
+        shape.velo_mph == null ? null : `${format(shape.velo_mph)} mph`,
+        shape.ivb_in == null ? null : `IVB ${format(shape.ivb_in)} in`,
+        shape.hb_in == null ? null : `HB ${format(shape.hb_in)} in`,
+      ].filter(Boolean).join(" · ");
+      const action = { add: "새 구종", refine: "shape 조정", usage: "구사율 조정" }[item.action] ?? item.action ?? "참고 후보";
+      return `<article class="recommendation">
+        <div class="recommendation__head"><h3>${index + 1}. ${escapeHtml(item.pitch_name ?? item.pitch_type)} <small>${escapeHtml(item.pitch_type)}</small></h3><span class="tag">${escapeHtml(action)}</span>${item.confidence && item.confidence !== "해당 없음" ? `<span class="tag">신뢰도 ${escapeHtml(item.confidence)}</span>` : ""}</div>
+        ${shapeText ? `<p class="recommendation__shape"><b>참고 목표 shape</b> ${escapeHtml(shapeText)}</p>` : ""}
+        ${(item.rationale ?? []).slice(0, 3).map((reason) => `<p>${escapeHtml(reason)}</p>`).join("")}
+        ${item.usage_plan ? `<p><b>해석:</b> ${escapeHtml(item.usage_plan)}</p>` : ""}
+      </article>`;
+    }).join("") : `<p class="analysis-empty">비교 투수의 변화구에서 수치가 충분한 참고 후보를 찾지 못했습니다.</p>`}
+    ${excluded.length ? `<p class="analysis-empty">추천 제외: ${excluded.map((item) => `${escapeHtml(item.pitch_type)} (${escapeHtml(item.reason)})`).join(" · ")}</p>` : ""}
     ${(similarities.length || differences.length) ? `<div class="analysis-points">
       ${similarities[0] ? `<div class="analysis-point"><strong>닮은 점</strong><p>${escapeHtml(similarities[0])}</p></div>` : ""}
       ${differences[0] ? `<div class="analysis-point"><strong>갈린 지점</strong><p>${escapeHtml(differences[0])}</p></div>` : ""}
-    </div>` : ""}
-    ${recommendations.map((item) => `<article class="recommendation">
-      <div class="recommendation__head"><h3>${item.rank ?? ""}. ${escapeHtml(item.pitch_name ?? item.pitch_type)}</h3><span class="tag">${escapeHtml(item.action ?? "추천")}</span><span class="tag">신뢰도 ${escapeHtml(item.confidence ?? "—")}</span></div>
-      ${(item.rationale ?? []).slice(0, 2).map((reason) => `<p>${escapeHtml(reason)}</p>`).join("")}
-      ${item.usage_plan ? `<p><b>활용:</b> ${escapeHtml(item.usage_plan)}</p>` : ""}
-    </article>`).join("")}`;
+    </div>` : ""}`;
   const tags = ["Statcast IVB/HB", "팔 각도", "구종 구사율", "FIP"];
-  if (response.recommendations?.length) tags.push("RV/100");
+  if (recommendations.length) tags.push("RV/100");
   const tagBox = document.querySelector("#evidence-tags");
   tagBox.innerHTML = tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
 }
 
-function renderAnalysisError(message) {
+function renderAnalysisError(message, profiles) {
   analysisMeta.textContent = "프로필 비교는 완료되었습니다";
-  analysisBody.innerHTML = `<div class="analysis-copy"><p>AI 설명을 불러오지 못했습니다. 두 투수의 프로필과 구종별 shape 비교는 그대로 확인할 수 있습니다.</p><p class="pitcher-card__sub">${escapeHtml(message)}</p></div>`;
+  analysisBody.innerHTML = `${clusterIntroMarkup(profiles)}<div class="analysis-copy"><p>변화구 후보를 불러오지 못했습니다. 두 투수의 프로필과 구종별 3D 궤적은 확인할 수 있습니다.</p><p class="pitcher-card__sub">${escapeHtml(message)}</p></div>`;
 }
 
 function renderComparison(response, search) {
@@ -271,8 +299,8 @@ function renderComparison(response, search) {
 
   activeSearch = { ...search, name: inputName, playerId: String(input.pitcher_id) };
   syncForms(activeSearch);
-  document.querySelector("#match-kicker").textContent = `군집 ${context.cluster ?? "—"} · ${input.throws === "L" ? "좌투" : "우투"} · ${search.rank}순위 매칭`;
-  document.querySelector("#match-title").textContent = `${input.season} ${inputName}와 가장 닮은 투수`;
+  document.querySelector("#match-kicker").textContent = `패스트볼 클러스터 ${context.cluster ?? "—"} · ${input.throws === "L" ? "좌투" : "우투"} · ${search.rank}순위 매칭`;
+  document.querySelector("#match-title").textContent = `${similarName}의 변화구를 ${inputName}에게 대입하면?`;
   document.querySelector("#input-card").innerHTML = profileCardMarkup("검색한 투수", input, context, true);
   document.querySelector("#similar-card").innerHTML = profileCardMarkup("닮은 투수 · FIP 더 낮음", similar, context, false);
   document.querySelector("#legend-input").textContent = inputName;
@@ -286,7 +314,7 @@ function renderComparison(response, search) {
   document.querySelector("#next-rank-cta").disabled = search.rank >= 5;
   resultStatus.replaceChildren();
   resultData.hidden = false;
-  renderAnalysisLoading();
+  renderAnalysisLoading(profiles);
   document.title = `${inputName} vs ${similarName} — PITCH TWIN`;
 }
 
@@ -296,7 +324,7 @@ async function renderTrajectories(response, signal) {
   try {
     const [input, similar] = await Promise.all(ids.map(({ player_id, year }) =>
       getJson(`/trajectory/${player_id}/${year}`, signal)));
-    threeViewerModule = await import("./three-viewer.js?v=5");
+    threeViewerModule = await import("./three-viewer.js?v=6");
     if (signal.aborted) return;
     container.replaceChildren();
     threeViewerModule.mountComparison(container, input, similar);
@@ -332,10 +360,10 @@ async function runComparison(values, { pushHistory = true } = {}) {
 
     try {
       const second = await getJson(first.llm_url, controller.signal);
-      if (second.matched && second.llm) renderAnalysis(second.llm);
-      else renderAnalysisError(second.message ?? "AI 분석 결과가 없습니다.");
+      if (second.matched && second.llm) renderAnalysis(second.llm, first.profiles);
+      else renderAnalysisError(second.message ?? "AI 분석 결과가 없습니다.", first.profiles);
     } catch (error) {
-      if (error.name !== "AbortError") renderAnalysisError(error.message);
+      if (error.name !== "AbortError") renderAnalysisError(error.message, first.profiles);
     }
   } catch (error) {
     if (error.name !== "AbortError") {

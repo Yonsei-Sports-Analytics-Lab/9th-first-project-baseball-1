@@ -173,12 +173,12 @@ function TrajectoryLine({
     <group>
       <Line
         points={firstHalf}
-        color={color}
+        color={tunnel ? "#b9c8c0" : color}
         dashed={isSimilar}
         dashSize={0.9}
         gapSize={0.5}
         lineWidth={dimmed ? 0.5 : showAllSamples ? 1.2 : isSimilar ? 2.9 : 2.2}
-        opacity={dimmed ? 0.04 : tunnel ? 0.16 : showAllSamples ? 0.2 : 0.45}
+        opacity={dimmed ? 0.04 : tunnel ? 0.6 : showAllSamples ? 0.2 : 0.45}
         transparent
         {...eventHandlers}
       />
@@ -320,7 +320,7 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
           <button className={showHeatmap ? "is-active" : ""} onClick={() => setShowHeatmap((value) => !value)}>
             {showHeatmap ? "도착 밀도 끄기" : "도착 밀도 보기"}
           </button>
-          <button className={showTunnel ? "is-active" : ""} onClick={() => setShowTunnel((value) => !value)}>
+          <button className={showTunnel ? "is-active" : ""} aria-pressed={showTunnel} onClick={() => setShowTunnel((value) => !value)}>
             {showTunnel ? "터널 모드 끄기" : "터널 모드 켜기"}
           </button>
         </div>
@@ -348,7 +348,7 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
           <pointLight position={[-10, 10, 0]} intensity={0.7} color="#ccccff" />
           <StadiumElements />
           <CameraController view={view} tunnel={showTunnel} />
-          <OrbitControls makeDefault target={[0, 2, 25]} maxPolarAngle={Math.PI / 1.9} />
+          <OrbitControls makeDefault target={showTunnel ? [0, 5, 55] : [0, 2, 25]} maxPolarAngle={Math.PI / 1.9} />
           {showHeatmap && <Heatmap trajectories={sampledTrajectories.map((item) => item.trajectory)} />}
           {visibleTrajectories.map(({ trajectory, source }) => (
             <TrajectoryLine

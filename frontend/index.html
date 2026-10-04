@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Statcast 기반 유사 투수 비교와 피치 디자인 분석">
+  <meta name="description" content="Statcast 패스트볼 shape 군집 기반 유사 투수와 변화구 추천">
   <meta name="theme-color" content="#f4f2ec">
-  <title>PITCH TWIN — 패스트볼 유형이 닮은 투수 찾기</title>
-  <link rel="stylesheet" href="./styles.css?v=2">
+  <title>PITCH TWIN — 패스트볼 군집 기반 변화구 찾기</title>
+  <link rel="stylesheet" href="./styles.css?v=5">
   <link rel="stylesheet" href="./three-viewer.css?v=5">
 </head>
 <body>
@@ -16,7 +16,7 @@
     <a class="brand" href="./" aria-label="PITCH TWIN 홈">
       <span class="brand__mark" aria-hidden="true"></span>
       <span class="brand__name">PITCH TWIN</span>
-      <span class="brand__tagline">패스트볼 유형이 닮은 투수 찾기</span>
+      <span class="brand__tagline">패스트볼 shape가 닮은 투수 찾기</span>
     </a>
     <nav class="site-nav" aria-label="주요 메뉴">
       <button type="button" data-scroll="method">분석 방법</button>
@@ -28,10 +28,10 @@
     <section id="home-view" class="home-view">
       <div class="hero shell">
         <p class="eyebrow">MLB STATCAST 2021–2025</p>
-        <h1>같은 유형, 더 잘 던진 투수</h1>
+        <h1>패스트볼 움직임이 닮은 투수의 변화구 찾기</h1>
         <p class="hero__description">
-          보정 무브먼트와 팔 각도로 묶은 군집에서, 구속이 비슷하지만 FIP가 더 낮은 투수를 찾아
-          무엇이 달랐는지 설명해 드립니다.
+          패스트볼의 수직·수평 움직임과 팔 각도로 군집을 만들고, 같은 군집에서 구속이 비슷하며 FIP가 더 낮은 투수를 찾습니다.
+          그 투수가 실제 던진 변화구의 수치와 참고 목표 shape를 보여 드립니다.
         </p>
 
         <form id="hero-search" class="search-panel" novalidate>
@@ -70,22 +70,22 @@
       <section id="method" class="method shell" aria-labelledby="method-title">
         <h2 id="method-title" class="visually-hidden">분석 방법</h2>
         <article class="method-card">
-          <span>01</span><h3>같은 군집에서 고르기</h3>
-          <p>보정 수직·수평 무브먼트와 팔 각도로 묶은 군집 안에서 평균 구속이 비슷하고 FIP는 더 낮은 투수를 찾습니다.</p>
+          <span>01</span><h3>패스트볼 shape 군집화</h3>
+          <p>FF·SI·FC 투구의 보정 수직·수평 무브먼트와 팔 각도를 표준화해 군집을 만듭니다. 구종 표기는 군집 기준이 아닙니다.</p>
         </article>
         <article class="method-card">
-          <span>02</span><h3>차이를 문장으로</h3>
-          <p>구종 구성과 무브먼트 차이를 수치로 설명합니다. API 키를 설정하면 생성형 AI 분석도 제공합니다.</p>
+          <span>02</span><h3>성적이 좋은 유사 투수 찾기</h3>
+          <p>같은 군집에서 평균 구속 차이가 2 mph 이내이고 FIP가 더 낮은 투수를 골라 릴리스 위치·익스텐션·팔 각도 거리순으로 정렬합니다.</p>
         </article>
         <article class="method-card">
-          <span>03</span><h3>구종 shape로 확인</h3>
-          <p>실제 Statcast 투구 좌표를 복원한 3D 궤적을 겹쳐 구종별 차이를 살펴봅니다.</p>
+          <span>03</span><h3>변화구 후보와 궤적 확인</h3>
+          <p>비교 투수가 던진 변화구의 성과와 패스트볼 대비 움직임 차이를 보여 줍니다. 3D 궤적으로 투구 경로도 확인할 수 있습니다.</p>
         </article>
       </section>
 
       <section id="data-note" class="data-note shell">
         <div><span class="eyebrow">DATA SCOPE</span><h2>정규시즌 투구를 같은 기준으로</h2></div>
-        <p>Baseball Savant Statcast의 2021–2025 정규시즌 데이터를 사용합니다. 패스트볼은 FF·SI·FC 중 투수별 주 구종을 기준으로 비교하며, 결과는 관측 데이터에 기반한 참고 분석입니다.</p>
+        <p>Baseball Savant Statcast의 2021–2025 정규시즌 데이터를 사용합니다. FF·SI·FC는 패스트볼 계열 투구를 모으는 데 사용하고, 실제 군집은 IVB·HB·팔 각도 수치로 결정합니다. 구속 비교와 변화구 shape 전이에는 투수별 최다 패스트볼을 기준으로 씁니다. 추천은 관측값에 기반한 참고 후보입니다.</p>
       </section>
     </section>
 
@@ -124,8 +124,8 @@
 
           <section class="analysis-card" aria-labelledby="analysis-title">
             <div class="section-heading">
-              <div><p id="analysis-label" class="section-label">COMPARISON</p><h2 id="analysis-title">무엇이 달랐나</h2></div>
-              <span id="analysis-meta">두 투수의 지표를 읽고 설명합니다</span>
+              <div><p id="analysis-label" class="section-label">SECONDARY PITCHES</p><h2 id="analysis-title">패스트볼 클러스터와 변화구 추천</h2></div>
+              <span id="analysis-meta">두 투수의 Statcast 관측값을 비교합니다</span>
             </div>
             <div id="analysis-body" aria-live="polite"></div>
             <div id="evidence-tags" class="evidence-tags"></div>
@@ -137,7 +137,7 @@
               <div class="legend"><span class="legend__input"></span><b id="legend-input"></b><span class="legend__similar"></span><b id="legend-similar"></b></div>
             </div>
             <div id="trajectory-grid" class="trajectory-grid"></div>
-            <p class="chart-note">먼저 두 투수 또는 한 투수를 선택한 뒤, 각 투수의 구종을 따로 필터링할 수 있습니다. 기본 궤적은 투수·구종별 실제 대표 투구 1개이며 ‘전체 표본 보기’에는 구종별 최대 12개가 나옵니다. 구사율과 평균 구속은 표본이 아닌 정규시즌 전체 투구 기준입니다.</p>
+            <p class="chart-note">먼저 두 투수 또는 한 투수를 선택한 뒤, 각 투수의 구종을 따로 필터링할 수 있습니다. 기본 궤적은 투수·구종별 실제 대표 투구 1개이며 ‘전체 표본 보기’에는 구종별 최대 12개가 나옵니다. 터널 모드는 홈플레이트 뒤에서 본 궤적의 앞 절반을 중립색으로, 뒤 절반을 구종 색으로 표시해 초반 경로가 얼마나 겹치는지 보여 줍니다. 구사율과 평균 구속은 표본이 아닌 정규시즌 전체 투구 기준입니다.</p>
             <details class="trajectory-explanation">
               <summary>궤적 끝점과 스트라이크 존은 어떻게 정해지나요?</summary>
               <p>궤적의 마지막 점은 Statcast가 기록한 홈플레이트 통과 좌표 <code>plate_x</code>·<code>plate_z</code>입니다. 2021–2025년 데이터는 플레이트 앞면(<code>y=17/12ft</code>)에 도달할 때까지 공개 속도·가속도 값으로 경로를 복원합니다. 끝점을 스트라이크 존 안으로 임의로 옮기지 않으므로, 존 밖에서 끝나는 투구도 정상입니다.</p>
@@ -160,6 +160,6 @@
   </footer>
 
   <div id="toast" class="toast" role="alert" hidden></div>
-  <script type="module" src="./app.js?v=7"></script>
+  <script type="module" src="./app.js?v=11"></script>
 </body>
 </html>

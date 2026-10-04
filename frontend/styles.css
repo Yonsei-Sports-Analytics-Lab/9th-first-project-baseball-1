@@ -140,7 +140,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
 .result-view { min-height: calc(100vh - 75px); }
 .result-search-wrap { position: sticky; z-index: 15; top: 0; background: rgb(255 255 255 / 96%); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
-.result-search { display: grid; grid-template-columns: auto minmax(260px, 1fr) 110px 100px auto; gap: 12px; align-items: end; min-height: 78px; padding: 11px 0; }
+.result-search { display: grid; grid-template-columns: auto minmax(260px, 1fr) 148px 112px auto; gap: 12px; align-items: end; min-height: 78px; padding: 11px 0; }
 .result-search__brand { align-self: center; margin-right: 8px; font-size: 17px; font-weight: 900; letter-spacing: -.03em; cursor: pointer; }
 .field--compact { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: center; }
 .field--compact label { margin: 0; white-space: nowrap; font-size: 11px; }
@@ -189,6 +189,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .section-heading > span { margin-top: 7px; color: var(--subtle); font-size: 10px; }
 .section-label { margin: 0 0 7px; color: var(--accent); font-size: 9px; font-weight: 900; letter-spacing: .12em; }
 #analysis-body { min-height: 105px; margin-top: 21px; }
+.cluster-explanation { margin-bottom: 20px; padding: 18px 20px; background: #eef4f2; border: 1px solid #cfe0da; border-radius: 11px; }
+.cluster-explanation h3 { margin: 0 0 9px; font-size: 17px; }
+.cluster-explanation p:not(.section-label) { margin: 0; color: #40544e; font-size: 13px; line-height: 1.7; }
+.cluster-explanation .cluster-explanation__note { margin-top: 7px !important; color: #667b74 !important; font-size: 11px !important; }
 .analysis-copy { display: grid; gap: 12px; margin: 0; color: #42484d; font-size: 14px; line-height: 1.75; }
 .analysis-copy p { margin: 0; }
 .analysis-points { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 18px; }
@@ -198,7 +202,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .recommendation { margin-top: 18px; padding: 16px 18px; background: #f6f3ed; border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; }
 .recommendation__head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
 .recommendation h3 { margin: 0; font-size: 14px; }
+.recommendation h3 small { margin-left: 4px; color: var(--muted); font-size: 11px; }
 .recommendation p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+.recommendation .recommendation__shape { margin: 10px 0; color: var(--blue-dark); font-size: 13px; }
+.recommendation__shape b { margin-right: 8px; }
+.analysis-empty { margin: 16px 0 0; color: var(--muted); font-size: 13px; }
 .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 9px; color: #5b6062; background: var(--chip); border-radius: 999px; font-size: 10px; font-weight: 800; }
 .evidence-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 21px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
 .evidence-tags::before { align-self: center; margin-right: 3px; color: var(--muted); content: "근거 지표"; font-size: 10px; }
@@ -235,7 +243,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   .search-panel { grid-template-columns: 1fr 1fr; }
   .field--pitcher { grid-column: 1 / -1; }
   .search-panel__submit { align-self: end; }
-  .result-search { grid-template-columns: 1fr 110px 90px auto; }
+  .result-search { grid-template-columns: 1fr 148px 112px auto; }
   .result-search__brand { display: none; }
   .comparison { grid-template-columns: 1fr; gap: 13px; }
   .versus { height: 24px; flex-direction: row; }.versus::before, .versus::after { width: calc(50% - 24px); height: 1px; }
