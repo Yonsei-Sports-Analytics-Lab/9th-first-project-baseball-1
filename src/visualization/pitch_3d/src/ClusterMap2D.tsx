@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { clusterMapBounds, ellipseBoundary, mapPoint, PLOT, type MapBounds } from "./cluster-map-geometry.ts";
+import { clusterMapBounds, mapPoint, PLOT, type MapBounds } from "./cluster-map-geometry.ts";
 import type { ClusterMapData } from "./types";
 import "./cluster-map.css";
 
@@ -18,20 +18,12 @@ function tickLabel(value: number, bounds: MapBounds[number]): string {
   return (bounds[1] - bounds[0] >= 25 ? value.toFixed(0) : value.toFixed(1));
 }
 
-function clusterPath(cluster: ClusterMapData["clusters"][number], bounds: MapBounds): string {
-  return ellipseBoundary(cluster).map((point, index) => {
-    const [x, y] = mapPoint(point, bounds);
-    return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
-  }).join(" ") + " Z";
-}
-
 function ClusterPlot({ data, bounds, activeCluster, names }: {
   data: ClusterMapData;
   bounds: MapBounds;
   activeCluster: number | null;
   names: { input: string; similar: string };
 }) {
-  const clusters = data.clusters.filter((cluster) => activeCluster === null || cluster.id === activeCluster);
   const points = data.points.filter((point) => activeCluster === null || point[3] === activeCluster);
   const pitchers = data.pitchers;
   return <svg className="cluster-map__chart" viewBox="0 0 940 480" role="img"
@@ -55,18 +47,11 @@ function ClusterPlot({ data, bounds, activeCluster, names }: {
     <text className="cluster-map__axis-label" x={(PLOT.left + PLOT.right) / 2} y="469" textAnchor="middle">보정 IVB (in)</text>
     <text className="cluster-map__axis-label" transform="translate(18 243) rotate(-90)" textAnchor="middle">암사이드 HB (in)</text>
     <g clipPath="url(#cluster-map-clip)">
-      {clusters.map((cluster) => <path key={`area-${cluster.id}`} d={clusterPath(cluster, bounds)}
-        className="cluster-map__region" fill={colorFor(cluster.id)} stroke={colorFor(cluster.id)} />)}
       {points.map((point, index) => {
         const [x, y] = mapPoint(point, bounds);
         return <circle key={`sample-${index}`} cx={x} cy={y} r="1.8" fill={colorFor(point[3])} className="cluster-map__sample" />;
       })}
     </g>
-    {clusters.map((cluster) => {
-      const [x, y] = mapPoint(cluster.center, bounds);
-      return <text key={`label-${cluster.id}`} className="cluster-map__cluster-label" x={x} y={y - 8}
-        textAnchor="middle" fill={colorFor(cluster.id)}>C{cluster.id}</text>;
-    })}
     {pitchers.map((pitcher) => {
       const [x, y] = mapPoint(pitcher.point, bounds);
       const input = pitcher.role === "input";
@@ -97,7 +82,7 @@ export default function ClusterMap2D({ data, names }: { data: ClusterMapData; na
       <ClusterPlot data={data} bounds={bounds} activeCluster={activeCluster} names={names} />
     </div>
     <div className="cluster-map__panel">
-      <p className="cluster-map__panel-label">군집 영역 · 전체 패스트볼 {data.total_pitches.toLocaleString("ko-KR")}구</p>
+      <p className="cluster-map__panel-label">군집별 투구 표본 · 전체 패스트볼 {data.total_pitches.toLocaleString("ko-KR")}구</p>
       <div className="cluster-map__cluster-list" role="group" aria-label="GMM 군집 선택">
         <button type="button" className={activeCluster === null ? "is-active" : ""} aria-pressed={activeCluster === null} onClick={() => setActiveCluster(null)}>전체 보기</button>
         {data.clusters.map((cluster) => <button type="button" key={cluster.id}
@@ -115,7 +100,7 @@ export default function ClusterMap2D({ data, names }: { data: ClusterMapData; na
             <small className="cluster-map__angle">평균 팔 각도 {format(pitcher.point[2])}°</small></div>
         </div>)}
       </div>
-      <p className="cluster-map__footnote">기존 GMM은 IVB·HB·팔 각도 3변수로 분류합니다. 차트는 IVB–HB 2차원 투영이며, 타원은 각 군집의 1.5σ 밀도 영역입니다. A·B는 각 시즌 FF·SI·FC 전체 평균을 나타내는 점 하나씩입니다. 여러 구종을 섞어 던지면 평균점이 최빈 군집 타원 밖에 있을 수 있습니다. 작은 점은 군집별 최대 {data.sample_per_cluster}개의 실제 투구 표본입니다.</p>
+      <p className="cluster-map__footnote">군집 번호는 각 투구의 IVB·HB·팔 각도를 모두 사용한 GMM 결과입니다. 색 점은 군집당 최대 {data.sample_per_cluster}개의 실제 투구 표본이며, 점 개수는 전체 군집 비율을 나타내지 않습니다. 이름이 붙은 A·B 점은 각 투수 시즌 FF·SI·FC의 평균 IVB·HB 위치이고, 옆의 C번호는 투구별 최빈 군집입니다. 2차원 투영에서는 평균점이 다른 색 점 근처에 있어도 군집 번호가 다를 수 있습니다.</p>
     </div>
   </section>;
 }
