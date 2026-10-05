@@ -43,9 +43,15 @@ python src/preprocessing/preprocess_pipeline.py --k 6 --force fit cluster   # �
 ## 📄 모듈별 설명
 
 ### 1. `extract_fastball.py`
-월별 원본을 연도 단위로 합치면서 FF/SI/FC 만 남기고, 필수 물리량 컬럼에 결측이 있는 행을 제거합니다. 파일을 청크 단위로 읽어 메모리를 적게 씁니다.
+월별 원본을 연도 단위로 합치면서 **정규시즌(`game_type == "R"`)** 의 FF/SI/FC 만 남기고, 필수 물리량 컬럼에 결측이 있는 행을 제거합니다. 파일을 청크 단위로 읽어 메모리를 적게 씁니다.
+
+3월 파일에는 시범경기(`S`), 10~11월 파일에는 포스트시즌(`D`/`L`/`F`/`W`)이 섞여 있습니다. 시범경기는 구속이 덜 올라와 있어 무브먼트 분포가 정규시즌과 다르고, `src/utils/llm_client.py` 의 구종 집계표도 정규시즌만 쓰므로 모집단을 맞추기 위해 기본으로 거릅니다.
 ```bash
 python src/preprocessing/extract_fastball.py --years 2024 2025 --no-overwrite
+
+# 경기 종류를 바꾸고 싶을 때
+python src/preprocessing/extract_fastball.py --game-types R D L F W
+python src/preprocessing/extract_fastball.py --game-types ALL   # 거르지 않음
 ```
 
 ### 2. `compute_movement_reconciliation.py`
