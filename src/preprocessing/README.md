@@ -64,11 +64,14 @@ python src/preprocessing/fit_pitch_gmm.py --k 6
 * `load_model(path)` 로 불러옵니다. 모델은 `src.preprocessing.fit_pitch_gmm.PitchTypeGMM` 클래스 경로로 저장되므로, 이 모듈을 다른 이름으로 복사해 쓰면 불러올 수 없습니다.
 
 ### 4. `cluster_pitcher_repertoire.py`
-모든 투구에 클러스터를 붙이고 `(pitcher, game_year)` 로 묶어서
-* `cluster`: 가장 많은 투구가 속한 클러스터 (동률이면 번호가 작은 쪽)
-* `average_velocity`: 그 투구들의 평균 `release_speed`
+모든 투구에 클러스터를 붙인 뒤 `(pitcher, game_year)` 로 묶고, **그 시즌 가장 많이 던진
+구종(주 패스트볼)의 투구만 남겨서**
+* `cluster`: 주 패스트볼 투구가 가장 많이 속한 클러스터 (동률이면 번호가 작은 쪽)
+* `average_velocity`: 주 패스트볼의 평균 `release_speed`
 
 를 구해 `{MLB ID: {연도: {"average_velocity", "cluster"}}}` 형식으로 저장합니다. 형식은 `data/processed/README.md` 를 참고하세요.
+
+구종을 섞지 않는 이유: 포심 55% / 싱커 45% 를 던지는 투수의 최빈 클러스터는 사실상 동전던지기가 되어 같은 투수라도 해마다 다른 클러스터로 튑니다. `--min-pitches` 도 **주 패스트볼 투구 수** 기준이며, 거르기 전 전체 패스트볼 수는 집계표의 `n_pitches_all` 에 남습니다.
 ```bash
 python src/preprocessing/cluster_pitcher_repertoire.py --model-in data/processed/pitch_type_gmm_k6.joblib --output data/processed/pitcher_clustered.json
 ```

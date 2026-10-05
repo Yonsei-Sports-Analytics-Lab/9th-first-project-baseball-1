@@ -8,13 +8,18 @@
    ``ivb_ft, hb_ft, arm_angle`` 로 GMM(``K`` 개 성분)을 적합하고, 모든 투구에
    소속 클러스터(확률 최대 성분)를 붙인다. ``K`` 는 인자로 받는다.
 3. **투수-시즌 집계** (:func:`summarize_pitcher_seasons`)
-   ``(pitcher, game_year)`` 로 묶어서
+   ``(pitcher, game_year)`` 로 묶되, **주 패스트볼**(그 시즌 FF/SI/FC 중 가장 많이
+   던진 구종) 의 투구만 남기고 나머지 구종은 버린 뒤
 
-   - ``cluster`` : 그 투구들이 가장 많이 속한 1차 클러스터 (최빈값)
-   - ``average_velocity`` : **주 패스트볼**(그 시즌 FF/SI/FC 중 가장 많이 던진 구종)의 평균 구속
-     (``release_speed``, mph). ``src/utils/llm_client.py`` 의 ``primary_fastball`` 과 같은 기준.
+   - ``cluster`` : 주 패스트볼 투구가 가장 많이 속한 1차 클러스터 (최빈값)
+   - ``average_velocity`` : 주 패스트볼의 평균 구속 (``release_speed``, mph).
+     ``src/utils/llm_client.py`` 의 ``primary_fastball`` 과 같은 기준.
 
-   를 구한다. 투구 수가 ``min_pitches`` (기본 200) 미만인 투수-시즌은 제외한다.
+   를 구한다. 서로 다른 구종을 섞으면 한 투수의 대표 클러스터가 흐려지므로
+   (포심 55%/싱커 45% 투수의 최빈 클러스터는 거의 동전던지기가 된다) 구종을
+   하나로 고정한다. ``n_pitches`` 는 **주 패스트볼 투구 수** 이고,
+   이 값이 ``min_pitches`` (기본 200) 미만인 투수-시즌은 제외한다.
+   거르기 전 전체 패스트볼 수는 ``n_pitches_all`` 에 남는다.
 4. **저장** (:func:`save_cluster_json`)
    ``data/processed/pitcher_repertoire_clusters_k{K}.json`` 에
    ``{MLB ID: {연도: {...}}}`` 형식으로 저장한다::
@@ -127,7 +132,14 @@ def summarize_pitcher_seasons(
     labels: np.ndarray,
     n_clusters: int,
 ) -> pd.DataFrame:
-    """투구를 ``(pitcher, game_year)`` 로 묶어 최빈 1차 클러스터와 주 패스트볼 평균 구속을 구한다.
+    """투구를 ``(pitcher, game_year)`` 로 묶어 **주 패스트볼만** 집계한다.
+
+    각 투수-시즌에서 가장 많이 던진 구종(주 패스트볼)을 고르고, **그 구종의 투구만**
+    남긴 뒤 최빈 1차 클러스터와 평균 구속을 구한다. 나머지 구종의 투구는 집계에서
+    제외된다(``n_pitches_all`` 에 개수만 남는다).
+
+    구종을 섞지 않는 이유: 포심 55% / 싱커 45% 를 던지는 투수의 최빈 클러스터는
+    사실상 동전던지기가 되어, 같은 투수라도 해마다 다른 클러스터로 튄다.
 
     Parameters
     ----------
@@ -139,22 +151,49 @@ def summarize_pitcher_seasons(
     Returns
     -------
     pd.DataFrame
-        ``pitcher, player_name, p_throws, game_year, n_pitches, primary_pitch_type,
-        average_velocity, cluster, cluster_share, n_C0 ... n_C{K-1}``
+        ``pitcher, player_name, p_throws, game_year, n_pitches, n_pitches_all,
+        primary_pitch_type, primary_share, average_velocity, cluster, cluster_share,
+        n_C0 ... n_C{K-1}``
 
         - ``primary_pitch_type`` : 주 패스트볼 — 가장 많이 던진 구종 (동률이면 코드 알파벳순 앞쪽)
+        - ``n_pitches`` : **주 패스트볼** 투구 수 (``min_pitches`` 필터가 보는 값)
+        - ``n_pitches_all`` : 거르기 전 전체 패스트볼(FF/SI/FC) 투구 수
+        - ``primary_share`` : ``n_pitches / n_pitches_all`` — 1 에 가까울수록 한 구종에 집중
         - ``average_velocity`` : 주 패스트볼의 평균 ``release_speed`` (구속 결측은 제외)
-        - ``cluster`` : 가장 많은 투구가 속한 클러스터 (동률이면 번호가 작은 쪽)
-        - ``cluster_share`` : 그 클러스터에 속한 투구 비율
-        - ``n_C*`` : 클러스터별 투구 수
+        - ``cluster`` : 주 패스트볼 투구가 가장 많이 속한 클러스터 (동률이면 번호가 작은 쪽)
+        - ``cluster_share`` : 주 패스트볼 중 그 클러스터에 속한 비율
+        - ``n_C*`` : 클러스터별 주 패스트볼 투구 수
     """
     if len(labels) != len(pitches):
         raise ValueError(f"labels 길이({len(labels)})가 투구 수({len(pitches)})와 다릅니다.")
 
     keys = ["pitcher", "game_year"]
-    frame = pitches[keys + [VELOCITY_COLUMN]].assign(cluster=np.asarray(labels))
 
-    # 클러스터별 투구 수 (투수-시즌 × K)
+    # 주 패스트볼(가장 많이 던진 구종)과 그 구종의 평균 구속.
+    # FF/SI/FC 를 섞어 평균 내면 커터가 섞인 투수의 구속이 실제보다 낮게 잡히므로 구종별로 따로 본다.
+    by_type = (
+        pitches[keys + ["pitch_type", VELOCITY_COLUMN]]
+        .astype({"pitch_type": str})
+        .groupby(keys + ["pitch_type"])[VELOCITY_COLUMN]
+        .agg(n="size", velocity="mean")
+        .reset_index()
+        .sort_values(keys + ["n", "pitch_type"], ascending=[True, True, False, True])
+    )
+    # 동률이면 코드 알파벳순 앞쪽이 첫 행이 되도록 위에서 정렬해 두었다
+    primary = by_type.drop_duplicates(keys, keep="first").set_index(keys)
+
+    frame = pitches[keys + ["pitch_type"]].assign(cluster=np.asarray(labels))
+    frame["pitch_type"] = frame["pitch_type"].astype(str)
+    n_all = frame.groupby(keys).size()
+
+    # 주 패스트볼 외의 구종은 버린다 — 구종을 섞으면 최빈 클러스터가 흐려진다.
+    frame = frame.merge(
+        primary["pitch_type"].rename("primary_pitch_type").reset_index(),
+        on=keys, how="left", copy=False,
+    )
+    frame = frame[frame["pitch_type"] == frame["primary_pitch_type"]]
+
+    # 클러스터별 투구 수 (투수-시즌 × K) — 주 패스트볼만
     counts = (
         frame.groupby(keys + ["cluster"]).size()
         .unstack("cluster", fill_value=0)
@@ -166,18 +205,9 @@ def summarize_pitcher_seasons(
 
     seasons = pd.DataFrame(index=counts.index)
     seasons["n_pitches"] = n_pitches.astype("int64")
-    # 주 패스트볼(가장 많이 던진 구종)과 그 구종의 평균 구속.
-    # FF/SI/FC 를 섞어 평균 내면 커터가 섞인 투수의 구속이 실제보다 낮게 잡히므로 구종별로 따로 본다.
-    by_type = (
-        pitches[keys + ["pitch_type", VELOCITY_COLUMN]]
-        .astype({"pitch_type": str})
-        .groupby(keys + ["pitch_type"])[VELOCITY_COLUMN]
-        .agg(n="size", velocity="mean")
-        .reset_index()
-        .sort_values(keys + ["n", "pitch_type"], ascending=[True, True, False, True])
-    )
-    primary = by_type.drop_duplicates(keys, keep="first").set_index(keys)
+    seasons["n_pitches_all"] = n_all.reindex(counts.index).astype("int64")
     seasons["primary_pitch_type"] = primary["pitch_type"]
+    seasons["primary_share"] = seasons["n_pitches"] / seasons["n_pitches_all"]
     seasons["average_velocity"] = primary["velocity"]
     seasons["cluster"] = mode.astype("int64")
     seasons["cluster_share"] = count_values[np.arange(len(mode)), mode] / n_pitches
@@ -195,20 +225,25 @@ def summarize_pitcher_seasons(
     seasons = seasons.join(identities, on="pitcher")
 
     ordered = [
-        "pitcher", "player_name", "p_throws", "game_year", "n_pitches",
-        "primary_pitch_type", "average_velocity", "cluster", "cluster_share",
+        "pitcher", "player_name", "p_throws", "game_year",
+        "n_pitches", "n_pitches_all", "primary_pitch_type", "primary_share",
+        "average_velocity", "cluster", "cluster_share",
         *[f"n_C{k}" for k in range(n_clusters)],
     ]
     seasons = seasons[ordered].sort_values(["pitcher", "game_year"])
-    logger.info("투수-시즌 %s개 집계", f"{len(seasons):,}")
+    logger.info(
+        "투수-시즌 %s개 집계 (주 패스트볼만 사용 — 주구종 비율 중앙값 %.2f)",
+        f"{len(seasons):,}",
+        seasons["primary_share"].median() if len(seasons) else float("nan"),
+    )
     return seasons.reset_index(drop=True)
 
 
 def filter_min_pitches(seasons: pd.DataFrame, min_pitches: int) -> pd.DataFrame:
-    """투구 수가 ``min_pitches`` 미만인 투수-시즌을 제외한다."""
+    """**주 패스트볼** 투구 수가 ``min_pitches`` 미만인 투수-시즌을 제외한다."""
     kept = seasons[seasons["n_pitches"] >= min_pitches].reset_index(drop=True)
     logger.info(
-        "%d구 이상 투수-시즌: %s / %s개 (투수 %s명)",
+        "주 패스트볼 %d구 이상 투수-시즌: %s / %s개 (투수 %s명)",
         min_pitches,
         f"{len(kept):,}",
         f"{len(seasons):,}",
@@ -406,7 +441,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--min-pitches", type=int, default=DEFAULT_MIN_PITCHES,
-        help=f"투수-시즌 최소 투구 수 (기본값: {DEFAULT_MIN_PITCHES})",
+        help=f"투수-시즌 최소 투구 수 — 주 패스트볼 기준 (기본값: {DEFAULT_MIN_PITCHES})",
     )
     parser.add_argument(
         "--fit-sample", type=int, default=DEFAULT_FIT_SAMPLE,

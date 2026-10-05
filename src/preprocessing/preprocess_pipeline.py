@@ -461,7 +461,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--min-pitches", type=int, default=cluster_step.DEFAULT_MIN_PITCHES,
-        help=f"투수-시즌 최소 투구 수 (기본값: {cluster_step.DEFAULT_MIN_PITCHES})",
+        help=f"투수-시즌 최소 투구 수 — 주 패스트볼 기준 (기본값: {cluster_step.DEFAULT_MIN_PITCHES})",
     )
     parser.add_argument(
         "--chunksize", type=int, default=extract_step.DEFAULT_CHUNKSIZE,
