@@ -11,6 +11,7 @@ import type {
   TrajectoryPoint,
 } from "./types";
 import { representativeTrajectories } from "./representative.ts";
+import { MIN_USAGE_PERCENT, visiblePitchTypes } from "./pitch-filter.ts";
 import "./pitch-3d.css";
 
 const PITCH_COLORS: Record<string, string> = {
@@ -253,28 +254,32 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
   const [showAllSamples, setShowAllSamples] = useState(false);
 
   const pitchGroups = useMemo(() => [
-    { role: "input" as const, viewerData: data },
-    ...(comparisonData ? [{ role: "similar" as const, viewerData: comparisonData }] : []),
+    { role: "input" as const, viewerData: data, pitchTypes: visiblePitchTypes(data, Boolean(comparisonData)) },
+    ...(comparisonData ? [{ role: "similar" as const, viewerData: comparisonData, pitchTypes: visiblePitchTypes(comparisonData, true) }] : []),
   ], [data, comparisonData]);
   const selectedGroups = pitchGroups.filter(({ role }) => pitcherSelection === "both" || pitcherSelection === role);
 
   useEffect(() => {
     setPitcherSelection("both");
     setActiveTypes({
-      input: data.pitch_types.map((pitchType) => pitchType.code),
-      similar: comparisonData?.pitch_types.map((pitchType) => pitchType.code) ?? [],
+      input: pitchGroups[0].pitchTypes.map((pitchType) => pitchType.code),
+      similar: pitchGroups[1]?.pitchTypes.map((pitchType) => pitchType.code) ?? [],
     });
     setShowAllSamples(false);
-  }, [data, comparisonData]);
+  }, [pitchGroups]);
 
-  const sampledTrajectories = selectedGroups.flatMap(({ role, viewerData }) =>
-    viewerData.trajectories
-      .filter((item) => activeTypes[role].includes(item.pitch_type))
-      .map((trajectory) => ({ trajectory, source: role }))
-  );
+  const sampledTrajectories = selectedGroups.flatMap(({ role, viewerData, pitchTypes }) => {
+    const allowedTypes = new Set(pitchTypes.map((item) => item.code));
+    return viewerData.trajectories
+      .filter((item) => allowedTypes.has(item.pitch_type) && activeTypes[role].includes(item.pitch_type))
+      .map((trajectory) => ({ trajectory, source: role }));
+  });
 
   const visibleTrajectories = !comparisonData || showAllSamples ? sampledTrajectories : selectedGroups.flatMap(({ role, viewerData }) =>
-    representativeTrajectories(viewerData.trajectories.filter((item) => activeTypes[role].includes(item.pitch_type)))
+    representativeTrajectories(
+      sampledTrajectories.filter((item) => item.source === role).map((item) => item.trajectory),
+      viewerData.pitch_types,
+    )
       .map((trajectory) => ({ trajectory, source: role }))
   );
 
@@ -287,13 +292,13 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
     }));
   };
 
-  const allVisible = selectedGroups.every(({ role, viewerData }) =>
-    viewerData.pitch_types.every((pitchType) => activeTypes[role].includes(pitchType.code))
+  const allVisible = selectedGroups.some(({ pitchTypes }) => pitchTypes.length > 0) && selectedGroups.every(({ role, pitchTypes }) =>
+    pitchTypes.every((pitchType) => activeTypes[role].includes(pitchType.code))
   );
   const toggleAllTypes = () => setActiveTypes((current) => {
     const next = { ...current };
-    for (const { role, viewerData } of selectedGroups) {
-      next[role] = allVisible ? [] : viewerData.pitch_types.map((pitchType) => pitchType.code);
+    for (const { role, pitchTypes } of selectedGroups) {
+      next[role] = allVisible ? [] : pitchTypes.map((pitchType) => pitchType.code);
     }
     return next;
   });
@@ -363,7 +368,7 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
           ))}
           {hoveredType && (
             <Text position={[0, 7.5, 4]} fontSize={0.7} color="white" anchorX="center">
-              {selectedGroups.flatMap(({ viewerData }) => viewerData.pitch_types).find((item) => item.code === hoveredType)?.name ?? hoveredType}
+              {selectedGroups.flatMap(({ pitchTypes }) => pitchTypes).find((item) => item.code === hoveredType)?.name ?? hoveredType}
             </Text>
           )}
         </Canvas>
@@ -389,16 +394,16 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
           </div>
         </div>}
         <div className="pitch3d__filter-heading">
-          <span>구종 필터</span>
+          <span>구종 필터 · 구사율 {MIN_USAGE_PERCENT}% 이상</span>
           <button type="button" onClick={toggleAllTypes}>
             {allVisible ? "모두 숨기기" : "모두 보기"}
           </button>
         </div>
-        {comparisonData && <p className="pitch3d__selection-note">기본값은 투수별·구종별 중앙 궤적에 가장 가까운 실제 투구 1개입니다.</p>}
-        {selectedGroups.map(({ role, viewerData }) => <div className={`pitch3d__pitch-group pitch3d__pitch-group--${role}`} key={role}>
+        {comparisonData && <p className="pitch3d__selection-note">기본값은 시즌 전체 도착 위치의 최빈 0.25ft 구간에 가까운 실제 투구 1개입니다.</p>}
+        {selectedGroups.map(({ role, viewerData, pitchTypes }) => <div className={`pitch3d__pitch-group pitch3d__pitch-group--${role}`} key={role}>
           {comparisonData && <h3>{viewerData.pitcher.name}</h3>}
           <div className="pitch3d__pitch-list">
-          {[...viewerData.pitch_types].sort((left, right) =>
+          {[...pitchTypes].sort((left, right) =>
             (right.season_count ?? right.count) - (left.season_count ?? left.count)
           ).map((pitchType) => {
             const active = activeTypes[role].includes(pitchType.code);
@@ -422,6 +427,7 @@ export default function Pitch3D({ data, comparisonData, className = "" }: Pitch3
               </button>
             );
           })}
+          {pitchTypes.length === 0 && <p className="pitch3d__selection-note">구사율 {MIN_USAGE_PERCENT}% 이상인 구종이 없습니다.</p>}
           </div>
         </div>)}
         {data.skipped.length > 0 && (

@@ -509,11 +509,33 @@ def compare_pitcher(
             "query": query,
             "nearest": {"player_id": nearest[0], "year": nearest[1]},
             "llm_url": f"/{player_id}/{year}/llm?rank={selected_rank}",
+            "cluster_map_url": f"/cluster-map/{player_id}/{year}?rank={selected_rank}",
         }
+    if nearest is None:
+        response["cluster_map_url"] = None
     response["rank"] = selected_rank
     response["profiles"] = profiles
     response["profile_error"] = profile_error
     return response
+
+
+@app.get("/cluster-map/{player_id}/{year}")
+def pitcher_cluster_map(
+    player_id: int = PathParam(..., gt=0),
+    year: int = PathParam(..., ge=2021, le=2025),
+    rank: int | None = Query(None, ge=1, le=20),
+) -> dict[str, Any]:
+    """All fastball GMM components, bounded real-pitch sample, and two season locations."""
+    validate_season(player_id, year)
+    nearest = call_find_nearest_pitcher(player_id, year, rank or app.state.top_n)
+    if nearest is None:
+        raise HTTPException(404, NO_MATCH_MESSAGE)
+    from src.visualization.cluster_map_data import comparison_cluster_map
+
+    try:
+        return comparison_cluster_map(int(app.state.k), (player_id, year), nearest)
+    except (FileNotFoundError, ValueError) as error:
+        raise HTTPException(503, f"GMM 지도를 만들 수 없습니다: {error}") from error
 
 
 @app.get("/{player_id}/{year}/llm")

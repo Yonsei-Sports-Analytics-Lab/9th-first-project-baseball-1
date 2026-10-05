@@ -7,6 +7,7 @@ const resultView = document.querySelector("#result-view");
 const resultData = document.querySelector("#result-data");
 const resultStatus = document.querySelector("#result-status");
 const analysisBody = document.querySelector("#analysis-body");
+const clusterOverview = document.querySelector("#cluster-overview");
 const analysisMeta = document.querySelector("#analysis-meta");
 const toast = document.querySelector("#toast");
 const forms = [...document.querySelectorAll("#hero-search, #result-search")];
@@ -38,7 +39,7 @@ function showToast(message) {
   toastTimer = setTimeout(() => { toast.hidden = true; }, 5200);
 }
 
-function setLoading(message = "비슷한 투수를 찾고 있습니다") {
+function setLoading(message = "유사 투수 탐색 중") {
   resultData.hidden = true;
   resultStatus.innerHTML = `
     <span class="status__spinner" aria-hidden="true"></span>
@@ -231,14 +232,14 @@ function clusterIntroMarkup(profiles) {
   </div>`;
 }
 
-function renderAnalysisLoading(profiles) {
+function renderAnalysisLoading() {
   document.querySelector("#analysis-label").textContent = "SECONDARY PITCHES";
-  analysisMeta.textContent = "변화구 후보와 근거를 불러오는 중입니다";
-  analysisBody.innerHTML = `${clusterIntroMarkup(profiles)}<div class="analysis-loading" aria-label="변화구 후보를 불러오는 중"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>`;
+  analysisMeta.textContent = "후보 분석 중";
+  analysisBody.innerHTML = '<div class="analysis-loading" aria-label="변화구 후보를 불러오는 중"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>';
   document.querySelector("#evidence-tags").replaceChildren();
 }
 
-function renderAnalysis(llm, profiles) {
+function renderAnalysis(llm) {
   const response = llm?.response ?? {};
   const similarities = response.fastball_comparison?.similarities ?? [];
   const differences = response.fastball_comparison?.differences ?? [];
@@ -249,11 +250,10 @@ function renderAnalysis(llm, profiles) {
   document.querySelector("#analysis-label").textContent = ruleBased ? "STATCAST PITCH TARGETS" : "AI PITCH TARGETS";
   analysisMeta.textContent = ruleBased
     ? (llm?.fallback_reason === "llm_unavailable"
-      ? "AI 모델 일시 오류 · Statcast 관측값 기반 참고 후보"
-      : "Statcast 관측값 기반 참고 후보 · AI 키 미설정")
+      ? "AI 일시 오류 · Statcast 참고"
+      : "API 키 없음 · Statcast 참고")
     : `${llm?.model ?? "AI"} 분석`;
   analysisBody.innerHTML = `
-    ${clusterIntroMarkup(profiles)}
     <div class="analysis-copy"><p>${escapeHtml(summary)}</p></div>
     ${recommendations.length ? recommendations.map((item, index) => {
       const shape = item.target_shape ?? {};
@@ -281,9 +281,9 @@ function renderAnalysis(llm, profiles) {
   tagBox.innerHTML = tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
 }
 
-function renderAnalysisError(message, profiles) {
-  analysisMeta.textContent = "프로필 비교는 완료되었습니다";
-  analysisBody.innerHTML = `${clusterIntroMarkup(profiles)}<div class="analysis-copy"><p>변화구 후보를 불러오지 못했습니다. 두 투수의 프로필과 구종별 3D 궤적은 확인할 수 있습니다.</p><p class="pitcher-card__sub">${escapeHtml(message)}</p></div>`;
+function renderAnalysisError(message) {
+  analysisMeta.textContent = "프로필 비교 완료";
+  analysisBody.innerHTML = `<div class="analysis-copy"><p>변화구 후보를 불러오지 못했습니다. 두 투수의 프로필과 구종별 3D 궤적은 확인할 수 있습니다.</p><p class="pitcher-card__sub">${escapeHtml(message)}</p></div>`;
 }
 
 function renderComparison(response, search) {
@@ -300,21 +300,24 @@ function renderComparison(response, search) {
   activeSearch = { ...search, name: inputName, playerId: String(input.pitcher_id) };
   syncForms(activeSearch);
   document.querySelector("#match-kicker").textContent = `패스트볼 클러스터 ${context.cluster ?? "—"} · ${input.throws === "L" ? "좌투" : "우투"} · ${search.rank}순위 매칭`;
-  document.querySelector("#match-title").textContent = `${similarName}의 변화구를 ${inputName}에게 대입하면?`;
+  document.querySelector("#match-title").textContent = `${inputName} vs ${similarName}`;
   document.querySelector("#input-card").innerHTML = profileCardMarkup("검색한 투수", input, context, true);
   document.querySelector("#similar-card").innerHTML = profileCardMarkup("닮은 투수 · FIP 더 낮음", similar, context, false);
   document.querySelector("#legend-input").textContent = inputName;
   document.querySelector("#legend-similar").textContent = similarName;
   const trajectoryGrid = document.querySelector("#trajectory-grid");
   threeViewerModule?.unmountComparison(trajectoryGrid);
-  trajectoryGrid.innerHTML = '<p class="trajectory-loading" role="status">실제 투구의 3D 궤적을 준비하고 있습니다…</p>';
+  trajectoryGrid.innerHTML = '<p class="trajectory-loading" role="status">3D 궤적 준비 중…</p>';
+  const previousMap = clusterOverview.querySelector("#cluster-map");
+  if (previousMap) threeViewerModule?.unmountClusterMap?.(previousMap);
+  clusterOverview.innerHTML = `${clusterIntroMarkup(profiles)}<div id="cluster-map" class="cluster-map-host"><p class="cluster-map-loading" role="status">전체 패스트볼 GMM 지도 준비 중…</p></div>`;
 
   document.querySelector("#previous-rank").disabled = search.rank <= 1;
   document.querySelector("#next-rank").disabled = search.rank >= 5;
   document.querySelector("#next-rank-cta").disabled = search.rank >= 5;
   resultStatus.replaceChildren();
   resultData.hidden = false;
-  renderAnalysisLoading(profiles);
+  renderAnalysisLoading();
   document.title = `${inputName} vs ${similarName} — PITCH TWIN`;
 }
 
@@ -324,13 +327,32 @@ async function renderTrajectories(response, signal) {
   try {
     const [input, similar] = await Promise.all(ids.map(({ player_id, year }) =>
       getJson(`/trajectory/${player_id}/${year}`, signal)));
-    threeViewerModule = await import("./three-viewer.js?v=6");
+    threeViewerModule = await import("./three-viewer.js?v=13");
     if (signal.aborted) return;
     container.replaceChildren();
     threeViewerModule.mountComparison(container, input, similar);
   } catch (error) {
     if (error.name !== "AbortError" && !signal.aborted) {
       container.innerHTML = `<p class="trajectory-loading" role="alert">3D 궤적을 불러오지 못했습니다: ${escapeHtml(error.message)}</p>`;
+    }
+  }
+}
+
+async function renderClusterMap(response, signal) {
+  const container = clusterOverview.querySelector("#cluster-map");
+  try {
+    const data = await getJson(response.cluster_map_url, signal);
+    const module = await import("./three-viewer.js?v=13");
+    if (signal.aborted || !container.isConnected) return;
+    threeViewerModule = module;
+    container.replaceChildren();
+    module.mountClusterMap(container, data, {
+      input: displayName(response.profiles.input_pitcher.player_name),
+      similar: displayName(response.profiles.similar_pitcher.player_name),
+    });
+  } catch (error) {
+    if (error.name !== "AbortError" && !signal.aborted && container.isConnected) {
+      container.innerHTML = `<p class="cluster-map-loading" role="alert">GMM 지도를 불러오지 못했습니다: ${escapeHtml(error.message)}</p>`;
     }
   }
 }
@@ -348,11 +370,12 @@ async function runComparison(values, { pushHistory = true } = {}) {
     syncForms(values);
     const first = await getJson(`/${playerId}/${values.year}?rank=${values.rank}`, controller.signal);
     if (!first.matched) {
-      setError("조건에 맞는 투수를 찾지 못했습니다", `${values.rank}순위 후보가 없습니다. 더 앞선 순위를 선택하거나 다른 시즌을 검색해 주세요.`);
+      setError("매칭 결과 없음", `${values.rank}순위 후보가 없습니다. 더 앞선 순위를 선택하거나 다른 시즌을 검색해 주세요.`);
       return;
     }
     renderComparison(first, values);
     void renderTrajectories(first, controller.signal);
+    void renderClusterMap(first, controller.signal);
     if (pushHistory) {
       const params = new URLSearchParams({ player: String(playerId), year: String(values.year), rank: String(values.rank) });
       history.pushState(values, "", `${location.pathname}?${params}`);
@@ -360,14 +383,14 @@ async function runComparison(values, { pushHistory = true } = {}) {
 
     try {
       const second = await getJson(first.llm_url, controller.signal);
-      if (second.matched && second.llm) renderAnalysis(second.llm, first.profiles);
-      else renderAnalysisError(second.message ?? "AI 분석 결과가 없습니다.", first.profiles);
+      if (second.matched && second.llm) renderAnalysis(second.llm);
+      else renderAnalysisError(second.message ?? "AI 분석 결과가 없습니다.");
     } catch (error) {
-      if (error.name !== "AbortError") renderAnalysisError(error.message, first.profiles);
+      if (error.name !== "AbortError") renderAnalysisError(error.message);
     }
   } catch (error) {
     if (error.name !== "AbortError") {
-      setError("비교를 시작할 수 없습니다", error.message);
+      setError("비교 오류", error.message);
       showToast(error.message);
     }
   }

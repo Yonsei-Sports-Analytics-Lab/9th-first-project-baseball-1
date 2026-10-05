@@ -60,7 +60,7 @@ main.py (FastAPI 백엔드)
 
 1. **저장소 클론**
    ```bash
-   git clone https://github.com/Yonsei-Sports-Analytics-Lab/9th-first-project-baseball-1.git
+   git clone --branch Euihan --single-branch https://github.com/Yonsei-Sports-Analytics-Lab/9th-first-project-baseball-1.git
    cd 9th-first-project-baseball-1
    ```
 2. **가상환경 생성 및 패키지 설치**
@@ -120,7 +120,8 @@ LLM 에 넘기는 것과 같은 두 선수의 프로필(구종별 스탯, 주 �
   "message": null,
   "query":   { "player_id": 660271, "year": 2023 },
   "nearest": { "player_id": 668390, "year": 2025 },
-  "llm_url": "/660271/2023/llm",
+  "llm_url": "/660271/2023/llm?rank=1",
+  "cluster_map_url": "/cluster-map/660271/2023?rank=1",
   "profiles": {
     "input_pitcher":    { "pitcher_id": 660271, "player_name": "Ohtani, Shohei", "season": 2023, "throws": "R",
                           "primary_fastball": { "pitch_type": "FF", "velo_mph": 96.8, "ivb_in": 14.1, "hb_in": 4.1, "arm_angle_deg": 36.4, "...": "..." },
@@ -138,6 +139,17 @@ LLM 에 넘기는 것과 같은 두 선수의 프로필(구종별 스탯, 주 �
 * 프로필을 만들지 못하면 `"profiles": null` 이고 `"profile_error"` 에 이유가 들어갑니다. 유사 투수 결과는 그대로 옵니다.
 * 유사 투수가 없을 때(`"matched": false`)도 `profiles.input_pitcher` 는 채워지고 `similar_pitcher` 는 `null` 입니다.
 * `?rank=2`처럼 순위를 지정하면 두 번째로 가까운 후보를 반환합니다. 생략하면 서버의 `--top-n` 값(기본 1)을 사용합니다.
+
+### GMM 지도 `GET /cluster-map/{player_id}/{year}?rank=N`
+
+기존 3변수 GMM의 모든 패스트볼 군집 중심·1.5표준편차 밀도 정보, 군집별 실제 투구
+최대 180개, 비교 투수 두 명의 시즌 FF·SI·FC 전체 평균 IVB·HB·팔 각도를 반환합니다.
+전체 2021–2025년 패스트볼에 군집 번호를 매겨 비율을 계산하며, 첫 호출은
+`data/processed/cluster_map_k{K}_v2.json` 캐시 생성 때문에 느릴 수 있습니다.
+화면에서는 군집 밀도 영역을 IVB–HB 2D로 투영하고, 두 투수의 시즌 평균을 점 하나씩
+표시합니다. 점 라벨에는 투수 이름만 나타내고 팔 각도는 옆의 상세 정보에서
+확인할 수 있습니다. GMM 분류에는 팔 각도가 계속 포함되며,
+투수 평균점은 단일 실제 투구가 아닙니다.
 
 ### 투수 검색 `GET /pitchers`
 
@@ -201,14 +213,23 @@ LLM 에 넘기는 것과 같은 두 선수의 프로필(구종별 스탯, 주 �
 ## 3D 투구 궤적 시각화
 
 비교 화면은 기존 React Three Fiber 뷰어를 사용합니다. 두 투수-시즌의 원본
-Statcast 정규시즌 CSV에서 구종별 최대 12구를 무작위 표본으로 선택하고, 기존
+Statcast 정규시즌 CSV에서 구종별 최대 12구를 표본으로 선택하고, 기존
 `pitch_trajectory.py`로 3D 좌표를 복원합니다. 첫 조회는 원본 파일을 읽으므로
 느릴 수 있지만 이후에는 `data/processed/trajectory_cache/`를 재사용합니다.
-비교 화면에는 기본적으로 각 투수·구종에서 표본의 중앙 궤적에 가장 가까운 실제
-투구 1개만 그리며, 필요할 때 `전체 표본 보기`로 전환할 수 있습니다.
+투수·구종별 시즌 전체 `plate_x`·`plate_z`를 0.25ft 간격으로 집계해 최빈
+도착 구간을 찾고, 그 구간 중심에 가장 가까운 실제 투구를 표본에 포함합니다.
+비교 화면은 기본적으로 이 대표 투구 1개만 그리며, 필요할 때 `전체 표본 보기`로
+전환할 수 있습니다. 최빈 구간이 동률이면 구간 중심 부근에 더 밀집한 쪽을 택합니다.
 궤적 색은 구종별로, 실선·점선은 두 투수별로 구분합니다. 끝점은 측정된
 `plate_x`·`plate_z`를 사용하며, 흰색 스트라이크 존 테두리는 타자별 판정이
 아닌 고정된 비교 가이드입니다.
+비교 화면에서는 각 투수의 정규시즌 구사율이 10% 이상인 구종만 보여 줍니다.
+군집·변화구 분석 카드에는 기존 3변수 GMM의 모든 군집을 IVB–HB 평면에 투영한
+2D 지도도 표시합니다. 각 군집의 1.5표준편차 밀도 타원과 군집당 실제 투구 최대
+180개를 보여 주며, 두 투수는 각 시즌 FF·SI·FC 전체 평균을 점 하나씩 표시합니다.
+점 라벨에는 투수 이름만, 팔 각도 평균은 상세 정보에 표기합니다.
+두 투수의 지도 마커는 군집 색 대신 흰색 채움/어두운 채움·흰 테두리로 구분합니다.
+첫 지도 요청은 전체 데이터를 스캔해 로컬 캐시를 생성하므로 느릴 수 있습니다.
 뷰어 코드를 수정한 뒤에는 `src/visualization/pitch_3d`에서 `npm ci`와
 `npm run build:comparison`을 실행해 `frontend/three-viewer.*`를 갱신합니다.
 
