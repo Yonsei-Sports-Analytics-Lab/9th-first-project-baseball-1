@@ -45,7 +45,11 @@ class ClusterMapDataTests(unittest.TestCase):
         self.assertEqual(len(data["clusters"][0]["shape_matrix"]), 3)
         self.assertEqual(data["pitcher_locations"]["1-2023"]["total_fastballs"], 45)
         self.assertEqual(data["pitcher_locations"]["2-2023"]["total_fastballs"], 40)
-        expected_mean = frame[frame["pitcher"] == 1][["ivb_ft", "hb_ft", "arm_angle"]].mean().to_numpy()
+        self.assertEqual(data["pitcher_locations"]["1-2023"]["primary_pitch_type"], "FF")
+        self.assertEqual(data["pitcher_locations"]["1-2023"]["primary_pitch_count"], 40)
+        expected_mean = frame[(frame["pitcher"] == 1) & (frame["pitch_type"] == "FF")][
+            ["ivb_ft", "hb_ft", "arm_angle"]
+        ].mean().to_numpy()
         np.testing.assert_allclose(data["pitcher_locations"]["1-2023"]["point"], expected_mean, atol=0.01)
         self.assertNotEqual(comparison["pitchers"][0]["cluster"], comparison["pitchers"][1]["cluster"])
         self.assertNotIn("pitcher_locations", comparison)

@@ -19,7 +19,7 @@ data/processed/{연도}_movement_reconciliation.csv
 data/processed/pitch_type_gmm_k{K}.joblib
         │  4. cluster_pitcher_repertoire          투구마다 클러스터 할당 → 투수-시즌별 최빈 클러스터·평균 구속
         ▼
-data/processed/pitcher_clustered.json            {MLB ID: {연도: {average_velocity, cluster}}}
+data/processed/pitcher_clustered.json            {MLB ID: {연도: {primary_pitch_type, average_velocity, cluster}}}
         │
         ▼
 main.py (FastAPI 백엔드)
@@ -227,7 +227,7 @@ Statcast 정규시즌 CSV에서 구종별 최대 12구를 표본으로 선택하
 비교 화면에서는 각 투수의 정규시즌 구사율이 10% 이상인 구종만 보여 줍니다.
 군집·변화구 분석 카드에는 기존 3변수 GMM의 모든 군집을 IVB–HB 평면에 투영한
 2D 지도도 표시합니다. 타원 없이 군집당 실제 투구 최대 180개를 점으로
-보여 주며, 두 투수는 각 시즌 FF·SI·FC 전체 평균을 점 하나씩 표시합니다.
+보여 주며, 두 투수는 각 시즌 가장 많이 던진 FF·SI·FC 중 한 구종의 평균을 점 하나씩 표시합니다.
 점 라벨에는 투수 이름만, 팔 각도 평균은 상세 정보에 표기합니다.
 두 투수의 지도 마커는 군집 색 대신 흰색 채움/어두운 채움·흰 테두리로 구분합니다.
 첫 지도 요청은 전체 데이터를 스캔해 로컬 캐시를 생성하므로 느릴 수 있습니다.

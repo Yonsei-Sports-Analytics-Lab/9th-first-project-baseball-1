@@ -327,7 +327,7 @@ async function renderTrajectories(response, signal) {
   try {
     const [input, similar] = await Promise.all(ids.map(({ player_id, year }) =>
       getJson(`/trajectory/${player_id}/${year}`, signal)));
-    threeViewerModule = await import("./three-viewer.js?v=14");
+    threeViewerModule = await import("./three-viewer.js?v=15");
     if (signal.aborted) return;
     container.replaceChildren();
     threeViewerModule.mountComparison(container, input, similar);
@@ -342,7 +342,7 @@ async function renderClusterMap(response, signal) {
   const container = clusterOverview.querySelector("#cluster-map");
   try {
     const data = await getJson(response.cluster_map_url, signal);
-    const module = await import("./three-viewer.js?v=14");
+    const module = await import("./three-viewer.js?v=15");
     if (signal.aborted || !container.isConnected) return;
     threeViewerModule = module;
     container.replaceChildren();

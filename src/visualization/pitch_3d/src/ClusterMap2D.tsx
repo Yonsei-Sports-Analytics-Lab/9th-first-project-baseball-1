@@ -95,12 +95,12 @@ export default function ClusterMap2D({ data, names }: { data: ClusterMapData; na
       <div className="cluster-map__pitchers">
         {data.pitchers.map((pitcher) => <div key={pitcher.role} className="cluster-map__pitcher">
           <span className={`cluster-map__marker cluster-map__marker--${pitcher.role}`}>{pitcher.role === "input" ? "A" : "B"}</span>
-          <div><strong>{names[pitcher.role]}</strong><small>{pitcher.year} · 최빈 군집 C{pitcher.cluster} ({format(pitcher.cluster_share_pct)}%)</small>
+          <div><strong>{names[pitcher.role]}</strong><small>{pitcher.year} · 주 패스트볼 {pitcher.primary_pitch_type} {pitcher.primary_pitch_count.toLocaleString("ko-KR")}구 · 최빈 군집 C{pitcher.cluster} ({format(pitcher.cluster_share_pct)}%)</small>
             <small>평균 IVB {format(pitcher.point[0])} · HB {format(pitcher.point[1])} in</small>
             <small className="cluster-map__angle">평균 팔 각도 {format(pitcher.point[2])}°</small></div>
         </div>)}
       </div>
-      <p className="cluster-map__footnote">군집 번호는 각 투구의 IVB·HB·팔 각도를 모두 사용한 GMM 결과입니다. 색 점은 군집당 최대 {data.sample_per_cluster}개의 실제 투구 표본이며, 점 개수는 전체 군집 비율을 나타내지 않습니다. 이름이 붙은 A·B 점은 각 투수 시즌 FF·SI·FC의 평균 IVB·HB 위치이고, 옆의 C번호는 투구별 최빈 군집입니다. 2차원 투영에서는 평균점이 다른 색 점 근처에 있어도 군집 번호가 다를 수 있습니다.</p>
+      <p className="cluster-map__footnote">군집 번호는 각 투구의 IVB·HB·팔 각도를 모두 사용한 GMM 결과입니다. 색 점은 FF·SI·FC 전체에서 군집당 최대 {data.sample_per_cluster}개의 실제 투구 표본이며, 점 개수는 전체 군집 비율을 나타내지 않습니다. 이름이 붙은 A·B 점은 각 투수 시즌에 가장 많이 던진 패스트볼 구종 하나의 평균 IVB·HB 위치입니다. 옆의 C번호와 비율도 그 구종 투구의 최빈 군집을 기준으로 합니다. 2차원 투영에서는 평균점이 다른 색 점 근처에 있어도 군집 번호가 다를 수 있습니다.</p>
     </div>
   </section>;
 }

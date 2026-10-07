@@ -73,6 +73,9 @@ ROOT = _find_repo_root()
 RAW_DIR = ROOT / "data" / "raw"
 INTERIM_DIR = ROOT / "data" / "processed" / "interim"
 ARSENAL_PKL = INTERIM_DIR / "pitch_arsenal.pkl"
+CLUSTER_FILE = ROOT / "data" / "processed" / "pitcher_clustered.json"
+MOVEMENT_DIR = ROOT / "data" / "processed"
+MOVEMENT_MEANS_PKL = INTERIM_DIR / "fastball_movement_means.pkl"
 
 
 def rel(p: Path) -> str:
@@ -161,6 +164,8 @@ def load_raw_pitches(raw_dir: Path = RAW_DIR) -> pd.DataFrame:
 def _add_pitch_flags(d: pd.DataFrame) -> pd.DataFrame:
     d = d.copy()
     hand = d["p_throws"].map({"R": -1.0, "L": 1.0})
+    # 원본 구종 집계용 임시값. FF/SI/FC는 corrected_fastball_movements()에서
+    # GMM 입력과 동일한 체공시간 보정 평균으로 교체한다.
     d["ivb_in"] = d["pfx_z"] * 12.0
     d["hb_in"] = d["pfx_x"] * 12.0 * hand          # 암사이드 양수
     d["is_swing"] = d["description"].isin(SWING_DESC)
@@ -250,17 +255,114 @@ def build_arsenal_table(data: pd.DataFrame) -> pd.DataFrame:
                                               ascending=[True, True, False]).reset_index(drop=True)
 
 
+def align_primary_fastballs(arsenal: pd.DataFrame) -> pd.DataFrame:
+    """추천 군집에 쓰인 대표 구종을 AI 분석과 구종 간 차이 계산에도 사용한다."""
+    if not CLUSTER_FILE.exists():
+        return arsenal
+    clusters = json.loads(CLUSTER_FILE.read_text(encoding="utf-8"))
+    selected = pd.DataFrame([
+        {"pitcher": int(pitcher), "game_year": int(year), "selected_pitch_type": info["primary_pitch_type"]}
+        for pitcher, seasons in clusters.items()
+        for year, info in seasons.items()
+        if info.get("primary_pitch_type") in FASTBALL_TYPES
+    ])
+    if selected.empty:
+        return arsenal
+
+    keys = ["pitcher", "game_year"]
+    aligned = arsenal.merge(selected, on=keys, how="left")
+    aligned["primary_fastball"] = aligned["selected_pitch_type"].fillna(aligned["primary_fastball"])
+    aligned["is_primary_fastball"] = aligned["pitch_type"] == aligned["primary_fastball"]
+    raw_columns = ["raw_ivb_in", "raw_hb_in"] if {"raw_ivb_in", "raw_hb_in"}.issubset(aligned.columns) else []
+    primary = aligned.loc[aligned["is_primary_fastball"], keys + ["velo_mph", "ivb_in", "hb_in", *raw_columns]]
+    primary = primary.rename(columns={
+        "velo_mph": "_fb_velo", "ivb_in": "_fb_ivb", "hb_in": "_fb_hb",
+        "raw_ivb_in": "_fb_raw_ivb", "raw_hb_in": "_fb_raw_hb",
+    })
+    aligned = aligned.drop(columns=[
+        "selected_pitch_type", "velo_gap_vs_fb", "ivb_gap_vs_fb", "hb_gap_vs_fb",
+    ])
+    aligned = aligned.merge(primary, on=keys, how="left", validate="many_to_one")
+    for feature, column in (("velo", "velo_mph"), ("ivb", "ivb_in"), ("hb", "hb_in")):
+        aligned[f"{feature}_gap_vs_fb"] = aligned[column] - aligned[f"_fb_{feature}"]
+    if raw_columns:
+        # 변화구에는 보정 기준 체공시간이 없다. 변화구의 기존 raw shape 차이를
+        # 보정된 주 패스트볼에 더하면 비교 기준을 섞지 않고 목표 shape를 만들 수 있다.
+        secondary = ~aligned["pitch_type"].isin(FASTBALL_TYPES)
+        for feature in ("ivb", "hb"):
+            aligned.loc[secondary, f"{feature}_gap_vs_fb"] = (
+                aligned.loc[secondary, f"raw_{feature}_in"] - aligned.loc[secondary, f"_fb_raw_{feature}"]
+            )
+    return aligned.drop(columns=["_fb_velo", "_fb_ivb", "_fb_hb", *[f"_fb_raw_{feature}" for feature in ("ivb", "hb") if raw_columns]])
+
+
+def corrected_fastball_movements(
+    arsenal: pd.DataFrame, processed_dir: Path = MOVEMENT_DIR
+) -> pd.DataFrame:
+    """FF/SI/FC 무브먼트를 GMM 입력과 같은 투구별 보정값의 평균으로 교체한다.
+
+    다른 구종은 체공시간 기준값이 없으므로 기존 Statcast pfx 값을 유지한다.
+    """
+    from src.preprocessing.load_movement_data import find_movement_files
+
+    files = find_movement_files(processed_dir)
+    sources = tuple(
+        (year, path.name, path.stat().st_size, path.stat().st_mtime_ns)
+        for year, path in files.items()
+    )
+    cache_file = Path(processed_dir) / "interim" / MOVEMENT_MEANS_PKL.name
+    means = pd.read_pickle(cache_file) if cache_file.is_file() else None
+    if means is None or means.attrs.get("sources") != sources:
+        keys = ["pitcher", "game_year", "pitch_type"]
+        columns = [*keys, "ivb_ft", "hb_ft", "arm_angle"]
+        parts = []
+        for path in files.values():
+            for chunk in pd.read_csv(path, usecols=columns, chunksize=150_000, low_memory=False):
+                chunk = chunk[chunk["pitch_type"].isin(FASTBALL_TYPES)].copy()
+                for column in ("pitcher", "game_year", "ivb_ft", "hb_ft", "arm_angle"):
+                    chunk[column] = pd.to_numeric(chunk[column], errors="coerce")
+                # GMM 지도와 동일하게 세 피처가 모두 유효한 투구만 사용한다.
+                chunk = chunk.dropna(subset=["pitcher", "game_year", "ivb_ft", "hb_ft", "arm_angle"])
+                if chunk.empty:
+                    continue
+                parts.append(chunk.groupby(keys, observed=True).agg(
+                    ivb_sum=("ivb_ft", "sum"), hb_sum=("hb_ft", "sum"), movement_n=("ivb_ft", "size")
+                ).reset_index())
+        if not parts:
+            raise ValueError("보정 무브먼트 파일에 유효한 패스트볼 투구가 없습니다.")
+        means = pd.concat(parts, ignore_index=True).groupby(keys, observed=True).agg(
+            ivb_sum=("ivb_sum", "sum"), hb_sum=("hb_sum", "sum"), movement_n=("movement_n", "sum")
+        ).reset_index()
+        means["corrected_ivb_in"] = means["ivb_sum"] / means["movement_n"]
+        means["corrected_hb_in"] = means["hb_sum"] / means["movement_n"]
+        means = means[keys + ["corrected_ivb_in", "corrected_hb_in"]]
+        means.attrs["sources"] = sources
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        temporary = cache_file.with_suffix(".tmp")
+        means.to_pickle(temporary)
+        temporary.replace(cache_file)
+
+    raw = arsenal.copy()
+    raw["raw_ivb_in"] = raw["ivb_in"]
+    raw["raw_hb_in"] = raw["hb_in"]
+    corrected = raw.merge(means, on=["pitcher", "game_year", "pitch_type"], how="left", validate="many_to_one")
+    fastballs = corrected["pitch_type"].isin(FASTBALL_TYPES)
+    corrected.loc[fastballs, "ivb_in"] = corrected.loc[fastballs, "corrected_ivb_in"]
+    corrected.loc[fastballs, "hb_in"] = corrected.loc[fastballs, "corrected_hb_in"]
+    return corrected.drop(columns=["corrected_ivb_in", "corrected_hb_in"])
+
+
 def load_arsenal(force_rerun: bool = False) -> pd.DataFrame:
     """캐시가 있으면 불러오고, 없으면 raw에서 계산 후 저장."""
     if ARSENAL_PKL.exists() and not force_rerun:
         cached = pd.read_pickle(ARSENAL_PKL)
         if {"gb_pct", "xwobacon", "n_bbe"}.issubset(cached.columns):   # 예전 버전 캐시면 다시 계산
-            return cached
+            return align_primary_fastballs(corrected_fastball_movements(cached))
     ars = build_arsenal_table(load_raw_pitches())
     INTERIM_DIR.mkdir(parents=True, exist_ok=True)
     ars.to_pickle(ARSENAL_PKL)
     print(f"[arsenal] 저장: {rel(ARSENAL_PKL)} ({len(ars):,}행)")
-    return ars
+    return align_primary_fastballs(corrected_fastball_movements(ars))
 
 
 def _r(x, nd=1):
@@ -404,22 +506,22 @@ SYSTEM_PROMPT = f"""당신은 MLB 투구 설계(pitch design) 분석가입니다
 입력 투수에게 맞는 변화구(세컨더리 피치) shape 목표를 최대 3개 제시합니다.
 
 ## 입력 데이터 정의
-- 모든 수치는 해당 시즌 MLB 정규시즌 Statcast 투구 데이터에서 계산한 값입니다.
+- 구속·구사율·성적 지표는 해당 시즌 MLB 정규시즌 Statcast 데이터에서 계산합니다. FF/SI/FC의 무브먼트는 GMM 입력과 같은 투구별 체공시간 보정값의 평균입니다.
 - velo_mph: 평균 구속(mph). ivb_in: 수직 무브먼트(인치, 중력 제외, +는 떠오름).
 - hb_in: 수평 무브먼트(인치). **암사이드(투수 팔 쪽) = +, 글러브사이드 = −** 로 좌/우완 통일.
-- *_gap_vs_fb: 같은 투수의 주 패스트볼 대비 차이(해당 구종 − 주 패스트볼).
+- 변화구의 무브먼트에는 체공시간 보정 기준이 없어 원본 pfx 인치값을 사용합니다. 변화구의 *_gap_vs_fb는 원본 변화구 − 원본 주 패스트볼의 차이입니다. FF/SI/FC 사이의 무브먼트 차이는 보정값끼리 계산합니다.
 - whiff_pct: 헛스윙/스윙(%). chase_pct: 존 밖 공에 대한 스윙 비율(%).
-- primary_fastball: 주 패스트볼의 릴리스 기하(팔 각도, 익스텐션, 릴리스 높이/좌우). 구속·무브먼트는 arsenal의 해당 구종 참고.
+- primary_fastball: 가장 많이 던진 FF/SI/FC 한 구종의 릴리스 기하와 보정 무브먼트입니다. arsenal의 해당 구종과 무브먼트가 같습니다.
 - rv_per_100: 100구당 투수 기준 런 밸류. **+일수록 투수에게 좋음**. (주 성과지표)
 - gb_pct: 인플레이 타구(BBE) 중 땅볼 비율(%). xwobacon: BBE의 기대 wOBA 평균, **낮을수록 투수에게 좋음** (리그 평균 약 0.370 내외).
 - n_bbe: 인플레이 타구 수. 30개 미만이면 gb_pct·xwobacon은 불안정합니다.
 - small_sample=true: 100구 미만 → 비율 지표가 불안정함.
-- transfer_targets: 코드가 미리 계산한 목표 shape = 입력 투수 주 패스트볼 + 유사 투수의 (구종 − 패스트볼) 차이.
+- transfer_targets: 코드가 미리 계산한 목표 shape = 입력 투수의 보정 주 패스트볼 + 유사 투수의 원본 변화구와 원본 주 패스트볼 사이의 차이. 변화구 목표 무브먼트는 상대적인 추정치입니다.
 - search_context: 유사 투수 검색 단계에서 넘어온 정보(클러스터, 거리, FIP 등). cluster_profile은 GMM 성분의 실제 중심값(보정 IVB·암사이드 HB는 inch, 팔 각도는 degree)입니다. 없을 수도 있습니다.
 
 ## 반드시 지킬 규칙
 1. 입력 JSON에 있는 수치만 사용하세요. 선수에 대한 사전 지식, 다른 시즌 기록, 부상·뉴스·코칭 정보는 쓰지 마세요. 선수 이름은 식별용일 뿐입니다.
-2. 추천 구종(pitch_type)은 유사 투수의 transfer_targets에 있고 유사 투수의 rv_per_100이 0 이상인 변화구만 허용됩니다. FF·SI·FC는 패스트볼 계열이므로 추천 변화구에서 제외하세요. 데이터에 없는 구종을 만들지 마세요.
+2. 추천 구종(pitch_type)은 유사 투수의 transfer_targets에 있고 유사 투수의 rv_per_100이 0 이상인 구종만 허용됩니다. 데이터에 없는 구종을 만들지 마세요.
 3. action 및 target_shape 규칙:
    - action은 다음 3가지 중 하나만 사용하세요:
      * 'add': 입력 투수가 던지지 않는 구종을 새로 추가

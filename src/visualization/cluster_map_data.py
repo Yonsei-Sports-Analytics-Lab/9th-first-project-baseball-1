@@ -1,8 +1,9 @@
 """Bounded, real-pitch sample and GMM density regions for the comparison map.
 
 The model has three features (IVB, arm-side HB, arm angle). A pitcher-season is
-represented by one mean of all its FF/SI/FC pitches; its most common component
-is retained separately. The point is not a single observed pitch or a GMM boundary.
+represented by the mean of its most-thrown FF/SI/FC pitch type. Its most common
+component within that type is retained separately. The point is not a single
+observed pitch or a GMM boundary.
 """
 
 from __future__ import annotations
@@ -16,11 +17,12 @@ import numpy as np
 import pandas as pd
 
 from src.preprocessing.fit_pitch_gmm import default_model_path, load_model
+from src.preprocessing.extract_fastball import FASTBALL_PITCH_TYPES
 from src.preprocessing.load_movement_data import DEFAULT_FEATURES, find_movement_files
 
 
 PROCESSED_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 SAMPLE_PER_CLUSTER = 180
 CHUNK_SIZE = 150_000
 _cache_lock = threading.Lock()
@@ -90,14 +92,14 @@ def build_cluster_map_data(
         regions = _component_regions(model)
         rng = np.random.default_rng(42)
         samples: dict[int, tuple[np.ndarray, np.ndarray]] = {}
-        # (pitcher, year, component) -> [number of pitches, IVB sum, HB sum, angle sum]
-        pitcher_stats: dict[tuple[int, int, int], np.ndarray] = defaultdict(lambda: np.zeros(4, dtype=float))
+        # (pitcher, year, pitch type, component) -> [count, IVB sum, HB sum, angle sum]
+        pitcher_stats: dict[tuple[int, int, str, int], np.ndarray] = defaultdict(lambda: np.zeros(4, dtype=float))
         total_pitches = 0
         columns = ["pitcher", "game_year", "pitch_type", *DEFAULT_FEATURES]
 
         for path in files.values():
             for chunk in pd.read_csv(path, usecols=columns, chunksize=chunk_size, low_memory=False):
-                chunk = chunk[chunk["pitch_type"].isin(("FF", "SI", "FC"))].copy()
+                chunk = chunk[chunk["pitch_type"].isin(FASTBALL_PITCH_TYPES)].copy()
                 for column in ["pitcher", "game_year", *DEFAULT_FEATURES]:
                     chunk[column] = pd.to_numeric(chunk[column], errors="coerce")
                 chunk = chunk.dropna(subset=["pitcher", "game_year", *DEFAULT_FEATURES])
@@ -126,32 +128,47 @@ def build_cluster_map_data(
                     keep_indices = np.argpartition(candidate_keys, keep - 1)[:keep]
                     samples[cluster] = candidate_keys[keep_indices], candidate_points[keep_indices]
 
-                grouped = chunk.assign(cluster=labels).groupby(["pitcher", "game_year", "cluster"])
-                for (pitcher, year, cluster), group in grouped:
-                    stats = pitcher_stats[(int(pitcher), int(year), int(cluster))]
+                grouped = chunk.assign(cluster=labels).groupby(["pitcher", "game_year", "pitch_type", "cluster"])
+                for (pitcher, year, pitch_type, cluster), group in grouped:
+                    stats = pitcher_stats[(int(pitcher), int(year), str(pitch_type), int(cluster))]
                     stats[0] += len(group)
                     stats[1:] += group[list(DEFAULT_FEATURES)].sum().to_numpy(dtype=float)
 
         if not total_pitches:
             raise ValueError("GMM 지도에 표시할 패스트볼 투구가 없습니다.")
-        pitcher_totals: dict[tuple[int, int], np.ndarray] = defaultdict(lambda: np.zeros(4, dtype=float))
-        for (pitcher, year, _), stats in pitcher_stats.items():
-            pitcher_totals[(pitcher, year)] += stats
+        type_totals: dict[tuple[int, int, str], np.ndarray] = defaultdict(lambda: np.zeros(4, dtype=float))
+        all_totals: dict[tuple[int, int], int] = defaultdict(int)
+        for (pitcher, year, pitch_type, _), stats in pitcher_stats.items():
+            type_totals[(pitcher, year, pitch_type)] += stats
+            all_totals[(pitcher, year)] += int(stats[0])
+        primary_types: dict[tuple[int, int], str] = {}
+        for pitcher, year, pitch_type in type_totals:
+            season = (pitcher, year)
+            previous = primary_types.get(season)
+            if previous is None or (
+                -type_totals[(pitcher, year, pitch_type)][0], pitch_type
+            ) < (-type_totals[(pitcher, year, previous)][0], previous):
+                primary_types[season] = pitch_type
+
         locations: dict[str, dict] = {}
-        for (pitcher, year, cluster), stats in pitcher_stats.items():
+        for (pitcher, year, pitch_type, cluster), stats in pitcher_stats.items():
+            if pitch_type != primary_types[(pitcher, year)]:
+                continue
             key = f"{pitcher}-{year}"
             count = int(stats[0])
             previous = locations.get(key)
             if previous and (previous["n_pitches"] > count or (previous["n_pitches"] == count and previous["cluster"] < cluster)):
                 continue
-            season_stats = pitcher_totals[(pitcher, year)]
-            total_fastballs = int(season_stats[0])
+            season_stats = type_totals[(pitcher, year, pitch_type)]
+            primary_pitch_count = int(season_stats[0])
             locations[key] = {
                 "cluster": cluster,
-                "point": np.round(season_stats[1:] / total_fastballs, 2).tolist(),
+                "point": np.round(season_stats[1:] / primary_pitch_count, 2).tolist(),
                 "n_pitches": count,
-                "total_fastballs": total_fastballs,
-                "cluster_share_pct": round(100 * count / total_fastballs, 1),
+                "primary_pitch_type": pitch_type,
+                "primary_pitch_count": primary_pitch_count,
+                "total_fastballs": all_totals[(pitcher, year)],
+                "cluster_share_pct": round(100 * count / primary_pitch_count, 1),
             }
 
         points = [

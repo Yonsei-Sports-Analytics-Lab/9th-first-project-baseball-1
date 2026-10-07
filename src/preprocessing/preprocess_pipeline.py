@@ -80,6 +80,7 @@ PROCESSED_FILE_PATTERN = movement_step.INPUT_FILE_PATTERN
 
 #: 클러스터 JSON 을 어떤 모델로 만들었는지 기록하는 파일
 STATE_FILE_NAME = "pipeline_state.json"
+CLUSTER_SCHEMA_VERSION = 2
 
 #: 실행 순서
 STAGES: tuple[str, ...] = ("extract", "movement", "fit", "cluster")
@@ -282,7 +283,11 @@ def model_signature(model_path: Path) -> dict[str, Any] | None:
     model_path = Path(model_path)
     if not model_path.exists():
         return None
-    return {"model": model_path.name, "model_mtime_ns": model_path.stat().st_mtime_ns}
+    return {
+        "model": model_path.name,
+        "model_mtime_ns": model_path.stat().st_mtime_ns,
+        "cluster_schema_version": CLUSTER_SCHEMA_VERSION,
+    }
 
 
 def load_state(processed_dir: Path) -> dict[str, Any]:
@@ -332,9 +337,13 @@ def run_cluster(
     recorded = state.get(output.name)
 
     if output.exists() and not force:
-        if recorded is None or recorded == signature:
+        if recorded == signature:
             return StageResult("cluster", "skipped", [output], "결과 JSON 존재")
-        if recorded.get("model") == model_path.name:
+        if recorded is None:
+            reason = "모델·대표 구종 기준 기록이 없어 결과를 다시 생성"
+        elif recorded.get("cluster_schema_version") != CLUSTER_SCHEMA_VERSION:
+            reason = "대표 패스트볼 기준이 변경되어 결과를 다시 생성"
+        elif recorded.get("model") == model_path.name:
             reason = f"K={k} 모델이 다시 적합되어 결과를 다시 생성"
         else:
             reason = f"기존 결과는 {recorded.get('model')} 기준 → K={k} 모델로 다시 생성"

@@ -65,6 +65,8 @@ export type ClusterMapData = {
     cluster: number;
     point: [number, number, number];
     n_pitches: number;
+    primary_pitch_type: "FF" | "SI" | "FC";
+    primary_pitch_count: number;
     total_fastballs: number;
     cluster_share_pct: number;
   }>;
