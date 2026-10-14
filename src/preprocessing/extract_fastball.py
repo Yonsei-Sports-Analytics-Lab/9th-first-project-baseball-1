@@ -3,12 +3,19 @@
 동작 요약
 ---------
 1. ``data/raw/{연도}/statcast_{연도}-{월}.csv`` 파일들을 연도별로 모은다.
-2. 패스트볼 계열 구종(:data:`FASTBALL_PITCH_TYPES` = ``FF``, ``SI``, ``FC``)의
+2. 정규시즌(:data:`DEFAULT_GAME_TYPES` = ``R``) 경기의 투구만 남긴다.
+3. 패스트볼 계열 구종(:data:`FASTBALL_PITCH_TYPES` = ``FF``, ``SI``, ``FC``)의
    투구만 남긴다.
-3. 투구 물리량 관련 필수 컬럼(:data:`REQUIRED_COLUMNS`)에 결측치(NaN)가 있는
+4. 투구 물리량 관련 필수 컬럼(:data:`REQUIRED_COLUMNS`)에 결측치(NaN)가 있는
    행을 제거한다.
-4. 같은 연도의 월별 데이터를 하나로 합쳐
+5. 같은 연도의 월별 데이터를 하나로 합쳐
    ``data/processed/{연도}_processed.csv`` 로 저장한다.
+
+.. note::
+   정규시즌만 남기는 이유: 3월 파일에는 시범경기(``S``), 10~11월 파일에는
+   포스트시즌(``D``/``L``/``F``/``W``)이 섞여 있다. 시범경기는 구속이 덜 올라와
+   있어 무브먼트 분포가 정규시즌과 다르다. 또한 ``src/utils/llm_client.py`` 의
+   구종 집계표가 정규시즌만 쓰므로, 두 테이블의 모집단을 맞추기 위해서이기도 하다.
 
 원본 데이터가 수 GB 단위이므로 파일 전체를 메모리에 올리지 않고
 ``chunksize`` 단위로 읽어 정제한 뒤 결과 파일에 바로 이어 쓰는 방식을 사용한다.
@@ -28,6 +35,10 @@ CLI 사용 예시
 
     # 추출할 구종 직접 지정 (기본값: FF SI FC)
     python src/preprocessing/extract_fastball.py --pitch-types FF SI FC SL
+
+    # 경기 종류 직접 지정 (기본값: R = 정규시즌만)
+    python src/preprocessing/extract_fastball.py --game-types R D L F W
+    python src/preprocessing/extract_fastball.py --game-types ALL   # 전부 포함
 """
 
 from __future__ import annotations
@@ -61,6 +72,17 @@ FASTBALL_PITCH_TYPES: tuple[str, ...] = ("FF", "SI", "FC")
 
 #: 구종 필터에 사용할 컬럼
 PITCH_TYPE_COLUMN = "pitch_type"
+
+#: 추출 대상 경기 종류 — ``R`` 정규시즌만.
+#: 그 밖의 값: ``S`` 시범경기, ``E`` 연습경기, ``D`` 디비전시리즈,
+#: ``L`` 리그챔피언십시리즈, ``F`` 와일드카드, ``W`` 월드시리즈, ``A`` 올스타전
+DEFAULT_GAME_TYPES: tuple[str, ...] = ("R",)
+
+#: 경기 종류 필터에 사용할 컬럼
+GAME_TYPE_COLUMN = "game_type"
+
+#: ``--game-types`` 에 이 값을 주면 경기 종류를 거르지 않는다
+ALL_GAME_TYPES_TOKEN = "ALL"
 
 #: 결측치가 하나라도 있으면 해당 행을 제거할 필수 컬럼
 REQUIRED_COLUMNS: tuple[str, ...] = (
@@ -107,6 +129,7 @@ class YearResult:
     output_path: Path
     source_files: list[Path] = field(default_factory=list)
     rows_read: int = 0
+    rows_regular: int = 0
     rows_fastball: int = 0
     rows_kept: int = 0
 
@@ -121,8 +144,8 @@ class YearResult:
     def summary(self) -> str:
         return (
             f"[{self.year}] 파일 {len(self.source_files)}개 | "
-            f"원본 {self.rows_read:,}행 → 패스트볼 {self.rows_fastball:,}행 "
-            f"→ 유지 {self.rows_kept:,}행 "
+            f"원본 {self.rows_read:,}행 → 경기종류 {self.rows_regular:,}행 "
+            f"→ 패스트볼 {self.rows_fastball:,}행 → 유지 {self.rows_kept:,}행 "
             f"(제거 {self.rows_dropped:,}행, {self.drop_ratio:.2%}) | "
             f"저장: {self.output_path}"
         )
@@ -183,9 +206,24 @@ def find_monthly_files(year_dir: Path) -> list[Path]:
 
 def validate_columns(columns: Sequence[str], source: Path) -> None:
     """필수 컬럼이 모두 존재하는지 확인한다."""
-    missing = [column for column in REQUIRED_COLUMNS if column not in columns]
+    needed = [*REQUIRED_COLUMNS, GAME_TYPE_COLUMN]
+    missing = [column for column in needed if column not in columns]
     if missing:
         raise KeyError(f"{source.name} 에 필수 컬럼이 없습니다: {missing}")
+
+
+def filter_game_types(
+    frame: pd.DataFrame,
+    game_types: Sequence[str] | None = DEFAULT_GAME_TYPES,
+) -> pd.DataFrame:
+    """지정한 경기 종류(기본: ``R`` 정규시즌)의 행만 남긴다.
+
+    ``game_types`` 가 ``None`` 이거나 비어 있으면 거르지 않는다.
+    ``game_type`` 이 비어 있는 행은 ``isin`` 결과가 False가 되므로 함께 제거된다.
+    """
+    if not game_types:
+        return frame
+    return frame[frame[GAME_TYPE_COLUMN].isin(list(game_types))]
 
 
 def filter_pitch_types(
@@ -208,13 +246,17 @@ def iter_clean_chunks(
     csv_path: Path,
     chunksize: int = DEFAULT_CHUNKSIZE,
     pitch_types: Sequence[str] = FASTBALL_PITCH_TYPES,
-) -> Iterator[tuple[pd.DataFrame, int, int]]:
+    game_types: Sequence[str] | None = DEFAULT_GAME_TYPES,
+) -> Iterator[tuple[pd.DataFrame, int, int, int]]:
     """CSV를 청크 단위로 읽어 정제 결과를 순차적으로 내보낸다.
+
+    필터 순서는 경기 종류 → 구종 → 결측 제거다. 거르는 양이 많은 조건을 앞에 두면
+    뒤 단계가 처리할 행이 줄어든다.
 
     Yields
     ------
-    tuple[pd.DataFrame, int, int]
-        ``(정제된 청크, 원본 행 수, 구종 필터 통과 행 수)``
+    tuple[pd.DataFrame, int, int, int]
+        ``(정제된 청크, 원본 행 수, 경기 종류 통과 행 수, 구종 통과 행 수)``
     """
     reader = pd.read_csv(
         csv_path,
@@ -223,8 +265,9 @@ def iter_clean_chunks(
     )
     for chunk in reader:
         validate_columns(chunk.columns, csv_path)
-        fastball = filter_pitch_types(chunk, pitch_types)
-        yield clean_missing_values(fastball), len(chunk), len(fastball)
+        regular = filter_game_types(chunk, game_types)
+        fastball = filter_pitch_types(regular, pitch_types)
+        yield clean_missing_values(fastball), len(chunk), len(regular), len(fastball)
 
 
 # --------------------------------------------------------------------------- #
@@ -238,6 +281,7 @@ def process_year(
     chunksize: int = DEFAULT_CHUNKSIZE,
     overwrite: bool = True,
     pitch_types: Sequence[str] = FASTBALL_PITCH_TYPES,
+    game_types: Sequence[str] | None = DEFAULT_GAME_TYPES,
 ) -> YearResult | None:
     """한 연도의 월별 CSV를 병합/정제해 ``{연도}_processed.csv`` 로 저장한다.
 
@@ -253,6 +297,8 @@ def process_year(
         False이고 결과 파일이 이미 있으면 건너뛴다.
     pitch_types:
         남길 구종 코드. 기본값은 패스트볼 계열(``FF``, ``SI``, ``FC``).
+    game_types:
+        남길 경기 종류 코드. 기본값은 정규시즌(``R``). ``None`` 이면 거르지 않는다.
 
     Returns
     -------
@@ -288,13 +334,15 @@ def process_year(
             for csv_path in monthly_files:
                 logger.info("[%s] 읽는 중: %s", year, csv_path.name)
                 file_rows_read = 0
+                file_rows_regular = 0
                 file_rows_fastball = 0
                 file_rows_kept = 0
 
-                for cleaned, raw_rows, fastball_rows in iter_clean_chunks(
-                    csv_path, chunksize, pitch_types
+                for cleaned, raw_rows, regular_rows, fastball_rows in iter_clean_chunks(
+                    csv_path, chunksize, pitch_types, game_types
                 ):
                     file_rows_read += raw_rows
+                    file_rows_regular += regular_rows
                     file_rows_fastball += fastball_rows
 
                     if reference_columns is None:
@@ -312,14 +360,16 @@ def process_year(
                     file_rows_kept += len(cleaned)
 
                 logger.info(
-                    "[%s] %s: %s행 → 패스트볼 %s행 → 유지 %s행",
+                    "[%s] %s: %s행 → 경기종류 %s행 → 패스트볼 %s행 → 유지 %s행",
                     year,
                     csv_path.name,
                     f"{file_rows_read:,}",
+                    f"{file_rows_regular:,}",
                     f"{file_rows_fastball:,}",
                     f"{file_rows_kept:,}",
                 )
                 result.rows_read += file_rows_read
+                result.rows_regular += file_rows_regular
                 result.rows_fastball += file_rows_fastball
                 result.rows_kept += file_rows_kept
 
@@ -344,6 +394,7 @@ def process_all(
     chunksize: int = DEFAULT_CHUNKSIZE,
     overwrite: bool = True,
     pitch_types: Sequence[str] = FASTBALL_PITCH_TYPES,
+    game_types: Sequence[str] | None = DEFAULT_GAME_TYPES,
 ) -> list[YearResult]:
     """``data/raw`` 아래 모든(또는 지정한) 연도를 전처리한다."""
     year_dirs = find_year_dirs(raw_dir)
@@ -367,6 +418,7 @@ def process_all(
             chunksize=chunksize,
             overwrite=overwrite,
             pitch_types=pitch_types,
+            game_types=game_types,
         )
         if result is not None:
             results.append(result)
@@ -418,6 +470,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--game-types",
+        nargs="+",
+        default=list(DEFAULT_GAME_TYPES),
+        help=(
+            "추출할 경기 종류 코드 (R 정규시즌, S 시범경기, D/L/F/W 포스트시즌). "
+            f"'{ALL_GAME_TYPES_TOKEN}' 을 주면 거르지 않음 "
+            f"(기본값: {' '.join(DEFAULT_GAME_TYPES)})"
+        ),
+    )
+    parser.add_argument(
         "--no-overwrite",
         action="store_true",
         help="결과 파일이 이미 있으면 건너뜁니다.",
@@ -440,7 +502,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         datefmt="%H:%M:%S",
     )
 
+    # 'ALL' 이 하나라도 있으면 경기 종류를 거르지 않는다
+    game_types: list[str] | None = (
+        None if any(g.upper() == ALL_GAME_TYPES_TOKEN for g in args.game_types)
+        else [g.upper() for g in args.game_types]
+    )
     logger.info("추출 구종: %s", ", ".join(args.pitch_types))
+    logger.info("추출 경기 종류: %s",
+                "전체(거르지 않음)" if game_types is None else ", ".join(game_types))
 
     results = process_all(
         raw_dir=args.raw_dir,
@@ -449,6 +518,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         chunksize=args.chunksize,
         overwrite=not args.no_overwrite,
         pitch_types=args.pitch_types,
+        game_types=game_types,
     )
 
     if not results:
