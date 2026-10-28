@@ -80,3 +80,18 @@ python -m src.utils.find_nearest_pitcher      # pitcher_profile.csv 만 다시 �
 
 * 원본 Statcast 나 `fip_2021_2025.csv` 를 교체한 경우에는 프로필이 자동으로 갱신되지 않습니다. `pitcher_profile.csv` 를 지우고 다시 실행하세요.
 * 자세한 전처리 옵션은 [`src/preprocessing/README.md`](../../src/preprocessing/README.md) 를 참고하세요.
+
+## 3D 투구 시각화 데이터
+
+3D 투구 뷰어가 읽는 파일은 `data_[설명].csv` 형식으로 저장합니다. 여러 파일을
+함께 둘 수 있고, CSV에 여러 투수가 있으면 실행 시 투수 이름을 선택합니다.
+
+```bash
+python -m src.visualization.dashboard_formatter --list-pitchers
+python -m src.visualization.dashboard_formatter --pitcher "Shohei Ohtani"
+```
+
+개별 투구 CSV에는 Statcast의 `pitch_type`, `release_speed`, `plate_x`, `plate_z`,
+`release_pos_y`, `vx0`, `vy0`, `vz0`, `ax`, `ay`, `az` 열 사용을 권장합니다.
+운동 파라미터가 없으면 릴리스 위치와 `pfx_x`, `pfx_z`를 사용하는 보조 모델로
+복원합니다. 전체 데이터 계약은 [`src/visualization/pitch_3d/README.md`](../../src/visualization/pitch_3d/README.md)에 있습니다.

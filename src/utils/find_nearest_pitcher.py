@@ -1,8 +1,8 @@
 """
 유사 투수 매칭 모듈 (파이프라인 5번)
 
-입력한 투수-시즌(MLBID, 연도)과 같은 클러스터에 속하고, 평균구속이 비슷하며, FIP가 더 낮은
-투수 중에서 투구 폼(릴리스 좌우·높이, 익스텐션, 팔각도)이 rank번째로 비슷한 투수-시즌을 찾아
+입력한 투수-시즌(MLBID, 연도)과 주 패스트볼의 클러스터·평균구속이 비슷하며 FIP가 더 낮은
+투수 중에서 주 패스트볼의 투구 폼(릴리스 좌우·높이, 익스텐션, 팔각도)이 rank번째로 비슷한 투수-시즌을 찾아
 (MLBID, 연도) 튜플로 반환한다.
 
 사용법
@@ -17,7 +17,7 @@
 필요 파일 (프로젝트 루트 기준)
 ------------------------------
 - data/raw/{연도}/statcast_{연도}-{MM}.csv  : Statcast 원본 (build_profile 실행 시에만 필요)
-- data/processed/pitcher_clustered.json     : {MLBID: {연도: {average_velocity, cluster}}}
+- data/processed/pitcher_clustered.json     : {MLBID: {연도: {primary_pitch_type, average_velocity, cluster}}}
                                               ("MLBID-연도" 형태의 키도 지원)
 - data/raw/fip_2021_2025.csv                : player_id, game_year, FIP, IP 컬럼
 - data/processed/pitcher_profile.csv        : build_profile()이 만드는 결과 파일
@@ -60,7 +60,11 @@ def _load_cluster_json(path):
         else:                                    # {"543037": {"2023": {...}}} 형식
             pid, items = key, value.items()
         for year, info in items:
+            primary_pitch_type = info.get("primary_pitch_type")
+            if primary_pitch_type not in {"FF", "SI", "FC"}:
+                raise ValueError(f"{path}에 주 패스트볼 구종이 없습니다. 군집 산출물을 다시 생성하세요.")
             records.append({"player_id": int(pid), "game_year": int(year),
+                            "primary_pitch_type": primary_pitch_type,
                             "average_velocity": float(info["average_velocity"]),
                             "cluster": int(info["cluster"])})
     return pd.DataFrame(records)
@@ -79,9 +83,17 @@ def build_profile(cluster_file=CLUSTER_FILE, fip_file=FIP_FILE, save=True):
     if not files:
         raise FileNotFoundError(
             f"Statcast 원본이 없습니다: {RAW_DIR}/{{연도}}/statcast_{{연도}}-{{MM}}.csv")
-    use_cols = ["pitcher", "player_name", "game_year", "p_throws", "release_pos_x",
+    cluster = _load_cluster_json(cluster_file)
+    use_cols = ["pitcher", "player_name", "game_year", "pitch_type", "p_throws", "release_pos_x",
                 "release_pos_z", "release_extension", "arm_angle"]
     raw = pd.concat([pd.read_csv(f, usecols=use_cols) for f in files], ignore_index=True)
+
+    # 군집·구속에 사용한 것과 동일한 대표 패스트볼 구종으로 투구 폼을 집계한다.
+    raw = raw.merge(
+        cluster[["player_id", "game_year", "primary_pitch_type"]],
+        left_on=["pitcher", "game_year"], right_on=["player_id", "game_year"], how="inner",
+    )
+    raw = raw[raw["pitch_type"] == raw["primary_pitch_type"]]
 
     # release_pos_x를 암사이드 기준으로 통일 (우완은 부호 반전)
     raw["release_pos_x_arm"] = np.where(raw["p_throws"] == "L",
@@ -93,7 +105,7 @@ def build_profile(cluster_file=CLUSTER_FILE, fip_file=FIP_FILE, save=True):
     agg["player_name"] = raw.groupby(keys)["player_name"].first()   # 확인용
     agg = agg.reset_index().rename(columns={"pitcher": "player_id"})
 
-    profile = _load_cluster_json(cluster_file).merge(agg, on=["player_id", "game_year"], how="left")
+    profile = cluster.merge(agg, on=["player_id", "game_year"], how="left")
 
     fip = pd.read_csv(fip_file)[["player_id", "game_year", "FIP", "IP"]]
     fip = fip.groupby(["player_id", "game_year"], as_index=False).first()

@@ -73,6 +73,9 @@ ROOT = _find_repo_root()
 RAW_DIR = ROOT / "data" / "raw"
 INTERIM_DIR = ROOT / "data" / "processed" / "interim"
 ARSENAL_PKL = INTERIM_DIR / "pitch_arsenal.pkl"
+CLUSTER_FILE = ROOT / "data" / "processed" / "pitcher_clustered.json"
+MOVEMENT_DIR = ROOT / "data" / "processed"
+MOVEMENT_MEANS_PKL = INTERIM_DIR / "fastball_movement_means.pkl"
 
 
 def rel(p: Path) -> str:
@@ -161,6 +164,8 @@ def load_raw_pitches(raw_dir: Path = RAW_DIR) -> pd.DataFrame:
 def _add_pitch_flags(d: pd.DataFrame) -> pd.DataFrame:
     d = d.copy()
     hand = d["p_throws"].map({"R": -1.0, "L": 1.0})
+    # 원본 구종 집계용 임시값. FF/SI/FC는 corrected_fastball_movements()에서
+    # GMM 입력과 동일한 체공시간 보정 평균으로 교체한다.
     d["ivb_in"] = d["pfx_z"] * 12.0
     d["hb_in"] = d["pfx_x"] * 12.0 * hand          # 암사이드 양수
     d["is_swing"] = d["description"].isin(SWING_DESC)
@@ -250,17 +255,114 @@ def build_arsenal_table(data: pd.DataFrame) -> pd.DataFrame:
                                               ascending=[True, True, False]).reset_index(drop=True)
 
 
+def align_primary_fastballs(arsenal: pd.DataFrame) -> pd.DataFrame:
+    """추천 군집에 쓰인 대표 구종을 AI 분석과 구종 간 차이 계산에도 사용한다."""
+    if not CLUSTER_FILE.exists():
+        return arsenal
+    clusters = json.loads(CLUSTER_FILE.read_text(encoding="utf-8"))
+    selected = pd.DataFrame([
+        {"pitcher": int(pitcher), "game_year": int(year), "selected_pitch_type": info["primary_pitch_type"]}
+        for pitcher, seasons in clusters.items()
+        for year, info in seasons.items()
+        if info.get("primary_pitch_type") in FASTBALL_TYPES
+    ])
+    if selected.empty:
+        return arsenal
+
+    keys = ["pitcher", "game_year"]
+    aligned = arsenal.merge(selected, on=keys, how="left")
+    aligned["primary_fastball"] = aligned["selected_pitch_type"].fillna(aligned["primary_fastball"])
+    aligned["is_primary_fastball"] = aligned["pitch_type"] == aligned["primary_fastball"]
+    raw_columns = ["raw_ivb_in", "raw_hb_in"] if {"raw_ivb_in", "raw_hb_in"}.issubset(aligned.columns) else []
+    primary = aligned.loc[aligned["is_primary_fastball"], keys + ["velo_mph", "ivb_in", "hb_in", *raw_columns]]
+    primary = primary.rename(columns={
+        "velo_mph": "_fb_velo", "ivb_in": "_fb_ivb", "hb_in": "_fb_hb",
+        "raw_ivb_in": "_fb_raw_ivb", "raw_hb_in": "_fb_raw_hb",
+    })
+    aligned = aligned.drop(columns=[
+        "selected_pitch_type", "velo_gap_vs_fb", "ivb_gap_vs_fb", "hb_gap_vs_fb",
+    ])
+    aligned = aligned.merge(primary, on=keys, how="left", validate="many_to_one")
+    for feature, column in (("velo", "velo_mph"), ("ivb", "ivb_in"), ("hb", "hb_in")):
+        aligned[f"{feature}_gap_vs_fb"] = aligned[column] - aligned[f"_fb_{feature}"]
+    if raw_columns:
+        # 변화구에는 보정 기준 체공시간이 없다. 변화구의 기존 raw shape 차이를
+        # 보정된 주 패스트볼에 더하면 비교 기준을 섞지 않고 목표 shape를 만들 수 있다.
+        secondary = ~aligned["pitch_type"].isin(FASTBALL_TYPES)
+        for feature in ("ivb", "hb"):
+            aligned.loc[secondary, f"{feature}_gap_vs_fb"] = (
+                aligned.loc[secondary, f"raw_{feature}_in"] - aligned.loc[secondary, f"_fb_raw_{feature}"]
+            )
+    return aligned.drop(columns=["_fb_velo", "_fb_ivb", "_fb_hb", *[f"_fb_raw_{feature}" for feature in ("ivb", "hb") if raw_columns]])
+
+
+def corrected_fastball_movements(
+    arsenal: pd.DataFrame, processed_dir: Path = MOVEMENT_DIR
+) -> pd.DataFrame:
+    """FF/SI/FC 무브먼트를 GMM 입력과 같은 투구별 보정값의 평균으로 교체한다.
+
+    다른 구종은 체공시간 기준값이 없으므로 기존 Statcast pfx 값을 유지한다.
+    """
+    from src.preprocessing.load_movement_data import find_movement_files
+
+    files = find_movement_files(processed_dir)
+    sources = tuple(
+        (year, path.name, path.stat().st_size, path.stat().st_mtime_ns)
+        for year, path in files.items()
+    )
+    cache_file = Path(processed_dir) / "interim" / MOVEMENT_MEANS_PKL.name
+    means = pd.read_pickle(cache_file) if cache_file.is_file() else None
+    if means is None or means.attrs.get("sources") != sources:
+        keys = ["pitcher", "game_year", "pitch_type"]
+        columns = [*keys, "ivb_ft", "hb_ft", "arm_angle"]
+        parts = []
+        for path in files.values():
+            for chunk in pd.read_csv(path, usecols=columns, chunksize=150_000, low_memory=False):
+                chunk = chunk[chunk["pitch_type"].isin(FASTBALL_TYPES)].copy()
+                for column in ("pitcher", "game_year", "ivb_ft", "hb_ft", "arm_angle"):
+                    chunk[column] = pd.to_numeric(chunk[column], errors="coerce")
+                # GMM 지도와 동일하게 세 피처가 모두 유효한 투구만 사용한다.
+                chunk = chunk.dropna(subset=["pitcher", "game_year", "ivb_ft", "hb_ft", "arm_angle"])
+                if chunk.empty:
+                    continue
+                parts.append(chunk.groupby(keys, observed=True).agg(
+                    ivb_sum=("ivb_ft", "sum"), hb_sum=("hb_ft", "sum"), movement_n=("ivb_ft", "size")
+                ).reset_index())
+        if not parts:
+            raise ValueError("보정 무브먼트 파일에 유효한 패스트볼 투구가 없습니다.")
+        means = pd.concat(parts, ignore_index=True).groupby(keys, observed=True).agg(
+            ivb_sum=("ivb_sum", "sum"), hb_sum=("hb_sum", "sum"), movement_n=("movement_n", "sum")
+        ).reset_index()
+        means["corrected_ivb_in"] = means["ivb_sum"] / means["movement_n"]
+        means["corrected_hb_in"] = means["hb_sum"] / means["movement_n"]
+        means = means[keys + ["corrected_ivb_in", "corrected_hb_in"]]
+        means.attrs["sources"] = sources
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        temporary = cache_file.with_suffix(".tmp")
+        means.to_pickle(temporary)
+        temporary.replace(cache_file)
+
+    raw = arsenal.copy()
+    raw["raw_ivb_in"] = raw["ivb_in"]
+    raw["raw_hb_in"] = raw["hb_in"]
+    corrected = raw.merge(means, on=["pitcher", "game_year", "pitch_type"], how="left", validate="many_to_one")
+    fastballs = corrected["pitch_type"].isin(FASTBALL_TYPES)
+    corrected.loc[fastballs, "ivb_in"] = corrected.loc[fastballs, "corrected_ivb_in"]
+    corrected.loc[fastballs, "hb_in"] = corrected.loc[fastballs, "corrected_hb_in"]
+    return corrected.drop(columns=["corrected_ivb_in", "corrected_hb_in"])
+
+
 def load_arsenal(force_rerun: bool = False) -> pd.DataFrame:
     """캐시가 있으면 불러오고, 없으면 raw에서 계산 후 저장."""
     if ARSENAL_PKL.exists() and not force_rerun:
         cached = pd.read_pickle(ARSENAL_PKL)
         if {"gb_pct", "xwobacon", "n_bbe"}.issubset(cached.columns):   # 예전 버전 캐시면 다시 계산
-            return cached
+            return align_primary_fastballs(corrected_fastball_movements(cached))
     ars = build_arsenal_table(load_raw_pitches())
     INTERIM_DIR.mkdir(parents=True, exist_ok=True)
     ars.to_pickle(ARSENAL_PKL)
     print(f"[arsenal] 저장: {rel(ARSENAL_PKL)} ({len(ars):,}행)")
-    return ars
+    return align_primary_fastballs(corrected_fastball_movements(ars))
 
 
 def _r(x, nd=1):
@@ -337,7 +439,7 @@ def transfer_targets(input_summary: dict, similar_summary: dict) -> list[dict]:
 
     out = []
     for p in similar_summary["arsenal"]:
-        if p["is_primary_fastball"] or None in (p["velo_gap_vs_fb"], p["ivb_gap_vs_fb"], p["hb_gap_vs_fb"]):
+        if p["pitch_type"] in FASTBALL_TYPES or None in (p["velo_gap_vs_fb"], p["ivb_gap_vs_fb"], p["hb_gap_vs_fb"]):
             continue
         target = {
             "pitch_type": p["pitch_type"],
@@ -345,6 +447,8 @@ def transfer_targets(input_summary: dict, similar_summary: dict) -> list[dict]:
             "source_usage_pct": p["usage_pct"],
             "source_n_pitches": p["n_pitches"],
             "source_small_sample": p["small_sample"],
+            "source_rv_per_100": p["rv_per_100"],
+            "source_whiff_pct": p["whiff_pct"],
             "gap_vs_fb": {"velo_mph": p["velo_gap_vs_fb"], "ivb_in": p["ivb_gap_vs_fb"], "hb_in": p["hb_gap_vs_fb"]},
             "target_shape": {
                 "velo_mph": round(fb_in["velo_mph"] + p["velo_gap_vs_fb"], 1),
@@ -367,7 +471,7 @@ def transfer_targets(input_summary: dict, similar_summary: dict) -> list[dict]:
 # 출력 JSON 스키마 (시스템 프롬프트에 그대로 들어가고, 코드 검증에도 사용)
 # ------------------------------------------------------------
 OUTPUT_SCHEMA = {
-    "summary": "string — 2~3문장. 두 투수 패스트볼의 공통점과 핵심 추천을 요약",
+    "summary": "string — 1~2문장. 유사 투수를 비교 대상으로 삼은 이유와 핵심 변화구 추천을 요약",
     "fastball_comparison": {
         "similarities": ["string — 수치 포함 (예: '팔 각도 45.9° vs 44.1°')"],
         "differences": ["string — 수치 포함"],
@@ -402,22 +506,22 @@ SYSTEM_PROMPT = f"""당신은 MLB 투구 설계(pitch design) 분석가입니다
 입력 투수에게 맞는 변화구(세컨더리 피치) shape 목표를 최대 3개 제시합니다.
 
 ## 입력 데이터 정의
-- 모든 수치는 해당 시즌 MLB 정규시즌 Statcast 투구 데이터에서 계산한 값입니다.
+- 구속·구사율·성적 지표는 해당 시즌 MLB 정규시즌 Statcast 데이터에서 계산합니다. FF/SI/FC의 무브먼트는 GMM 입력과 같은 투구별 체공시간 보정값의 평균입니다.
 - velo_mph: 평균 구속(mph). ivb_in: 수직 무브먼트(인치, 중력 제외, +는 떠오름).
 - hb_in: 수평 무브먼트(인치). **암사이드(투수 팔 쪽) = +, 글러브사이드 = −** 로 좌/우완 통일.
-- *_gap_vs_fb: 같은 투수의 주 패스트볼 대비 차이(해당 구종 − 주 패스트볼).
+- 변화구의 무브먼트에는 체공시간 보정 기준이 없어 원본 pfx 인치값을 사용합니다. 변화구의 *_gap_vs_fb는 원본 변화구 − 원본 주 패스트볼의 차이입니다. FF/SI/FC 사이의 무브먼트 차이는 보정값끼리 계산합니다.
 - whiff_pct: 헛스윙/스윙(%). chase_pct: 존 밖 공에 대한 스윙 비율(%).
-- primary_fastball: 주 패스트볼의 릴리스 기하(팔 각도, 익스텐션, 릴리스 높이/좌우). 구속·무브먼트는 arsenal의 해당 구종 참고.
+- primary_fastball: 가장 많이 던진 FF/SI/FC 한 구종의 릴리스 기하와 보정 무브먼트입니다. arsenal의 해당 구종과 무브먼트가 같습니다.
 - rv_per_100: 100구당 투수 기준 런 밸류. **+일수록 투수에게 좋음**. (주 성과지표)
 - gb_pct: 인플레이 타구(BBE) 중 땅볼 비율(%). xwobacon: BBE의 기대 wOBA 평균, **낮을수록 투수에게 좋음** (리그 평균 약 0.370 내외).
 - n_bbe: 인플레이 타구 수. 30개 미만이면 gb_pct·xwobacon은 불안정합니다.
 - small_sample=true: 100구 미만 → 비율 지표가 불안정함.
-- transfer_targets: 코드가 미리 계산한 목표 shape = 입력 투수 주 패스트볼 + 유사 투수의 (구종 − 패스트볼) 차이.
-- search_context: 유사 투수 검색 단계에서 넘어온 정보(클러스터, 거리, FIP 등). 없을 수도 있습니다.
+- transfer_targets: 코드가 미리 계산한 목표 shape = 입력 투수의 보정 주 패스트볼 + 유사 투수의 원본 변화구와 원본 주 패스트볼 사이의 차이. 변화구 목표 무브먼트는 상대적인 추정치입니다.
+- search_context: 유사 투수 검색 단계에서 넘어온 정보(클러스터, 거리, FIP 등). cluster_profile은 GMM 성분의 실제 중심값(보정 IVB·암사이드 HB는 inch, 팔 각도는 degree)입니다. 없을 수도 있습니다.
 
 ## 반드시 지킬 규칙
 1. 입력 JSON에 있는 수치만 사용하세요. 선수에 대한 사전 지식, 다른 시즌 기록, 부상·뉴스·코칭 정보는 쓰지 마세요. 선수 이름은 식별용일 뿐입니다.
-2. 추천 구종(pitch_type)은 (a) 유사 투수의 arsenal에 있는 구종, 또는 (b) 입력 투수가 이미 던지는 구종의 조정만 허용됩니다. 데이터에 없는 구종을 만들지 마세요.
+2. 추천 구종(pitch_type)은 유사 투수의 transfer_targets에 있고 유사 투수의 rv_per_100이 0 이상인 구종만 허용됩니다. 데이터에 없는 구종을 만들지 마세요.
 3. action 및 target_shape 규칙:
    - action은 다음 3가지 중 하나만 사용하세요:
      * 'add': 입력 투수가 던지지 않는 구종을 새로 추가
@@ -431,7 +535,7 @@ SYSTEM_PROMPT = f"""당신은 MLB 투구 설계(pitch design) 분석가입니다
    (2) 역할별 메커니즘: 구종 역할에 맞는 지표로 성공 이유를 확인하세요.
        - 스위퍼·슬라이더·커브(ST, SL, SV, CU, KC): whiff_pct, chase_pct
        - 체인지업·스플리터(CH, FS, FO): whiff_pct, gb_pct, xwobacon
-       - 커터·싱커(FC, SI): whiff_pct, xwobacon(약한 컨택)
+       - 그 밖의 변화구: whiff_pct, xwobacon(약한 컨택)
    (3) 분리: 입력 투수 패스트볼과의 구속·무브먼트 차이
    (4) 역할 보완: 입력 투수에게 없거나 성과가 나쁜 역할(예: 반대손 타자 대응 구종)을 채우는지
 5-1. 실패 사례: 유사 투수 또는 입력 투수의 구종 중 rv_per_100이 음수이거나 xwobacon이 높은 구종이 있으면 failure_cases에 "어떤 shape/사용법을 피해야 하는지"를 수치와 함께 1~2개 쓰세요. 해당 사례가 없으면 빈 리스트([])로 두세요.
@@ -440,6 +544,7 @@ SYSTEM_PROMPT = f"""당신은 MLB 투구 설계(pitch design) 분석가입니다
 8. 관측 데이터 기반 추천입니다. "이 구종을 익히면 성적이 오른다" 같은 인과적 단정은 하지 말고 "유사한 패스트볼을 가진 투수에게서 효과적이었다" 수준으로 객관적 서술을 유지하세요.
 9. 근거가 부족하면 추천을 3개보다 적게(1~2개) 내도 됩니다. 억지로 채우지 마세요.
 10. 한국어로 작성하되 구종 코드(FF, SL, ST 등)와 지표명(IVB, HB, Whiff%, RV/100 등)은 영어 표준 표기를 유지하세요.
+11. 프런트엔드가 search_context의 군집 중심값을 먼저 별도로 표시합니다. summary에서 같은 중심값을 반복하지 말고 변화구 추천 이유에 집중하세요. 군집 번호를 FF·SI·FC 구종명이나 성적 순위로 해석하지 마세요.
 
 ## 출력 형식
 아래 스키마를 만족하는 단일 JSON 객체로 반환하세요.
@@ -451,7 +556,8 @@ SYSTEM_PROMPT = f"""당신은 MLB 투구 설계(pitch design) 분석가입니다
 # ------------------------------------------------------------
 ONE_SHOT_USER = {
     "task": "입력 투수에게 맞는 변화구 shape 목표를 최대 3개 추천",
-    "search_context": {"cluster": 0, "fastball_distance": 0.42, "input_fip": 4.61, "similar_fip": 3.38},
+    "search_context": {"cluster": 0, "cluster_profile": {"ivb_in": 16.0, "hb_in": 7.2, "arm_angle_deg": 44.5},
+                       "fastball_distance": 0.42, "input_fip": 4.61, "similar_fip": 3.38},
     "input_pitcher": {
         "player_name": "예시 투수 A (가상)", "season": 2024, "throws": "R",
         "primary_fastball": {"pitch_type": "FF", "velo_mph": 94.0, "ivb_in": 15.8, "hb_in": 7.5,
@@ -528,8 +634,8 @@ for _who in ("input_pitcher", "similar_pitcher"):
         _p["n_bbe"], _p["gb_pct"], _p["xwobacon"] = _EXAMPLE_BBE[(_who, _p["pitch_type"])]
 
 ONE_SHOT_ASSISTANT = {
-    "summary": "두 투수는 94mph대 라이징 포심(IVB 15.8 vs 16.4in)과 비슷한 팔 각도(44.0° vs 45.5°)를 공유합니다. "
-               "유사 투수 B의 성과를 이끈 스위퍼와 스플리터를 입력 투수 A의 패스트볼 기준 목표 shape로 옮기는 것을 우선 추천합니다.",
+    "summary": "유사 투수 B는 입력 투수 A와 같은 패스트볼 군집에서 FIP가 더 낮습니다. "
+               "B의 성과를 이끈 스위퍼와 스플리터의 상대 움직임을 A의 패스트볼 기준 목표 shape로 옮기는 것을 우선 추천합니다.",
     "fastball_comparison": {
         "similarities": ["구속 94.0 vs 94.6mph, IVB 15.8 vs 16.4in로 거의 같은 라이징 포심",
                          "팔 각도 44.0° vs 45.5°, 익스텐션 6.4 vs 6.5ft로 릴리스 기하가 유사"],
@@ -620,7 +726,7 @@ PROVIDERS = {
                # 기본 모델이 혼잡(503)·한도 초과(429)일 때 차례로 시도할 무료 모델
                "fallback_models": ["gemini-3.7-flash", "gemini-3.5-flash-lite"]},
 }
-TRANSIENT_RETRIES = 3            # 일시적 오류 때 같은 모델로 재시도 횟수 (2초, 4초, 8초 대기)
+TRANSIENT_RETRIES = 1            # 혼잡한 모델은 한 번만 재시도한 뒤 대체 모델로 전환
 _sleep = time.sleep              # 테스트에서 대기 없이 돌릴 수 있게 분리
 MAX_RETRIES = 4
 
@@ -648,7 +754,8 @@ def get_client():
             "OPENAI_API_KEY=... 를 적어주세요. 코드에 직접 쓰지 마세요."
         )
     from openai import OpenAI                   # dry-run 때는 설치 안 돼 있어도 되게 여기서 import
-    return OpenAI(api_key=api_key, base_url=PROVIDERS[provider]["base_url"])
+    return OpenAI(api_key=api_key, base_url=PROVIDERS[provider]["base_url"],
+                  timeout=45.0, max_retries=0)
 
 class TransientLLMError(RuntimeError):
     """서버 혼잡·한도 초과처럼 잠시 뒤 다시 하면 될 수 있는 오류."""
@@ -780,9 +887,13 @@ def validate_response(resp: dict, payload: dict, tol: float = 0.25) -> list[str]
     """스키마와 근거를 점검하고 경고 목록을 돌려준다 (빈 리스트면 통과)."""
     warnings = [f"필수 키 없음: {k}" for k in REQUIRED_KEYS if k not in resp]
 
-    allowed = {p["pitch_type"] for p in payload["similar_pitcher"]["arsenal"]}
-    allowed |= {p["pitch_type"] for p in payload["input_pitcher"]["arsenal"]}
     targets = {t["pitch_type"]: t for t in payload["transfer_targets"]}
+    similar_arsenal = {p["pitch_type"]: p for p in payload["similar_pitcher"]["arsenal"]}
+    allowed = {
+        pitch_type for pitch_type in targets
+        if (similar_arsenal.get(pitch_type) or {}).get("rv_per_100") is not None
+        and (similar_arsenal[pitch_type]["rv_per_100"] >= 0)
+    }
 
     recs = resp.get("recommendations", [])
     if len(recs) > 3:
@@ -790,7 +901,7 @@ def validate_response(resp: dict, payload: dict, tol: float = 0.25) -> list[str]
     for r in recs:
         pt = r.get("pitch_type")
         if pt not in allowed:
-            warnings.append(f"[{pt}] 입력 데이터에 없는 구종을 추천함")
+            warnings.append(f"[{pt}] 유사 투수의 성과가 확인된 변화구 후보가 아님")
             continue
         if r.get("action") not in ("add", "refine", "usage"):
             warnings.append(f"[{pt}] action 값이 잘못됨: {r.get('action')}")
@@ -890,6 +1001,16 @@ def llm_client(input_mlbid, input_year: int, similar_mlbid, similar_year: int,
     response, used_model = call_llm_with_fallback(build_messages(payload), model=model)
 
     warnings = validate_response(response, payload)
+    similar_arsenal = {pitch["pitch_type"]: pitch for pitch in payload["similar_pitcher"]["arsenal"]}
+    allowed_targets = {
+        target["pitch_type"] for target in payload["transfer_targets"]
+        if (similar_arsenal.get(target["pitch_type"]) or {}).get("rv_per_100") is not None
+        and similar_arsenal[target["pitch_type"]]["rv_per_100"] >= 0
+    }
+    response["recommendations"] = [
+        recommendation for recommendation in response.get("recommendations", [])
+        if recommendation.get("pitch_type") in allowed_targets
+    ]
     if warnings:
         print(f"[llm_client] 검증 경고 ({used_model}): " + " / ".join(warnings))
     return {

@@ -39,6 +39,7 @@ LLM 분석은 오래 걸리므로 두 단계로 나눠 호출한다. 프론트�
     유사 투수를 서버에서 다시 찾은 뒤(프로필이 메모리에 있어 빠름) 입력 ``(player_id, year)`` 와
     찾은 ``(MLB ID, 연도)`` 를 ``src/utils/llm_client.llm_client(input_mlbid, input_year,
     similar_mlbid, similar_year, search_context)`` 에 넣어 답변(dict)을 돌려준다.
+    API 키가 없으면 AI를 호출하지 않고 Statcast 수치 기반 설명을 돌려준다.
     같은 조합의 답변은 메모리에 캐시해 두 번째 요청부터는 바로 응답한다::
 
         {
@@ -81,15 +82,19 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import mimetypes
 import os
 import sys
 from contextlib import asynccontextmanager
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Sequence
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi import Path as PathParam
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -117,6 +122,7 @@ from src.utils.find_nearest_pitcher import (  # noqa: E402
 # --------------------------------------------------------------------------- #
 
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
 
 #: 서버가 쓰는 클러스터 JSON (전처리 파이프라인이 이 이름으로 저장한다)
 CLUSTER_FILE_NAME = "pitcher_clustered.json"
@@ -178,6 +184,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+if FRONTEND_DIR.is_dir():
+    # Windows may serve .mjs as text/plain, which browsers reject for ES modules.
+    mimetypes.add_type("text/javascript", ".mjs")
+    app.mount("/app", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+
 
 # --------------------------------------------------------------------------- #
 # 다른 모듈 호출 (src/utils — 다른 팀원이 작업 중)
@@ -211,6 +222,23 @@ def call_find_nearest_pitcher(player_id: int, year: int, top_n: int) -> tuple[in
         ) from error
 
 
+@lru_cache(maxsize=4)
+def _cluster_centers(k: int) -> dict[int, dict[str, float]]:
+    """저장된 GMM의 군집 중심을 원래 움직임(inch)·팔 각도 단위로 읽는다."""
+    from src.preprocessing.fit_pitch_gmm import default_model_path, load_model
+
+    model = load_model(default_model_path(k, PROCESSED_DIR))
+    centers = model.component_centers()
+    return {
+        int(cluster): {
+            "ivb_in": round(float(row["ivb_ft"]), 1),
+            "hb_in": round(float(row["hb_ft"]), 1),
+            "arm_angle_deg": round(float(row["arm_angle"]), 1),
+        }
+        for cluster, row in centers.iterrows()
+    }
+
+
 def build_search_context(query: tuple[int, int], nearest: tuple[int, int]) -> dict[str, Any] | None:
     """유사 투수 검색 단계의 정보를 ``llm_client`` 의 ``search_context`` 로 넘긴다.
 
@@ -235,14 +263,20 @@ def build_search_context(query: tuple[int, int], nearest: tuple[int, int]) -> di
 
         distance = np.sqrt(((target[Z_COLS].to_numpy(dtype=float)
                              - similar[Z_COLS].to_numpy(dtype=float)) ** 2).sum())
-        return {
-            "cluster": int(target["cluster"]),
+        cluster = int(target["cluster"])
+        context = {
+            "cluster": cluster,
             "input_avg_velocity": num(target["average_velocity"], 1),
             "similar_avg_velocity": num(similar["average_velocity"], 1),
             "input_fip": num(target["FIP"]),
             "similar_fip": num(similar["FIP"]),
             "form_distance": num(distance, 3),
         }
+        try:
+            context["cluster_profile"] = _cluster_centers(int(app.state.k))[cluster]
+        except (FileNotFoundError, KeyError, ValueError, AttributeError) as error:
+            logger.warning("군집 중심값을 읽지 못했습니다: %s", error)
+        return context
     except Exception:  # 부가 정보라 실패해도 LLM 호출은 막지 않는다
         logger.warning("search_context 를 만들지 못해 생략합니다 (%s, %s)", query, nearest, exc_info=True)
         return None
@@ -258,6 +292,13 @@ def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[st
         raise HTTPException(503, f"llm_client 를 불러올 수 없습니다: {error}") from error
 
     (input_mlbid, input_year), (similar_mlbid, similar_year) = query, nearest
+    from src.utils.llm_client import resolve_provider
+    if resolve_provider()[1] is None:
+        from src.utils.local_analysis import build_local_analysis
+        profiles, error = build_profiles(query, nearest)
+        if profiles is None:
+            raise HTTPException(503, f"데이터 기반 설명을 만들 수 없습니다: {error}")
+        return build_local_analysis(profiles)
     try:
         answer = llm_client(
             input_mlbid=input_mlbid,
@@ -266,9 +307,17 @@ def call_llm_client(query: tuple[int, int], nearest: tuple[int, int]) -> dict[st
             similar_year=similar_year,
             search_context=build_search_context(query, nearest),
         )
-    except TransientLLMError as error:     # 서버 혼잡·한도 초과 — 잠시 뒤 다시 시도하면 됨
+    except TransientLLMError as error:     # 모든 모델이 혼잡해도 관측값 기반 후보는 보여준다.
         logger.warning("LLM 일시적 오류 (%s, %s): %s", query, nearest, error)
-        raise HTTPException(503, f"LLM 서버가 혼잡합니다. 잠시 후 다시 시도하세요: {error}") from error
+        from src.utils.local_analysis import build_local_analysis
+
+        profiles, profile_error = build_profiles(query, nearest)
+        if profiles is None:
+            raise HTTPException(503, f"데이터 기반 설명을 만들 수 없습니다: {profile_error}") from error
+        fallback = build_local_analysis(profiles)
+        fallback["fallback_reason"] = "llm_unavailable"
+        fallback["validation_warnings"] = ["외부 AI 모델이 일시적으로 응답하지 않아 Statcast 관측값 기반 참고 분석을 제공했습니다."]
+        return fallback
     except ValueError as error:            # 해당 시즌 구종 데이터 없음 등
         raise HTTPException(404, f"LLM 입력 데이터를 만들 수 없습니다: {error}") from error
     except ImportError as error:           # openai 패키지 미설치 등
@@ -355,6 +404,59 @@ def health() -> dict[str, Any]:
     }
 
 
+@app.get("/", include_in_schema=False)
+def frontend() -> RedirectResponse:
+    """FastAPI와 함께 배포되는 PITCH TWIN 프런트엔드로 이동한다."""
+    return RedirectResponse(url="/app/")
+
+
+def display_player_name(value: str) -> str:
+    """Statcast의 ``성, 이름`` 표기를 화면용 ``이름 성`` 표기로 바꾼다."""
+    parts = [part.strip() for part in value.split(",", 1)]
+    return f"{parts[1]} {parts[0]}" if len(parts) == 2 else value.strip()
+
+
+@app.get("/pitchers")
+def search_pitchers(
+    query: str = Query("", max_length=80, description="선수 이름 또는 MLB ID"),
+    year: int | None = Query(None, ge=2021, le=2025, description="시즌 필터"),
+    limit: int = Query(8, ge=1, le=30),
+) -> dict[str, Any]:
+    """입력 폼 자동완성에 사용할 투수와 보유 시즌을 반환한다."""
+    try:
+        profile = load_profile()
+    except Exception as error:
+        raise HTTPException(503, f"투수 목록을 불러올 수 없습니다: {error}") from error
+
+    rows = profile
+    if year is not None:
+        rows = rows[rows["game_year"] == year]
+
+    needle = query.strip().casefold()
+    candidates: list[dict[str, Any]] = []
+    for player_id, group in rows.groupby("player_id", sort=False):
+        raw_name = str(group.iloc[0].get("player_name", player_id))
+        name = display_player_name(raw_name)
+        matches_query = (
+            not needle
+            or needle in name.casefold()
+            or needle in raw_name.casefold()
+            or needle in str(player_id)
+        )
+        if not matches_query:
+            continue
+        candidates.append(
+            {
+                "player_id": int(player_id),
+                "player_name": name,
+                "seasons": sorted({int(value) for value in group["game_year"]}, reverse=True),
+            }
+        )
+
+    candidates.sort(key=lambda item: item["player_name"].casefold())
+    return {"items": candidates[:limit], "count": len(candidates)}
+
+
 def validate_season(player_id: int, year: int) -> None:
     """``pitcher_clustered.json`` 에 없는 (ID, 연도) 면 404."""
     clusters = app.state.clusters
@@ -388,12 +490,14 @@ _llm_cache: dict[tuple[tuple[int, int], tuple[int, int]], dict[str, Any]] = {}
 def compare_pitcher(
     player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
     year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
+    rank: int | None = Query(None, ge=1, le=20, description="유사 투수 순위"),
 ) -> dict[str, Any]:
     """1단계: 유사 투수와 두 선수의 프로필을 빠르게 돌려준다 (LLM 호출 없음)."""
     validate_season(player_id, year)
     query = {"player_id": player_id, "year": year}
 
-    nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
+    selected_rank = rank or app.state.top_n
+    nearest = call_find_nearest_pitcher(player_id, year, selected_rank)
     profiles, profile_error = build_profiles((player_id, year), nearest)
 
     if nearest is None:
@@ -404,17 +508,41 @@ def compare_pitcher(
             "message": None,
             "query": query,
             "nearest": {"player_id": nearest[0], "year": nearest[1]},
-            "llm_url": f"/{player_id}/{year}/llm",
+            "llm_url": f"/{player_id}/{year}/llm?rank={selected_rank}",
+            "cluster_map_url": f"/cluster-map/{player_id}/{year}?rank={selected_rank}",
         }
+    if nearest is None:
+        response["cluster_map_url"] = None
+    response["rank"] = selected_rank
     response["profiles"] = profiles
     response["profile_error"] = profile_error
     return response
+
+
+@app.get("/cluster-map/{player_id}/{year}")
+def pitcher_cluster_map(
+    player_id: int = PathParam(..., gt=0),
+    year: int = PathParam(..., ge=2021, le=2025),
+    rank: int | None = Query(None, ge=1, le=20),
+) -> dict[str, Any]:
+    """All fastball GMM components, bounded real-pitch sample, and two season locations."""
+    validate_season(player_id, year)
+    nearest = call_find_nearest_pitcher(player_id, year, rank or app.state.top_n)
+    if nearest is None:
+        raise HTTPException(404, NO_MATCH_MESSAGE)
+    from src.visualization.cluster_map_data import comparison_cluster_map
+
+    try:
+        return comparison_cluster_map(int(app.state.k), (player_id, year), nearest)
+    except (FileNotFoundError, ValueError) as error:
+        raise HTTPException(503, f"GMM 지도를 만들 수 없습니다: {error}") from error
 
 
 @app.get("/{player_id}/{year}/llm")
 def compare_pitcher_llm(
     player_id: int = PathParam(..., gt=0, description="MLB(MLBAM) 선수 ID", examples=[660271]),
     year: int = PathParam(..., ge=1900, le=2100, description="시즌 연도", examples=[2023]),
+    rank: int | None = Query(None, ge=1, le=20, description="유사 투수 순위"),
 ) -> dict[str, Any]:
     """2단계: 유사 투수를 서버에서 다시 찾아 LLM 분석을 돌려준다.
 
@@ -424,12 +552,19 @@ def compare_pitcher_llm(
     validate_season(player_id, year)
     query = {"player_id": player_id, "year": year}
 
-    nearest = call_find_nearest_pitcher(player_id, year, app.state.top_n)
+    selected_rank = rank or app.state.top_n
+    nearest = call_find_nearest_pitcher(player_id, year, selected_rank)
     if nearest is None:
-        return no_match_response(query, "llm")
+        response = no_match_response(query, "llm")
+        response["rank"] = selected_rank
+        return response
 
     key = ((player_id, year), nearest)
     cached = key in _llm_cache
+    if cached and _llm_cache[key].get("source") == "rule_based":
+        from src.utils.llm_client import resolve_provider
+        if resolve_provider()[1] is not None:
+            cached = False
     if not cached:
         _llm_cache[key] = to_jsonable(call_llm_client(*key))   # 실패하면 예외가 나서 캐시에 남지 않는다
 
@@ -438,9 +573,24 @@ def compare_pitcher_llm(
         "message": None,
         "query": query,
         "nearest": {"player_id": nearest[0], "year": nearest[1]},
+        "rank": selected_rank,
         "llm": _llm_cache[key],
         "cached": cached,
     }
+
+
+@app.get("/trajectory/{player_id}/{year}")
+def pitcher_trajectory(
+    player_id: int = PathParam(..., gt=0),
+    year: int = PathParam(..., ge=2021, le=2025),
+) -> dict[str, Any]:
+    """Original 3D viewer payload, sampled from real regular-season Statcast pitches."""
+    validate_season(player_id, year)
+    from src.visualization.comparison_data import pitcher_trajectory_data
+    try:
+        return pitcher_trajectory_data(player_id, year)
+    except (FileNotFoundError, ValueError) as error:
+        raise HTTPException(404, str(error)) from error
 
 
 # --------------------------------------------------------------------------- #

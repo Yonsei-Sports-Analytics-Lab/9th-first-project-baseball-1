@@ -26,7 +26,7 @@
 
        {
          "660271": {
-           "2023": { "average_velocity": 100.0, "cluster": 10 },
+           "2023": { "primary_pitch_type": "FF", "average_velocity": 100.0, "cluster": 10 },
            ...
          },
          ...
@@ -87,6 +87,7 @@ from src.preprocessing.fit_pitch_gmm import (  # noqa: E402
     save_model,
     summarize_components,
 )
+from src.preprocessing.extract_fastball import FASTBALL_PITCH_TYPES  # noqa: E402
 from src.preprocessing.load_movement_data import (  # noqa: E402
     DEFAULT_CHUNKSIZE,
     DEFAULT_FEATURES,
@@ -172,7 +173,7 @@ def summarize_pitcher_seasons(
     # 주 패스트볼(가장 많이 던진 구종)과 그 구종의 평균 구속.
     # FF/SI/FC 를 섞어 평균 내면 커터가 섞인 투수의 구속이 실제보다 낮게 잡히므로 구종별로 따로 본다.
     by_type = (
-        pitches[keys + ["pitch_type", VELOCITY_COLUMN]]
+        pitches.loc[pitches["pitch_type"].isin(FASTBALL_PITCH_TYPES), keys + ["pitch_type", VELOCITY_COLUMN]]
         .astype({"pitch_type": str})
         .groupby(keys + ["pitch_type"])[VELOCITY_COLUMN]
         .agg(n="size", velocity="mean")
@@ -184,7 +185,7 @@ def summarize_pitcher_seasons(
 
     frame = pitches[keys + ["pitch_type"]].assign(cluster=np.asarray(labels))
     frame["pitch_type"] = frame["pitch_type"].astype(str)
-    n_all = frame.groupby(keys).size()
+    n_all = frame[frame["pitch_type"].isin(FASTBALL_PITCH_TYPES)].groupby(keys).size()
 
     # 주 패스트볼 외의 구종은 버린다 — 구종을 섞으면 최빈 클러스터가 흐려진다.
     frame = frame.merge(
@@ -260,18 +261,19 @@ def filter_min_pitches(seasons: pd.DataFrame, min_pitches: int) -> pd.DataFrame:
 def build_description_payload(
     seasons: pd.DataFrame,
     velocity_decimals: int = VELOCITY_DECIMALS,
-) -> dict[str, dict[str, dict[str, float | int | None]]]:
-    """``{MLB ID: {연도: {"average_velocity": ..., "cluster": ...}}}`` 딕셔너리.
+) -> dict[str, dict[str, dict[str, float | int | str | None]]]:
+    """``{MLB ID: {연도: {"primary_pitch_type": ..., "average_velocity": ..., "cluster": ...}}}`` 딕셔너리.
 
     키는 Statcast ``pitcher`` 컬럼(MLBAM ID)을 문자열로 쓴다(JSON 키는 문자열만 가능).
     MLB ID 오름차순, 연도 오름차순으로 정렬한다.
     """
     frame = seasons.sort_values(["pitcher", "game_year"])
 
-    payload: dict[str, dict[str, dict[str, float | int | None]]] = {}
+    payload: dict[str, dict[str, dict[str, float | int | str | None]]] = {}
     for row in frame.itertuples(index=False):
         velocity = row.average_velocity
         payload.setdefault(str(int(row.pitcher)), {})[str(int(row.game_year))] = {
+            "primary_pitch_type": str(row.primary_pitch_type),
             "average_velocity": (
                 None if pd.isna(velocity) else round(float(velocity), velocity_decimals)
             ),
